@@ -17,18 +17,17 @@ Hero และเนื้อหาโดยรวมต้องพูดกั
 
 ## Technology
 
-- Next.js App Router
 - TypeScript
-- Tailwind CSS
+- Javascript
 - Lucide Icons
 - Framer Motion — ใช้เฉพาะจุดที่จำเป็น
-- Semantic HTML
+- HTML 
 - Responsive ตั้งแต่ Mobile ถึง Desktop
-- **ขอบเขต: Front-end เท่านั้น** (ไม่ต้องต่อ backend/AI จริง ใช้ mock/static content)
+- Back-end MongoDB
 
 ## Art Direction
 
-แนว **Editorial Minimalism ผสม Modern Swiss Design**
+แนว **Editorial Minimalism ผสม Modern Swiss Design และ modern clean website design**
 
 บุคลิกเว็บไซต์: มั่นใจ / เรียบง่าย / ฉลาด / ทันสมัย / ไม่พยายามมากเกินไป / มีรายละเอียดเล็ก ๆ ที่ทำให้ดู Premium
 
@@ -64,7 +63,7 @@ Hero และเนื้อหาโดยรวมต้องพูดกั
 
 - Logo แบบ Typography: **"BrewMap"** (ไม่ใช้ icon logo)
 - เมนู: `Discover` / `Features` / `How it Works` / `About`
-- ปุ่ม CTA: **"Find your café"** (แทนที่ "Start a project" ของ agency — ให้ตรงกับ action จริงของผู้ใช้ปลายทาง)
+- ปุ่ม CTA: **"Find your café"** 
 - รองรับ Mobile Menu แบบ smooth, เข้ากับ visual language โดยรวม
 
 ### 2. Hero Section
