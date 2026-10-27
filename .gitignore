@@ -21,3 +21,12 @@ node_modules/
 out/
 build/
 *.tsbuildinfo
+
+# AI tool configs / agent instructions
+.claude/
+CLAUDE.md
+AGENTS.md
+
+# python cache (scripts/)
+__pycache__/
+*.pyc
