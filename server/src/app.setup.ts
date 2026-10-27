@@ -21,6 +21,9 @@ export function configureApp(app: INestApplication): void {
     );
   }
 
+  // Don't advertise the framework.
+  (app.getHttpAdapter().getInstance() as Application).disable('x-powered-by');
+
   app.setGlobalPrefix('api');
   app.use(cookieParser());
   app.enableCors({
