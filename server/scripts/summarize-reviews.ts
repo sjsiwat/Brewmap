@@ -17,34 +17,15 @@
  * names, photos or profile links.
  */
 import 'reflect-metadata';
-import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ConfigService } from '@nestjs/config';
 import mongoose from 'mongoose';
 import { GeminiService } from '../src/ai/gemini.service';
 import { Cafe, CafeSchema } from '../src/cafes/schemas/cafe.schema';
-
-const RAW_PATH = join(
-  __dirname,
-  '..',
-  '..',
-  'web',
-  'scripts',
-  'scrape-cafes',
-  'raw-full173.json',
-);
+import { cafeIndexOf, loadRawCafes } from './raw-scrape';
 
 const MAX_ITEMS = 4;
 const MAX_ITEM_LENGTH = 90;
-
-interface RawReview {
-  Rating?: number;
-  Description?: string;
-}
-interface RawCafe {
-  title: string;
-  user_reviews?: RawReview[] | null;
-}
 
 const SYSTEM = `You summarise Google reviews of one café in Chiang Mai for a café-discovery site.
 Return up to ${MAX_ITEMS} pros and up to ${MAX_ITEMS} cons, each a short English phrase (max ${MAX_ITEM_LENGTH} characters), e.g. "Creamy latte" or "Few parking spots".
@@ -95,7 +76,7 @@ async function main() {
   const gemini = new GeminiService(new ConfigService(process.env));
   if (!gemini.modelName) throw new Error('GEMINI_MODEL is not set');
 
-  const raw = JSON.parse(readFileSync(RAW_PATH, 'utf8')) as RawCafe[];
+  const raw = loadRawCafes();
   const connection = await mongoose.createConnection(uri).asPromise();
   const CafeModel = connection.model(Cafe.name, CafeSchema);
 
@@ -105,8 +86,7 @@ async function main() {
   try {
     for (const [i, source] of raw.entries()) {
       if (done >= limit) break;
-      // cafes.json was built from this file in order: entry i is index i+1.
-      const index = String(i + 1).padStart(3, '0');
+      const index = cafeIndexOf(i);
       const cafe = await CafeModel.findOne(
         { index },
         { slug: 1, aiSummary: 1 },
@@ -126,7 +106,10 @@ async function main() {
         .filter(
           (r) => typeof r.Description === 'string' && r.Description.trim(),
         )
-        .map((r) => ({ stars: r.Rating ?? null, text: r.Description!.trim() }));
+        .map((r) => ({
+          stars: r.Rating === undefined ? null : Number(r.Rating),
+          text: r.Description!.trim(),
+        }));
       if (reviews.length === 0) {
         console.warn(`#${index} ${cafe.slug}: no review text, skipped`);
         skipped++;

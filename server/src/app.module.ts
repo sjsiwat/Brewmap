@@ -6,6 +6,7 @@ import { AiModule } from './ai/ai.module';
 import { AuthModule } from './auth/auth.module';
 import { CafesModule } from './cafes/cafes.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { GoogleReviewsModule } from './google-reviews/google-reviews.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { HealthController } from './health/health.controller';
 
@@ -24,6 +25,7 @@ import { HealthController } from './health/health.controller';
     CafesModule,
     FavoritesModule,
     ReviewsModule,
+    GoogleReviewsModule,
     AiModule,
   ],
   controllers: [HealthController],
