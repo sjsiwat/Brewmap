@@ -361,7 +361,7 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 ---
 
 ### Phase 9 — ค้นหาร้านด้วยชื่อ (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-9.md](reviews/phase-9.md)
 **Branch:** `phase-9-name-search`
 **Review range:** `main..phase-9-name-search` (ใช้ `git diff main...HEAD`)
 
