@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
@@ -70,6 +71,19 @@ describe('Auth + Favorites API (e2e)', () => {
         .post('/api/auth/register')
         .send({ ...USER, email: '  SIWAT@example.com ' })
         .expect(409);
+    });
+
+    it('measures the password limit in bytes, as bcrypt does -> 400', async () => {
+      // 30 Thai letters = 90 bytes: bcrypt would ignore everything after byte 72.
+      await http()
+        .post('/api/auth/register')
+        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(30) })
+        .expect(400);
+      // 24 Thai letters = 72 bytes: fine.
+      await http()
+        .post('/api/auth/register')
+        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(24) })
+        .expect(201);
     });
 
     it('validates the body -> 400', async () => {
@@ -195,6 +209,27 @@ describe('Auth + Favorites API (e2e)', () => {
       const res = await otherAgent.get('/api/me/favorites').expect(200);
       expect(res.body).toEqual([]);
     });
+  });
+
+  it("a deleted account's cookie stops working at once -> 401", async () => {
+    const ghost = { ...USER, email: 'ghost@example.com' };
+    await http().post('/api/auth/register').send(ghost).expect(201);
+    const agent = request.agent(app.getHttpServer());
+    await agent
+      .post('/api/auth/login')
+      .send({ email: ghost.email, password: ghost.password })
+      .expect(200);
+    await agent.get('/api/auth/me').expect(200);
+
+    const db = await mongoose
+      .createConnection(process.env.MONGODB_URI!)
+      .asPromise();
+    await db.collection('users').deleteOne({ email: ghost.email });
+    await db.close();
+
+    await agent.get('/api/auth/me').expect(401);
+    await agent.get('/api/me/favorites').expect(401);
+    await agent.put(`/api/me/favorites/${slugs[0]}`).expect(401);
   });
 
   // Last: it uses up the login rate limit for this client.

@@ -42,7 +42,7 @@ function errorText(error: unknown, mode: Mode): string {
       return "Too many attempts. Wait a minute, then try again.";
     case 400:
       return mode === "register"
-        ? "Check the fields: a valid email, a name, and a password of 8–72 characters."
+        ? "Check the fields: a valid email, a name, and a password of 8–72 characters (about 24 in Thai)."
         : "Enter a valid email and your password.";
     default:
       return error.status >= 500
