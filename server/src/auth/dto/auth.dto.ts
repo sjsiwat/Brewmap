@@ -92,6 +92,7 @@ export class LoginDto {
   @IsString()
   @MaxLength(EMAIL_MAX)
   @IsEmail(EMAIL_OPTIONS, { message: EMAIL_MESSAGE })
+  @Matches(EMAIL_PATTERN, { message: EMAIL_MESSAGE })
   email: string;
 
   // Loose on purpose: a wrong password should get the same 401 as any other,
