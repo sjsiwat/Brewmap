@@ -301,7 +301,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 6 — Deploy + QA
-**Status:** `awaiting-review` · D3 = (a) rewrite · D4 = Vercel + Render
+**Status:** `approved` — [reviews/phase-6.md](reviews/phase-6.md) · D3 = (a) rewrite · D4 = Vercel + Render
 **Production:** web https://brewmap-cafe.vercel.app · API https://brewmap-api.onrender.com/api/health
 **Branch:** `phase-6-deploy`
 **Review range:** `main..phase-6-deploy` (ใช้ `git diff main...HEAD`)
