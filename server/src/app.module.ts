@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { CafesModule } from './cafes/cafes.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { ReviewsModule } from './reviews/reviews.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -21,6 +22,7 @@ import { HealthController } from './health/health.controller';
     AuthModule,
     CafesModule,
     FavoritesModule,
+    ReviewsModule,
   ],
   controllers: [HealthController],
 })

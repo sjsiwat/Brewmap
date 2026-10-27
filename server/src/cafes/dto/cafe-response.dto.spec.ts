@@ -19,6 +19,8 @@ const cafe: Cafe = {
   parking: false,
   drinkType: 'Coffee',
   location: { type: 'Point', coordinates: [98.9879, 18.7892] },
+  communityRating: null,
+  communityReviewCount: 0,
 };
 
 describe('toCafeResponse', () => {
@@ -35,5 +37,14 @@ describe('toCafeResponse', () => {
       1.2,
     );
     expect(toCafeResponse({ ...cafe, distanceMeters: 0 }).distanceKm).toBe(0);
+  });
+
+  it('defaults community fields for cafés stored before reviews existed', () => {
+    const legacy: Partial<Cafe> = { ...cafe };
+    delete legacy.communityRating;
+    delete legacy.communityReviewCount;
+    const res = toCafeResponse(legacy as Cafe);
+    expect(res.communityRating).toBeNull();
+    expect(res.communityReviewCount).toBe(0);
   });
 });

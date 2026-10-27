@@ -20,6 +20,9 @@ export class CafeResponseDto {
   drinkType: DrinkType;
   lat: number;
   lng: number;
+  /** BrewMap reviews average, null until the first review. Separate from Google's `rating`. */
+  communityRating: number | null;
+  communityReviewCount: number;
   /** Present only when the request included lat/lng. */
   distanceKm?: number;
 }
@@ -61,6 +64,9 @@ export function toCafeResponse(
     drinkType: cafe.drinkType,
     lat,
     lng,
+    // Documents seeded before Phase 4 don't have these yet.
+    communityRating: cafe.communityRating ?? null,
+    communityReviewCount: cafe.communityReviewCount ?? 0,
   };
   if (cafe.distanceMeters !== undefined) {
     response.distanceKm = Math.round(cafe.distanceMeters / 100) / 10;
