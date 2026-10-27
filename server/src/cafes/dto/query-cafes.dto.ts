@@ -26,7 +26,7 @@ type TransformArgs = {
 // An empty query param (`?maxPrice=`) means "not set". Without this, @Type(() => Number)
 // turns "" into 0, which then passes validation (e.g. lat=0 / lng=0). Not used on
 // page/limit: undefined would override their defaults, so "" there stays a 400.
-const emptyToUndefined = ({ value, obj, key }: TransformArgs) =>
+export const emptyToUndefined = ({ value, obj, key }: TransformArgs) =>
   obj[key] === '' ? undefined : value;
 
 // Query strings are always text, and Boolean("false") === true, so parse explicitly.
@@ -71,10 +71,12 @@ export class QueryCafesDto {
 
   /** Exact tag match, e.g. "Matcha", "Quiet". */
   @IsOptional()
+  @Transform(emptyToUndefined)
   @IsString()
   tag?: string;
 
   @IsOptional()
+  @Transform(emptyToUndefined)
   @IsString()
   area?: string;
 

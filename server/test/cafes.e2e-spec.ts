@@ -112,11 +112,15 @@ describe('Cafes API (e2e)', () => {
     expect(coordsBody.items[0]).not.toHaveProperty('distanceKm');
 
     const emptyFilters = await get(
-      '/api/cafes?maxPrice=&minPrice=&drinkType=&parking=&sort=&limit=1',
+      '/api/cafes?maxPrice=&minPrice=&drinkType=&parking=&tag=&area=&sort=&limit=1',
     ).expect(200);
     expect((emptyFilters.body as PaginatedCafesDto).total).toBe(total);
 
     await get('/api/cafes?page=').expect(400);
+
+    const top = await get('/api/cafes/top?limit=50').expect(200);
+    const emptyTag = await get('/api/cafes/top?tag=&limit=50').expect(200);
+    expect(emptyTag.body).toEqual(top.body);
   });
 
   it('GET /api/cafes/top respects tag and minReviews', async () => {
