@@ -93,7 +93,8 @@ export function safeNextPath(next: string | null): string {
   if (!next || !next.startsWith("/")) return "/cafes";
   try {
     const url = new URL(next, NEXT_BASE);
-    if (url.origin !== NEXT_BASE) return "/cafes";
+    // Dot segments can normalise to a protocol-relative path: `/.//evil` -> `//evil`.
+    if (url.origin !== NEXT_BASE || url.pathname.startsWith("//")) return "/cafes";
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
     return "/cafes";
