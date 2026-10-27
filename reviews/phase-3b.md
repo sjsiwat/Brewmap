@@ -22,3 +22,20 @@
 
 ## Response
 - **#1 แก้แล้ว** (`ec4e8d3`) — ยืนยันแล้วว่าเป็นช่องโหว่จริง ไม่ใช่แค่ nit: `/login?next=/.//example.com` (และ `/..//`, `/a/..//`, `/%2e//`, `/./\\`) ได้ path `//example.com` ซึ่ง router ตีความเป็น protocol-relative → ออกนอกเว็บ · แก้ตามที่แนะนำ: ผลลัพธ์ที่ขึ้นต้นด้วย `//` → `/cafes` · ทดสอบ 13 เคสด้วย node (off-site 0) และใน Chrome ตอน login อยู่: `/.//example.com`, `/a/..//example.com`, `/\\example.com` → `/cafes` · `/me/favorites` ยังพากลับถูก · ขอตรวจ Round 2 เพราะเป็นการแก้ด้าน security หลัง APPROVED
+
+## Round 2 — 2026-10-27
+**Range:** `2eba272..1a9856f`
+**Verdict:** APPROVED
+
+### Gate
+- [x] `npm run gate:server` (`typecheck` → `lint:check` → `test` (2 suites, 3 passed) → `test:e2e` (2 suites, 24 passed) → `build`)
+- [x] `npm run gate:web` (`typecheck` → `lint` → `build` (182 static pages generated))
+
+### Findings
+ไม่พบปัญหาเพิ่มเติม — แก้ไขประเด็นเรื่อง Open Redirect ใน [`safeNextPath`](file:///Users/siwat/Documents/GitHub/JSD13/week03/vibecode-myecommerce/web/lib/auth.tsx#L92-L101) ครบถ้วนและรัดกุมแล้ว
+
+### สิ่งที่ทำได้ดี (optional)
+- **Complete Open Redirect Normalization Guard (`ec4e8d3`):** [`safeNextPath`](file:///Users/siwat/Documents/GitHub/JSD13/week03/vibecode-myecommerce/web/lib/auth.tsx#L92-L101) ใช้ WHATWG `new URL(next, NEXT_BASE)` ร่วมกับการตรวจ `url.origin !== NEXT_BASE || url.pathname.startsWith("//")` ก่อนคืนค่า `${url.pathname}${url.search}${url.hash}` ซึ่งป้องกันได้ครบทุกเวกเตอร์:
+  - **Protocol-relative & Backslash:** `//evil.com`, `///evil.com`, `/\evil.com`, `/\\evil.com` ถูกแปลง `\` เป็น `/` ตาม special-scheme URL spec ทำให้ `url.origin` เปลี่ยนและถูกบล็อกตั้งแต่เช็ก `url.origin !== NEXT_BASE`
+  - **Dot-segment Collapse (Plain & Encoded):** `/.//evil.com`, `/..//evil.com`, `/a/..//evil.com`, `/%2e//evil.com`, `/%2e%2e//evil.com`, และ `/./\evil.com` ที่ WHATWG URL parser ยุบ dot-segment จน `url.pathname` กลายเป็น `"//evil.com"` ถูกบล็อกด้วย `url.pathname.startsWith("//")`
+  - **Control Characters & Encoded Separators:** อักขระควบคุม (`\t`, `\r`, `\n`) ถูกตัดออกก่อน normalize ตาม URL spec ส่วน `%2f` / `%5c` คงรูป percent-encoded ใน `url.pathname` (เช่น `/%5cevil.com`) จึงไม่กลายเป็น `//` เมื่อส่งต่อให้ [`router.replace(next)`](file:///Users/siwat/Documents/GitHub/JSD13/week03/vibecode-myecommerce/web/components/auth-form.tsx#L68-L85)
