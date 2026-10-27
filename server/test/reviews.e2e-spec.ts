@@ -15,7 +15,7 @@ import { seedCafes } from '../scripts/seed';
 
 type Agent = ReturnType<typeof request.agent>;
 
-const PASSWORD = 'correct-horse';
+const PASSWORD = 'correct-horse-9';
 const TEXT = 'Creamy latte, quiet corner, friendly staff.';
 
 describe('Reviews API (e2e)', () => {

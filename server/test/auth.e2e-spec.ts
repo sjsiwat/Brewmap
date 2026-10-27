@@ -12,7 +12,7 @@ import { seedCafes } from '../scripts/seed';
 
 const USER = {
   email: 'siwat@example.com',
-  password: 'correct-horse',
+  password: 'correct-horse-9',
   displayName: 'Siwat',
 };
 
@@ -73,17 +73,78 @@ describe('Auth + Favorites API (e2e)', () => {
         .expect(409);
     });
 
-    it('measures the password limit in bytes, as bcrypt does -> 400', async () => {
-      // 30 Thai letters = 90 bytes: bcrypt would ignore everything after byte 72.
-      await http()
+    it('enforces the email, password and name rules -> 400', async () => {
+      const ok = {
+        email: 'rules@example.com',
+        password: 'Brew1234',
+        displayName: 'Ploy',
+      };
+      const bad: Record<string, unknown>[] = [
+        // email
+        { ...ok, email: 'plainaddress' },
+        { ...ok, email: 'no-tld@example' },
+        { ...ok, email: 'two@@example.com' },
+        { ...ok, email: '.dot@example.com' },
+        { ...ok, email: 'dot.@example.com' },
+        { ...ok, email: 'dou..ble@example.com' },
+        { ...ok, email: 'space in@example.com' },
+        { ...ok, email: 'ไทย@example.com' },
+        { ...ok, email: 'user@ตัวอย่าง.com' },
+        { ...ok, email: 'user@-bad.com' },
+        { ...ok, email: 'user@[127.0.0.1]' },
+        { ...ok, email: 'Name <user@example.com>' },
+        { ...ok, email: `${'a'.repeat(250)}@x.co` },
+        // password
+        { ...ok, password: 'รหัสผ่าน1234' },
+        { ...ok, password: 'Brew1234ก' },
+        { ...ok, password: 'Brew 1234' },
+        { ...ok, password: 'Brew1234☕' },
+        { ...ok, password: 'Brew123' },
+        { ...ok, password: 'brewmapcafe' },
+        { ...ok, password: '12345678' },
+        { ...ok, password: `A1${'x'.repeat(71)}` },
+        // name
+        { ...ok, displayName: 'P' },
+        { ...ok, displayName: '   ' },
+        { ...ok, displayName: 'x'.repeat(31) },
+        { ...ok, displayName: '<script>' },
+        { ...ok, displayName: 'Ploy ☕' },
+        { ...ok, displayName: '-Ploy' },
+        { ...ok, displayName: 'Ploy\u200bP' },
+        { ...ok, displayName: 'Ploy\u0000P' },
+      ];
+      // Each case comes from its own forwarded visitor, so the 10/min register
+      // limit doesn't turn the later cases into 429s.
+      process.env.PROXY_SECRET = 'e2e-rules-secret';
+      try {
+        for (const [i, body] of bad.entries()) {
+          const res = await http()
+            .post('/api/auth/register')
+            .set({
+              'x-client-ip': `198.51.100.${i + 1}`,
+              'x-proxy-secret': 'e2e-rules-secret',
+            })
+            .send(body);
+          expect({ body, status: res.status }).toEqual({ body, status: 400 });
+        }
+      } finally {
+        delete process.env.PROXY_SECRET;
+      }
+    });
+
+    it('accepts well-formed values and normalises them', async () => {
+      const res = await http()
         .post('/api/auth/register')
-        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(30) })
-        .expect(400);
-      // 24 Thai letters = 72 bytes: fine.
-      await http()
-        .post('/api/auth/register')
-        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(24) })
+        .send({
+          email: '  First.Last+cafe@Mail.Example.co.th ',
+          password: `Aa1!${'x'.repeat(68)}`,
+          displayName: "  ปลาย   O'Neil-Brew_2.  ",
+        })
         .expect(201);
+      expect(res.body).toMatchObject({
+        email: 'first.last+cafe@mail.example.co.th',
+        displayName: "ปลาย O'Neil-Brew_2.",
+      });
     });
 
     it('validates the body -> 400', async () => {
