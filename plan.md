@@ -259,19 +259,42 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 5 — AI (Gemini)
-**Status:** `todo`
+**Status:** `awaiting-review`
+**Branch:** `phase-5-ai`
+**Review range:** `main..phase-5-ai` (ใช้ `git diff main...HEAD`)
 
-- [ ] 5.1 `AiModule` + `GeminiService` ใช้ SDK `@google/genai` · `GEMINI_API_KEY`, `GEMINI_MODEL` อยู่ใน env (ไม่ hardcode ชื่อ model) · key อยู่ฝั่ง server เท่านั้น
-- [ ] 5.2 `POST /api/ai/find` `{ query, lat?, lng? }` (รองรับภาษาไทย/อังกฤษ)
+- [x] 5.1 `AiModule` + `GeminiService` ใช้ SDK `@google/genai` · `GEMINI_API_KEY`, `GEMINI_MODEL` อยู่ใน env (ไม่ hardcode ชื่อ model) · key อยู่ฝั่ง server เท่านั้น
+- [x] 5.2 `POST /api/ai/find` `{ query, lat?, lng? }` (รองรับภาษาไทย/อังกฤษ)
   1. Gemini แปลง query → filter ด้วย structured output (schema เดียวกับ `QueryCafesDto`)
   2. validate filter ด้วย class-validator อีกรอบ (ห้ามเชื่อ output ของ AI ตรง ๆ)
   3. เรียก `CafesService.findAll` เอาไม่เกิน 5 ร้าน
   4. Gemini เขียนเหตุผล 1–2 ประโยคต่อร้าน **อ้างอิงเฉพาะข้อมูลร้านที่ส่งให้** (กัน AI แต่งข้อมูล)
-- [ ] 5.3 Timeout + error handling — Gemini ล่ม → 503 ข้อความชัดเจน
-- [ ] 5.4 Rate limit `/ai/*` ต่อ IP
-- [ ] 5.5 Script `server/scripts/summarize-reviews.ts` — สรุป review text จาก `web/scripts/scrape-cafes/raw-full173.json` → `aiSummary { pros[], cons[] }` เก็บลง DB (รันครั้งเดียว ไม่เรียก AI ทุกครั้งที่เปิดหน้า)
-- [ ] 5.6 Frontend: ช่อง AI Finder (หน้า `/cafes` หรือ hero) + แสดงเหตุผล · แสดง `aiSummary` ในหน้าร้าน
-- [ ] 5.7 Tests: mock `GeminiService` — ทดสอบ filter ที่ invalid ถูกตัดทิ้ง, Gemini error → 503
+- [x] 5.3 Timeout + error handling — Gemini ล่ม → 503 ข้อความชัดเจน
+- [x] 5.4 Rate limit `/ai/*` ต่อ IP
+- [x] 5.5 Script `server/scripts/summarize-reviews.ts` — สรุป review text จาก `web/scripts/scrape-cafes/raw-full173.json` → `aiSummary { pros[], cons[] }` เก็บลง DB (รันครั้งเดียว ไม่เรียก AI ทุกครั้งที่เปิดหน้า)
+- [x] 5.6 Frontend: ช่อง AI Finder (หน้า `/cafes` หรือ hero) + แสดงเหตุผล · แสดง `aiSummary` ในหน้าร้าน
+- [x] 5.7 Tests: mock `GeminiService` — ทดสอบ filter ที่ invalid ถูกตัดทิ้ง, Gemini error → 503
+
+- [x] 5.8 ปรับจูนกับ Gemini จริง
+  - model `gemini-3.1-flash-lite-preview` + `GEMINI_THINKING_LEVEL=minimal` ตอบ ~2–7 วินาที (`gemini-flash-latest` ไม่ตอบภายใน 40 วินาที/ติด 503 high demand)
+  - Gemini ตอบ 503 → ลองใหม่ 1 ครั้งภายใน deadline เดิม
+  - ไม่มีร้านตรงทุก filter → ผ่อน filter ทีละตัว (tag → area → drink → ราคา → สัตว์เลี้ยง → ที่จอดรถ → ระยะ) และส่ง `relaxed` ให้หน้าเว็บบอกว่าข้ามอะไร
+  - `ai:summarize --rpm` (ค่าเริ่มต้น 10) — free tier ได้ 15 requests/นาที/model ใช้ร่วมกับ AI Finder
+- สรุปรีวิวครบ **173/173 ร้าน** ใน Atlas (`aiSummary.model = gemini-3.1-flash-lite-preview`)
+
+**Acceptance (Gemini จริง, 2026-10-27):**
+
+| คำค้น | filter ที่ได้ | ผ่อน | ผลลัพธ์ |
+|---|---|---|---|
+| ร้านกาแฟเงียบๆ มีที่จอดรถ ใกล้นิมมาน | Coffee, parking | Quiet, Nimman | 5 ร้านมีที่จอด ย่านช้างเผือกติดนิมมาน · เหตุผลบอกตรง ๆ ว่าใกล้นิมมาน/บางร้านไม่เงียบ |
+| อยากได้มัทฉะรสเข้มข้น นั่งทำงานได้ | Tea | Work-friendly | ร้านมัทฉะ (Minna, hokkori…) · เหตุผลบอกว่าร้านเล็ก อาจไม่เหมาะนั่งทำงานนาน |
+| คาเฟ่ที่พาหมาไปได้ ราคาไม่แพง | petFriendly, Budget-friendly | — | ร้าน pet-friendly 70–80฿ |
+| quiet specialty coffee with pour over in the old city | Coffee, Quiet, Old City | — | ร้าน Old City เงียบ · เหตุผลบอกว่าไม่มีข้อมูล pour-over (ไม่แต่งเติม) |
+| cheap cafe with good desserts open early | Budget-friendly, sort price | — | ร้านราคาถูกเรียงตามราคา |
+
+ทดสอบใน Chrome: AI Finder (ไทย) แสดงผล + เหตุผล + ข้อความ "skip: Quiet, Nimman" · หน้าร้านแสดง "What reviewers say" · ไม่มี console error
+
+**ข้อจำกัด:** free tier 15 requests/นาที — 1 การค้นหา = 2 requests → ราว 7 การค้นหา/นาทีทั้งเว็บ (เกินแล้วได้ 503 "taking a break") · production ควรเปิด billing หรือยอมรับข้อจำกัดนี้
 
 **Gate:** Phase 4 gate · **Acceptance:** ลอง 5 ประโยคตัวอย่าง (ไทย 3 / อังกฤษ 2) แล้วผลลัพธ์สมเหตุสมผล จดผลไว้ใน review request
 
