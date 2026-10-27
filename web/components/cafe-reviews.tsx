@@ -199,6 +199,8 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
   const [list, setList] = useState<{
     items: Review[];
     total: number;
+    /** Last page fetched. Paging follows this, not items.length, which de-duplication can shrink. */
+    page: number;
     communityRating: number | null;
     communityReviewCount: number;
   } | null>(null);
@@ -275,7 +277,7 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
     setLoadingMore(true);
     try {
       const next = await api.getReviews(slug, {
-        page: Math.floor(list.items.length / PAGE_SIZE) + 1,
+        page: list.page + 1,
         limit: PAGE_SIZE,
       });
       setListError(false);
@@ -457,7 +459,7 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
                       <ReviewItem key={review.id} review={review} />
                     ))}
                   </ul>
-                  {list.items.length < list.total && (
+                  {list.page * PAGE_SIZE < list.total && (
                     <button type="button" onClick={loadMore} disabled={loadingMore} className={`mt-6 ${outlineButton}`}>
                       {loadingMore ? "Loading…" : "Show more reviews"}
                     </button>
