@@ -14,6 +14,7 @@ const accountLink =
 function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void; mobile?: boolean }) {
   const { status, user, logout } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutFailed, setLogoutFailed] = useState(false);
 
   if (status === "loading") return null;
 
@@ -27,9 +28,13 @@ function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void;
 
   async function onLogout() {
     setLoggingOut(true);
+    setLogoutFailed(false);
     try {
       await logout();
       onNavigate?.();
+    } catch {
+      // API unreachable: the cookie is still set, so stay logged in and say so.
+      setLogoutFailed(true);
     } finally {
       setLoggingOut(false);
     }
@@ -55,7 +60,7 @@ function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void;
         title={mobile ? undefined : `Logged in as ${user?.displayName}`}
         className={mobile ? "py-2 text-left font-mono text-xs uppercase tracking-[0.12em] text-ink-soft" : accountLink}
       >
-        {loggingOut ? "Logging out…" : "Log out"}
+        {loggingOut ? "Logging out…" : logoutFailed ? "Log out failed · retry" : "Log out"}
       </button>
     </div>
   );
