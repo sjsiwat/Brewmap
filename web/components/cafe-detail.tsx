@@ -8,7 +8,8 @@ import {
   Star,
 } from "lucide-react";
 import type { Cafe } from "@/lib/cafes";
-import { osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
+import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
+import { DistanceFromOrigin } from "@/components/location-origin";
 import { Reveal } from "@/components/reveal";
 
 interface Fact {
@@ -54,8 +55,8 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-muted">
-            <span>{cafe.price}</span>
-            <span>{cafe.distance} away</span>
+            <span>{formatPrice(cafe.priceAvg)}</span>
+            <DistanceFromOrigin lat={cafe.lat} lng={cafe.lng} />
             {cafe.tags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
