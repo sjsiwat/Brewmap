@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AiModule } from './ai/ai.module';
 import { AuthModule } from './auth/auth.module';
 import { CafesModule } from './cafes/cafes.module';
 import { FavoritesModule } from './favorites/favorites.module';
@@ -23,6 +24,7 @@ import { HealthController } from './health/health.controller';
     CafesModule,
     FavoritesModule,
     ReviewsModule,
+    AiModule,
   ],
   controllers: [HealthController],
 })

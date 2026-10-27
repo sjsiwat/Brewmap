@@ -1,0 +1,93 @@
+import { sanitizeFilters } from './ai.service';
+
+const context = {
+  tags: ['Matcha', 'Quiet', 'Specialty'],
+  areas: ['Nimman', 'Old City'],
+  hasOrigin: false,
+};
+
+describe('sanitizeFilters', () => {
+  it('keeps valid filters', () => {
+    expect(
+      sanitizeFilters(
+        {
+          minPrice: 50,
+          maxPrice: 150,
+          drinkType: 'Tea',
+          parking: true,
+          petFriendly: false,
+          tag: 'Matcha',
+          area: 'Nimman',
+          sort: 'price',
+        },
+        context,
+      ),
+    ).toEqual({
+      minPrice: 50,
+      maxPrice: 150,
+      drinkType: 'Tea',
+      parking: true,
+      petFriendly: false,
+      tag: 'Matcha',
+      area: 'Nimman',
+      sort: 'price',
+    });
+  });
+
+  it('drops invalid values one by one, keeping the rest', () => {
+    expect(
+      sanitizeFilters(
+        {
+          maxPrice: -5,
+          drinkType: 'Beer',
+          parking: 'maybe',
+          tag: 'Matcha',
+          sort: 'random',
+        },
+        context,
+      ),
+    ).toEqual({ tag: 'Matcha' });
+  });
+
+  it('drops tags and areas the database does not have', () => {
+    expect(
+      sanitizeFilters({ tag: 'Rooftop', area: 'Bangkok' }, context),
+    ).toEqual({});
+  });
+
+  it('drops unknown keys and non-scalar values (no operator injection)', () => {
+    expect(
+      sanitizeFilters(
+        {
+          area: { $ne: null },
+          tag: ['Matcha'],
+          lat: 1,
+          limit: 50,
+          $where: 'sleep(1000)',
+          drinkType: 'Coffee',
+        },
+        context,
+      ),
+    ).toEqual({ drinkType: 'Coffee' });
+  });
+
+  it('drops distance-only filters without a location, keeps them with one', () => {
+    const proposed = { radiusKm: 3, sort: 'distance' };
+    expect(sanitizeFilters(proposed, context)).toEqual({});
+    expect(sanitizeFilters(proposed, { ...context, hasOrigin: true })).toEqual(
+      proposed,
+    );
+  });
+
+  it('drops an impossible price range instead of failing', () => {
+    expect(sanitizeFilters({ minPrice: 200, maxPrice: 100 }, context)).toEqual(
+      {},
+    );
+  });
+
+  it('returns no filters for output that is not an object', () => {
+    for (const output of [null, 'Matcha', 42, ['Matcha'], undefined]) {
+      expect(sanitizeFilters(output, context)).toEqual({});
+    }
+  });
+});
