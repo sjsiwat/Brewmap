@@ -10,6 +10,7 @@ import {
 import type { Cafe } from "@/lib/cafes";
 import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
 import { DistanceFromOrigin } from "@/components/location-origin";
+import { FavoriteButton } from "@/components/favorite-button";
 import { Reveal } from "@/components/reveal";
 
 interface Fact {
@@ -34,13 +35,16 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
     <section className="border-b border-line">
       <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
         <Reveal>
-          <Link
-            href="/cafes"
-            className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
-          >
-            <ArrowLeft size={14} aria-hidden />
-            All cafés
-          </Link>
+          <div className="flex items-center justify-between gap-6">
+            <Link
+              href="/cafes"
+              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            >
+              <ArrowLeft size={14} aria-hidden />
+              All cafés
+            </Link>
+            <FavoriteButton cafe={cafe} showLabel />
+          </div>
 
           <p className="mt-8 flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-rust">
             <MapPin size={13} aria-hidden />

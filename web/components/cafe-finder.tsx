@@ -25,6 +25,7 @@ import { formatKm } from "@/lib/geo";
 import { useCafeSearch } from "@/lib/use-cafe-search";
 import { useUserLocation } from "@/lib/use-user-location";
 import { LocationOrigin } from "@/components/location-origin";
+import { FavoriteButton } from "@/components/favorite-button";
 import { Reveal } from "@/components/reveal";
 
 interface Criteria {
@@ -174,13 +175,17 @@ export function CafeFinder() {
       <div className="mt-6 border-t border-ink">
         {search.items.map((cafe, i) => {
           return (
-            <Reveal key={cafe.slug} delay={Math.min((i % PAGE_SIZE) * 0.03, 0.3)}>
+            <Reveal
+              key={cafe.slug}
+              delay={Math.min((i % PAGE_SIZE) * 0.03, 0.3)}
+              className="relative"
+            >
               <Link href={`/cafes/${cafe.slug}`} className="block">
                 <motion.div
                   whileHover="hover"
                   initial="rest"
                   animate="rest"
-                  className="group grid grid-cols-1 gap-3 border-b border-line py-7 md:grid-cols-12 md:items-baseline md:gap-6"
+                  className="group grid grid-cols-1 gap-3 border-b border-line py-7 pr-10 md:grid-cols-12 md:items-baseline md:gap-6"
                 >
                   <span className="font-mono text-sm text-muted md:col-span-1">
                     {cafe.index}
@@ -236,6 +241,8 @@ export function CafeFinder() {
                   </div>
                 </motion.div>
               </Link>
+              {/* Outside the link: a button can't be nested inside an <a>. */}
+              <FavoriteButton cafe={cafe} className="absolute top-6 right-0 p-1" />
             </Reveal>
           );
         })}
