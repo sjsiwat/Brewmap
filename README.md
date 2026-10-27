@@ -334,7 +334,7 @@ npm run install:all
 
 # 2. env files
 cp server/.env.example server/.env   # fill in MONGODB_URI
-cp web/.env.example web/.env.local   # NEXT_PUBLIC_API_URL=http://localhost:4000/api
+cp web/.env.example web/.env.local   # API_URL=http://localhost:4000/api
 
 # 3. load café data into MongoDB (safe to re-run)
 npm run seed

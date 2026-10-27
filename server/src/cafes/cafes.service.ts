@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, QueryFilter } from 'mongoose';
+import { Model, QueryFilter, Types } from 'mongoose';
 import {
   CafeFiltersDto,
   CafeResponseDto,
@@ -122,6 +122,27 @@ export class CafesService {
     const cafe = await this.cafeModel.findOne({ slug }).lean<Cafe>();
     if (!cafe) throw new NotFoundException(`Café "${slug}" not found`);
     return toCafeResponse(cafe);
+  }
+
+  /** The café's document id, for other collections to reference. */
+  async findIdBySlug(slug: string): Promise<Types.ObjectId> {
+    const cafe = await this.cafeModel
+      .findOne({ slug }, { _id: 1 })
+      .lean<{ _id: Types.ObjectId }>();
+    if (!cafe) throw new NotFoundException(`Café "${slug}" not found`);
+    return cafe._id;
+  }
+
+  /** Cafés in the order of `ids`; ids with no café are skipped. */
+  async findByIds(ids: Types.ObjectId[]): Promise<CafeResponseDto[]> {
+    const cafes = await this.cafeModel
+      .find({ _id: { $in: ids } })
+      .lean<(Cafe & { _id: Types.ObjectId })[]>();
+    const byId = new Map(cafes.map((cafe) => [cafe._id.toString(), cafe]));
+    return ids.flatMap((id) => {
+      const cafe = byId.get(id.toString());
+      return cafe ? [toCafeResponse(cafe)] : [];
+    });
   }
 
   async getFilters(): Promise<CafeFiltersDto> {
