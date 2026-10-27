@@ -3,7 +3,11 @@ import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { CafesService } from '../cafes/cafes.service';
 import { CafeResponseDto } from '../cafes/dto/cafe-response.dto';
-import { CAFE_SORTS, QueryCafesDto } from '../cafes/dto/query-cafes.dto';
+import {
+  CAFE_SORTS,
+  QueryCafesDto,
+  SEARCH_MAX,
+} from '../cafes/dto/query-cafes.dto';
 import { DRINK_TYPES } from '../cafes/schemas/cafe.schema';
 import {
   AiFindDto,
@@ -17,6 +21,7 @@ const MAX_RESULTS = 5;
 const MAX_REASON_LENGTH = 400;
 
 const FILTER_KEYS = [
+  'q',
   'minPrice',
   'maxPrice',
   'drinkType',
@@ -32,6 +37,7 @@ const FILTER_SYSTEM = `You turn a café request from Chiang Mai, Thailand (Thai 
 Only set a filter the request clearly asks for; leave everything else out.
 Set "parking": true when the request mentions parking or coming by car, and "petFriendly": true when it mentions bringing a dog, cat or pet.
 A specific drink (coffee, matcha, tea, cocoa...) sets "drinkType".
+Set "q" only when the request names a particular café or chain (e.g. "% Arabica", "Starbucks"): just the name, without words like "café" or "near".
 Prices are typical drink prices in Thai baht (THB).
 "tag" and "area" must be one of the allowed values exactly; pick the single closest tag or leave it out.
 radiusKm and sort "distance" only make sense when the visitor's location is known.
@@ -100,7 +106,17 @@ export class AiService {
     // and say which, rather than answering "no café" to a reasonable request.
     let { items } = await this.cafesService.findAll(query);
     const relaxed: AppliedFilters = {};
-    for (let step = nextRelaxation(filters); !items.length && step;) {
+    // A café we don't have at all ("Starbucks Reserve near Nimman"): give up the
+    // name first and keep the rest, rather than dropping "Nimman" for it.
+    if (!items.length && filters.q && !(await this.hasCafeNamed(filters.q))) {
+      relaxed.q = filters.q;
+      delete query.q;
+      ({ items } = await this.cafesService.findAll(query));
+    }
+    for (
+      let step = nextRelaxation(withoutKeys(filters, relaxed));
+      !items.length && step;
+    ) {
       Object.assign(relaxed, { [step.key]: filters[step.key] });
       delete query[step.key];
       ({ items } = await this.cafesService.findAll(query));
@@ -124,6 +140,11 @@ export class AiService {
       relaxed,
       items: matches,
     };
+  }
+
+  private async hasCafeNamed(q: string): Promise<boolean> {
+    const query = plainToInstance(QueryCafesDto, { q, page: 1, limit: 1 });
+    return (await this.cafesService.findAll(query)).total > 0;
   }
 
   private async explain(
@@ -191,6 +212,7 @@ function filterSchema(
   hasOrigin: boolean,
 ): Record<string, unknown> {
   const properties: Record<string, unknown> = {
+    q: { type: 'string', maxLength: SEARCH_MAX, description: 'café name' },
     minPrice: { type: 'number', minimum: 0, description: 'THB' },
     maxPrice: { type: 'number', minimum: 0, description: 'THB' },
     drinkType: { type: 'string', enum: [...DRINK_TYPES] },
@@ -283,6 +305,8 @@ const RELAX_ORDER = [
   'petFriendly',
   'parking',
   'radiusKm',
+  // Last: a named café is what was asked for; only give it up when nothing else helps.
+  'q',
 ] as const satisfies readonly (keyof AppliedFilters)[];
 
 /** The next filter to drop when nothing matches, or null when none are left. */

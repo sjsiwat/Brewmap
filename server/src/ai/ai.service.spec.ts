@@ -124,3 +124,22 @@ describe('nextRelaxation', () => {
     expect(nextRelaxation({})).toBeNull();
   });
 });
+
+describe('café name in the AI filters', () => {
+  it('keeps a short name and drops a blank or overlong one', () => {
+    expect(sanitizeFilters({ q: '  % Arabica ' }, context)).toEqual({
+      q: '% Arabica',
+    });
+    expect(sanitizeFilters({ q: '   ' }, context)).toEqual({});
+    expect(sanitizeFilters({ q: 'x'.repeat(61) }, context)).toEqual({});
+  });
+
+  it('is the last thing relaxed when nothing matches', () => {
+    expect(nextRelaxation({ q: 'Starbucks', tag: 'Quiet' })).toEqual({
+      key: 'tag',
+    });
+    expect(nextRelaxation({ q: 'Starbucks', sort: 'rating' })).toEqual({
+      key: 'q',
+    });
+  });
+});

@@ -34,6 +34,8 @@ export class AiFindDto {
 
 /** The filters actually applied after validating what Gemini proposed. */
 export interface AppliedFilters {
+  /** Café name words, when the request names a specific café. */
+  q?: string;
   minPrice?: number;
   maxPrice?: number;
   drinkType?: DrinkType;
