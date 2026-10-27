@@ -46,5 +46,19 @@ describe('toCafeResponse', () => {
     const res = toCafeResponse(legacy as Cafe);
     expect(res.communityRating).toBeNull();
     expect(res.communityReviewCount).toBe(0);
+    expect(res.aiSummary).toBeNull();
+  });
+
+  it('exposes only pros and cons of the AI summary', () => {
+    const res = toCafeResponse({
+      ...cafe,
+      aiSummary: {
+        pros: ['Creamy latte'],
+        cons: [],
+        model: 'some-model',
+        generatedAt: new Date(),
+      },
+    });
+    expect(res.aiSummary).toEqual({ pros: ['Creamy latte'], cons: [] });
   });
 });

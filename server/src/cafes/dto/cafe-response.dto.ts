@@ -23,6 +23,8 @@ export class CafeResponseDto {
   /** BrewMap reviews average, null until the first review. Separate from Google's `rating`. */
   communityRating: number | null;
   communityReviewCount: number;
+  /** AI summary of Google reviews, or null if not generated yet. */
+  aiSummary: { pros: string[]; cons: string[] } | null;
   /** Present only when the request included lat/lng. */
   distanceKm?: number;
 }
@@ -67,6 +69,9 @@ export function toCafeResponse(
     // Documents seeded before Phase 4 don't have these yet.
     communityRating: cafe.communityRating ?? null,
     communityReviewCount: cafe.communityReviewCount ?? 0,
+    aiSummary: cafe.aiSummary
+      ? { pros: cafe.aiSummary.pros, cons: cafe.aiSummary.cons }
+      : null,
   };
   if (cafe.distanceMeters !== undefined) {
     response.distanceKm = Math.round(cafe.distanceMeters / 100) / 10;

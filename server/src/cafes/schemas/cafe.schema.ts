@@ -4,6 +4,24 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 export const DRINK_TYPES = ['Coffee', 'Tea', 'Non-Coffee'] as const;
 export type DrinkType = (typeof DRINK_TYPES)[number];
 
+/** Pros/cons distilled from Google reviews by scripts/summarize-reviews.ts. */
+export interface AiSummary {
+  pros: string[];
+  cons: string[];
+  model: string;
+  generatedAt: Date;
+}
+
+const AiSummarySchema = new MongooseSchema<AiSummary>(
+  {
+    pros: { type: [String], default: [] },
+    cons: { type: [String], default: [] },
+    model: { type: String, required: true },
+    generatedAt: { type: Date, required: true },
+  },
+  { _id: false },
+);
+
 /** GeoJSON point. Note MongoDB's order is [lng, lat]. */
 export interface GeoPoint {
   type: 'Point';
@@ -83,6 +101,10 @@ export class Cafe {
 
   @Prop({ type: Number, default: 0, min: 0 })
   communityReviewCount: number;
+
+  /** Generated once offline, never per page view. Absent until the script runs. */
+  @Prop({ type: AiSummarySchema, required: false })
+  aiSummary?: AiSummary;
 }
 
 export type CafeDocument = HydratedDocument<Cafe>;
