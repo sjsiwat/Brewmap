@@ -217,7 +217,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 4b — ตรวจความปลอดภัย + บั๊กทั้งระบบ (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-4b.md](reviews/phase-4b.md)
 **Branch:** `phase-4b-security-recheck`
 **Review range:** `58a26b7..phase-4b-security-recheck` (ใช้ `git diff 58a26b7..phase-4b-security-recheck`)
 
@@ -226,6 +226,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - [x] 4b.1 Dependencies: `next` 16.2.10 → 16.4.3 (critical: Proxy bypass, DoS) + postcss/sharp/nanoid ฯลฯ · `multer` ≥ 2.5 ผ่าน `overrides` → web audit 0
 - [x] 4b.2 **รหัสผ่านเกิน 72 bytes** — bcrypt ตัดที่ 72 bytes แต่ DTO นับเป็นตัวอักษร → รหัสไทย 30 ตัว (90 bytes) สมัครได้ แล้ว login ด้วยรหัสที่ 6 ตัวท้ายต่างกันได้ 200 → ตรวจเป็น bytes ทั้ง register/login + e2e
 - [x] 4b.3 **Token ของบัญชีที่ถูกลบ** ยังเพิ่ม favorite (204) และโพสต์รีวิว (201) ได้จนหมดอายุ → `JwtAuthGuard` เช็กว่าผู้ใช้ยังอยู่ + e2e
+- [x] 4b.5 (review 4b #1) `?page=1e20` + `lat`/`lng` → 500 → `page` ≤ 10,000
 - [x] 4b.4 Security headers บนเว็บ (X-Frame-Options/CSP frame-ancestors, nosniff, Referrer-Policy, Permissions-Policy) · ปิด `X-Powered-By` ทั้งเว็บและ API
 
 ทดสอบใน Chrome บน Next 16.4.3: สมัคร (รหัสไทยเกิน → ข้อความชัด) · ❤️ · เขียนรีวิว · แผนที่ · หน้า Saved · open redirect · ไม่มี console error
