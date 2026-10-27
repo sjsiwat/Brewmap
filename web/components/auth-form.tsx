@@ -45,7 +45,9 @@ function errorText(error: unknown, mode: Mode): string {
         ? "Check the fields: a valid email, a name, and a password of 8–72 characters."
         : "Enter a valid email and your password.";
     default:
-      return error.message;
+      return error.status >= 500
+        ? "Something went wrong on our side. Try again in a moment."
+        : error.message;
   }
 }
 

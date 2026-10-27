@@ -84,6 +84,12 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(0, "Can't reach the BrewMap API");
   }
   if (!response.ok) {
+    // The NestJS API always answers errors with JSON. A 5xx without it comes from
+    // the /api rewrite proxy failing to reach the API, so report it as unreachable.
+    const fromApi = response.headers.get("content-type")?.includes("application/json");
+    if (response.status >= 500 && !fromApi) {
+      throw new ApiError(0, "Can't reach the BrewMap API");
+    }
     throw new ApiError(response.status, await errorMessage(response));
   }
   if (response.status === 204) return undefined as T;
