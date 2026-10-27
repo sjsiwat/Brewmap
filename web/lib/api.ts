@@ -108,6 +108,26 @@ export function getCafes(query: CafeQuery, init?: RequestInit): Promise<CafePage
   return apiFetch<CafePage>(`/cafes${buildQuery({ ...query })}`, init);
 }
 
+/** Mirrors GoogleReviewDto in server/src/google-reviews/dto/google-review.dto.ts. */
+export interface GoogleReview {
+  rating: number;
+  /** As the reviewer wrote it. */
+  text: string;
+  /** Google's English translation, only for reviews not written in English. */
+  translatedText: string | null;
+  language: string | null;
+  publishedAt: string | null;
+}
+
+/** A café's Google Maps reviews, newest first: anonymous, no owner replies. */
+export async function getGoogleReviews(slug: string, init?: RequestInit): Promise<GoogleReview[]> {
+  const { items } = await apiFetch<{ items: GoogleReview[] }>(
+    `/cafes/${encodeURIComponent(slug)}/google-reviews`,
+    init,
+  );
+  return items;
+}
+
 /** Returns null when the café doesn't exist; throws ApiError for anything else. */
 export async function getCafe(slug: string, init?: RequestInit): Promise<Cafe | null> {
   try {

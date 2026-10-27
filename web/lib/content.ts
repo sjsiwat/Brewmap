@@ -29,7 +29,7 @@ export const heroStats: StatItem[] = [
   { value: String(CAFE_COUNT), label: "AI review summaries" },
 ];
 
-/** A café page that shows the AI summary and community reviews, for linking to. */
+/** A café page with an AI summary, Google reviews and community reviews, for linking to. */
 const SAMPLE_CAFE = "/cafes/the-baristro-asian-style";
 
 export interface Feature {
@@ -38,6 +38,7 @@ export interface Feature {
   description: string;
   category: string;
   detail: string;
+  /** A page, opened at its top - never a #section, which lands mid-page. */
   href: string;
   cta: string;
 }
@@ -45,46 +46,26 @@ export interface Feature {
 export const features: Feature[] = [
   {
     index: "01",
-    name: "AI Coffee Finder",
+    name: "AI Finder, Filters & Sort",
     description:
-      "Describe what you want in a sentence, in Thai or English. Gemini turns it into filters, we search the real café data, and each pick comes with the reason it fits.",
+      "Describe what you want in a sentence, in Thai or English, and Gemini picks real cafés with the reason each one fits. Or filter by price, distance, parking and drink type yourself, and sort by rating, distance, review count or price.",
     category: "Discovery",
-    detail: "If nothing matches every wish, it says which one it let go of.",
-    href: "/cafes#ai-finder",
-    cta: "Try the finder",
+    detail: "If nothing matches every wish, the finder says which one it let go of.",
+    href: "/cafes",
+    cta: "Find a café",
   },
   {
     index: "02",
-    name: "Filters & Sort",
+    name: "Reviews & AI Summary",
     description:
-      "Narrow the list by price, distance, parking and drink type, then sort by rating, distance, review count or price.",
-    category: "Discovery",
-    detail: "Distances are measured from where you are, once you share your location.",
-    href: "/cafes#filters",
-    cta: "Open the filters",
-  },
-  {
-    index: "03",
-    name: "AI Review Summary",
-    description:
-      "Every café's Google reviews condensed into what people loved and what to watch out for.",
+      "Each café page shows what people loved and what to watch out for, summarised by AI, the latest Google reviews, and BrewMap's own community reviews. Log in to rate a café and write yours.",
     category: "Insights",
-    detail: `Written by AI from review text only, for all ${CAFE_COUNT} cafés.`,
-    href: `${SAMPLE_CAFE}#reviewers-say`,
+    detail: `AI summaries for all ${CAFE_COUNT} cafés. Google reviews are shown without names or owner replies.`,
+    href: SAMPLE_CAFE,
     cta: "See an example",
   },
   {
-    index: "04",
-    name: "Community Reviews",
-    description:
-      "Log in to rate a café from one to five and say why. BrewMap keeps its own community rating next to Google's.",
-    category: "Community",
-    detail: "One review per person per café, editable any time.",
-    href: `${SAMPLE_CAFE}#reviews`,
-    cta: "Read and write reviews",
-  },
-  {
-    index: "05",
+    index: "03",
     name: "Saved Cafés",
     description:
       "Tap the heart on any café to keep it on your shortlist, and find them all in one place later.",
@@ -94,13 +75,13 @@ export const features: Feature[] = [
     cta: "Your saved cafés",
   },
   {
-    index: "06",
+    index: "04",
     name: "Café Pages",
     description:
-      "Hours, Google rating, price, parking, pets, tags and a map for each café, with distance from you.",
+      "Hours, Google rating, price, parking, pets, tags and a map for each café, with the distance from you.",
     category: "Details",
-    detail: "Open in OpenStreetMap for directions.",
-    href: SAMPLE_CAFE,
+    detail: "Open the map in OpenStreetMap for directions.",
+    href: "/cafes/twenty-mar",
     cta: "View a café",
   },
 ];
@@ -118,7 +99,7 @@ export const capabilities: Capability[] = [
   { label: "Budget", description: "Typical drink price in baht." },
   { label: "Distance", description: "From your location, or Tha Phae Gate if you'd rather not share." },
   { label: "Parking & pets", description: "Somewhere to park, and whether your dog can come." },
-  { label: "Ratings", description: "Google rating and review count, plus BrewMap's own community rating." },
+  { label: "Ratings & reviews", description: "Google rating and reviews, plus BrewMap's own community rating." },
 ];
 
 export interface ProcessStep {

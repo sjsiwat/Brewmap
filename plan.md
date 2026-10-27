@@ -339,6 +339,27 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 8 — ยุบ feature + เปิดหน้าที่บนสุด + รีวิว Google จริง (owner สั่ง 2026-10-27)
+**Status:** `awaiting-review`
+**Branch:** `phase-8-google-reviews`
+**Review range:** `main..phase-8-google-reviews` (ใช้ `git diff main...HEAD`)
+
+- [x] 8.1 **ยุบ feature เหลือ 4 ข้อ:** "AI Finder, Filters & Sort" (รวม AI Finder + Filters) · "Reviews & AI Summary" (รวม AI summary + community reviews + รีวิว Google) · Saved Cafés · Café Pages
+- [x] 8.2 **กดแล้วเปิดหน้าที่บนสุด:** ทดสอบบน production พบว่าลิงก์ `#ai-finder`, `#filters`, `#reviewers-say`, `#reviews` พาไปกลางหน้า (y = 365–867) → ลิงก์ feature ทุกข้อชี้หน้าเฉย ๆ ไม่มี `#` · เพิ่ม `data-scroll-behavior="smooth"` ที่ `<html>` ตามเอกสาร Next 16 (smooth scroll ใช้แค่ในหน้า ไม่ใช่ตอนเปลี่ยนหน้า) · ทดสอบคลิกจากกลางหน้า 15 ลิงก์ (feature, การ์ด hero, footer, รายการร้าน, ปุ่มกลับ) → y = 0 ทุกลิงก์
+- [x] 8.3 **รีวิว Google จริงในหน้าร้าน:**
+  - collection `google_reviews` (ดาว, ข้อความต้นฉบับ, คำแปลอังกฤษของ Google เฉพาะรีวิวที่ไม่ใช่ภาษาอังกฤษ, ภาษา, วันที่) — **ไม่มีชื่อ/รูป/ลิงก์ผู้รีวิว และไม่มีข้อความที่ร้านตอบกลับ**
+  - `npm run import:google-reviews` (`--dry-run`) อ่านจากไฟล์ scrape → แทนที่รีวิวของแต่ละร้าน รันซ้ำได้ · นำเข้า Atlas แล้ว 861 รีวิว ครบ 173 ร้าน (ข้าม 4 รีวิวที่ไม่มีข้อความ) · ไทย 28 รีวิวมีคำแปล
+  - `GET /api/cafes/:slug/google-reviews` → `{ items, total }` ใหม่สุดก่อน, ร้านไม่มี → 404
+  - หน้าร้าน: ส่วน "Google reviews" (rating + จำนวนรีวิวบน Google, รีวิวพร้อมดาว/เดือนปี, รีวิวยาวพับได้ด้วย `<details>`, คำแปลกดดูได้) · โหลดไม่ได้ → หน้ายังแสดงตามปกติ
+  - `scripts/raw-scrape.ts` ใช้ร่วมกับ `ai:summarize` · `Stars` แยกเป็น component กลาง
+  - tests: unit `toGoogleReview` (เก็บแค่ฟิลด์ที่อนุญาต, คำแปล, ข้ามรีวิวที่แสดงไม่ได้) · e2e (นำเข้าซ้ำไม่ซ้ำซ้อน, ฟิลด์ตรง, ไม่มี reply/ชื่อ, เรียงใหม่สุดก่อน, รีวิวไทยมีคำแปล, 404)
+
+QA 7 หน้า × 375/768/1440 = 0 ปัญหา
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews

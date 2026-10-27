@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RotateCw, Star } from "lucide-react";
+import { Stars } from "@/components/stars";
 import * as api from "@/lib/api";
 import type { Review, ReviewInput } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -23,16 +24,6 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", {
   month: "short",
   year: "numeric",
 });
-
-function Stars({ value, size = 12 }: { value: number; size?: number }) {
-  return (
-    <span className="inline-flex items-center gap-0.5 text-rust" aria-label={`${value} out of 5`}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <Star key={n} size={size} className={n <= value ? "fill-current" : "text-line"} aria-hidden />
-      ))}
-    </span>
-  );
-}
 
 function errorText(error: unknown): string {
   if (!(error instanceof api.ApiError)) return "Something went wrong. Try again.";

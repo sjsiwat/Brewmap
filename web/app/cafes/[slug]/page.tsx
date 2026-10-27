@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllCafeSlugs, getCafe } from "@/lib/api";
+import { getAllCafeSlugs, getCafe, getGoogleReviews, type GoogleReview } from "@/lib/api";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CafeDetail } from "@/components/cafe-detail";
 import { CafeReviews } from "@/components/cafe-reviews";
+import { GoogleReviews } from "@/components/google-reviews";
 
 interface CafePageProps {
   params: Promise<{ slug: string }>;
@@ -49,12 +50,15 @@ export default async function CafePage({ params }: CafePageProps) {
   if (!cafe) {
     notFound();
   }
+  // Optional: if they can't be loaded the page still renders, just without them.
+  const googleReviews = await getGoogleReviews(slug, cached).catch((): GoogleReview[] => []);
 
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <CafeDetail cafe={cafe} />
+        <GoogleReviews cafe={cafe} reviews={googleReviews} />
         {/* Client-side, so reviews stay fresh while the page itself is cached (ISR). */}
         <CafeReviews slug={cafe.slug} cafeName={cafe.name} />
       </main>

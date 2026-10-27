@@ -359,7 +359,7 @@ flowchart LR
   B[Browser] -->|pages + /api/*| V[Next.js on Vercel<br/>web/]
   V -->|"/api/* rewrite (same-origin cookie)<br/>+ x-client-ip, x-proxy-secret"| R[NestJS API on Render<br/>server/]
   V -.->|build + ISR: café pages| R
-  R --> M[(MongoDB Atlas<br/>cafes · users · favorites · reviews)]
+  R --> M[(MongoDB Atlas<br/>cafes · users · favorites · reviews · google_reviews)]
   R -->|AI Finder: filters + reasons| G[Gemini API]
   S[ai:summarize script] -->|review text + stars only| G
   S --> M
@@ -401,6 +401,12 @@ The API goes first, because the web build reads café data from it.
 | `API_URL` | `https://<api>.onrender.com/api`. It must end in `/api`; without it every API call and café page returns 404. |
 | `PROXY_SECRET` | the same value as on Render |
 
-**4. Data**: the café data and AI summaries already live in Atlas. If you point to a new cluster, run `npm run seed` and then `npm --prefix server run ai:summarize` with that `MONGODB_URI`.
+**4. Data**: the café data, AI summaries and Google reviews already live in Atlas. If you point to a new cluster, run these with that `MONGODB_URI`:
+
+```bash
+npm run seed                                        # cafés
+npm --prefix server run import:google-reviews       # Google reviews: stars, text, date only
+npm --prefix server run ai:summarize                # AI pros/cons (uses Gemini)
+```
 
 Render's free tier sleeps after 15 minutes idle, so the first request after that takes about 30–60 s.

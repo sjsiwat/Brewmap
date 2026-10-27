@@ -21,6 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     "seed": "tsx scripts/seed.ts",
+    "import:google-reviews": "tsx scripts/import-google-reviews.ts",
     "ai:models": "tsx scripts/list-models.ts",
     "ai:summarize": "tsx scripts/summarize-reviews.ts"
   },
