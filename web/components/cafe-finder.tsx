@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -9,19 +9,20 @@ import {
   MapPin,
   ParkingCircle,
   PawPrint,
+  RotateCw,
   Star,
 } from "lucide-react";
+import type { CafeQuery } from "@/lib/api";
 import {
-  cafes,
-  distanceToCafe,
   distanceOptions,
   drinkTypeOptions,
   parkingOptions,
   formatPrice,
   priceOptions,
-  type MatchOption,
+  type FilterOption,
 } from "@/lib/cafes";
 import { formatKm } from "@/lib/geo";
+import { useCafeSearch } from "@/lib/use-cafe-search";
 import { useUserLocation } from "@/lib/use-user-location";
 import { LocationOrigin } from "@/components/location-origin";
 import { Reveal } from "@/components/reveal";
@@ -43,7 +44,7 @@ const defaultCriteria: Criteria = {
 const fields: Array<{
   key: keyof Criteria;
   label: string;
-  options: MatchOption[];
+  options: FilterOption[];
 }> = [
   { key: "price", label: "Price", options: priceOptions },
   { key: "distance", label: "Distance", options: distanceOptions },
@@ -51,8 +52,15 @@ const fields: Array<{
   { key: "drinkType", label: "Drink type", options: drinkTypeOptions },
 ];
 
-function findOption(options: MatchOption[], label: string) {
-  return options.find((option) => option.label === label);
+const PAGE_SIZE = 24;
+
+/** Strict filtering: every chosen option is sent to the API and must match. */
+function toQuery(criteria: Criteria | null): CafeQuery {
+  if (!criteria) return {};
+  return fields.reduce<CafeQuery>((query, field) => {
+    const option = field.options.find((o) => o.label === criteria[field.key]);
+    return { ...query, ...option?.query };
+  }, {});
 }
 
 export function CafeFinder() {
@@ -60,34 +68,15 @@ export function CafeFinder() {
   const [applied, setApplied] = useState<Criteria | null>(null);
   const { origin } = useUserLocation();
 
-  const results = useMemo(() => {
-    const withDistance = cafes.map((cafe) => ({
-      cafe,
-      distanceKm: distanceToCafe(origin, cafe),
-    }));
-
-    if (!applied) {
-      return withDistance
-        .sort((a, b) => b.cafe.rating - a.cafe.rating)
-        .map((entry) => ({ ...entry, matchPercent: null as number | null }));
-    }
-
-    const activeFields = fields.filter((field) => applied[field.key] !== "Any");
-
-    return withDistance
-      .map(({ cafe, distanceKm }) => {
-        const score = activeFields.reduce((total, field) => {
-          const option = findOption(field.options, applied[field.key]);
-          return option?.test?.(cafe, { distanceKm }) ? total + 1 : total;
-        }, 0);
-        const matchPercent =
-          activeFields.length > 0
-            ? Math.round((score / activeFields.length) * 100)
-            : null;
-        return { cafe, distanceKm, score, matchPercent };
-      })
-      .sort((a, b) => b.score - a.score || b.cafe.rating - a.cafe.rating);
-  }, [applied, origin]);
+  // Always send an origin (the user's location, or the Tha Phae Gate fallback)
+  // so every result carries distanceKm and "Within N km" has a centre.
+  const search = useCafeSearch({
+    ...toQuery(applied),
+    lat: origin.lat,
+    lng: origin.lng,
+    sort: "rating",
+    limit: PAGE_SIZE,
+  });
 
   const activeCount = applied
     ? fields.filter((field) => applied[field.key] !== "Any").length
@@ -169,15 +158,23 @@ export function CafeFinder() {
         <LocationOrigin />
       </div>
 
-      <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted">
-        {results.length} café{results.length === 1 ? "" : "s"}
-        {applied ? " ranked by match" : " · sorted by rating"}
+      <p
+        className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted"
+        aria-live="polite"
+      >
+        {search.total === null
+          ? search.status === "error"
+            ? "Couldn't load cafés"
+            : "Loading cafés…"
+          : `${search.total} café${search.total === 1 ? "" : "s"}${
+              activeCount > 0 ? " matching every filter" : ""
+            } · sorted by rating`}
       </p>
 
       <div className="mt-6 border-t border-ink">
-        {results.map(({ cafe, distanceKm, matchPercent }, i) => {
+        {search.items.map((cafe, i) => {
           return (
-            <Reveal key={cafe.slug} delay={Math.min(i * 0.03, 0.3)}>
+            <Reveal key={cafe.slug} delay={Math.min((i % PAGE_SIZE) * 0.03, 0.3)}>
               <Link href={`/cafes/${cafe.slug}`} className="block">
                 <motion.div
                   whileHover="hover"
@@ -197,7 +194,8 @@ export function CafeFinder() {
                     <h3 className="font-display text-2xl text-ink">{cafe.name}</h3>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
                       <MapPin size={12} aria-hidden />
-                      {cafe.area} · {formatKm(distanceKm)}
+                      {cafe.area}
+                      {cafe.distanceKm !== undefined && ` · ${formatKm(cafe.distanceKm)}`}
                     </p>
                   </motion.div>
 
@@ -214,12 +212,6 @@ export function CafeFinder() {
                   </div>
 
                   <div className="flex items-center justify-between gap-2 md:col-span-3 md:flex-col md:items-end">
-                    {matchPercent !== null && (
-                      <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
-                        {matchPercent}% match
-                      </p>
-                    )}
-
                     <div className="flex items-center gap-1.5 text-xs text-ink">
                       <Star size={12} className="fill-current text-rust" aria-hidden />
                       {cafe.rating.toFixed(1)}
@@ -248,12 +240,57 @@ export function CafeFinder() {
           );
         })}
 
-        {results.length === 0 && (
+        {search.status === "ready" && search.items.length === 0 && (
           <p className="border-b border-line py-10 text-sm text-muted">
-            No cafés match that combination yet — try loosening a filter.
+            No cafés match every filter — try loosening one.
           </p>
         )}
+
+        {search.status === "loading" && search.items.length === 0 && (
+          <div className="space-y-px" aria-hidden>
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="h-24 animate-pulse border-b border-line bg-ink/[0.03]" />
+            ))}
+          </div>
+        )}
+
+        {search.status === "error" && (
+          <div
+            role="alert"
+            className="flex flex-col gap-4 border-b border-line py-10 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p className="font-display text-lg text-ink">Couldn&apos;t load cafés.</p>
+              <p className="mt-1 text-sm text-muted">
+                {search.error?.status === 0
+                  ? "The BrewMap API isn't reachable right now."
+                  : search.error?.message}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={search.retry}
+              className="inline-flex items-center gap-2 self-start border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            >
+              <RotateCw size={14} aria-hidden />
+              Try again
+            </button>
+          </div>
+        )}
       </div>
+
+      {(search.hasMore || (search.status === "loading" && search.items.length > 0)) && (
+        <button
+          type="button"
+          onClick={search.loadMore}
+          disabled={search.status === "loading"}
+          className="mt-8 w-full border border-ink px-5 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust disabled:cursor-wait disabled:opacity-60"
+        >
+          {search.status === "loading"
+            ? "Loading…"
+            : `Show more · ${search.items.length} of ${search.total}`}
+        </button>
+      )}
     </div>
   );
 }
