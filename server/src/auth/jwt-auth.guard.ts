@@ -7,14 +7,22 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
+import { UsersService } from '../users/users.service';
 import { AUTH_COOKIE, JwtPayload } from './auth.constants';
 
 type AuthedRequest = Request & { userId?: string };
 
-/** Requires a valid JWT in the httpOnly `access_token` cookie; sets `req.userId`. */
+/**
+ * Requires a valid JWT in the httpOnly `access_token` cookie for a user that
+ * still exists; sets `req.userId`. Without the existence check a deleted
+ * account's token kept writing favorites and reviews until it expired.
+ */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<AuthedRequest>();
@@ -23,13 +31,17 @@ export class JwtAuthGuard implements CanActivate {
     ];
     if (!token) throw new UnauthorizedException();
 
+    let payload: JwtPayload;
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token);
-      req.userId = payload.sub;
-      return true;
+      payload = await this.jwtService.verifyAsync<JwtPayload>(token);
     } catch {
       throw new UnauthorizedException();
     }
+    if (!(await this.usersService.exists(payload.sub))) {
+      throw new UnauthorizedException();
+    }
+    req.userId = payload.sub;
+    return true;
   }
 }
 

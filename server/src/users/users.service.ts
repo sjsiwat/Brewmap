@@ -25,6 +25,11 @@ export class UsersService {
     return new Map(users.map((u) => [u._id.toString(), u.displayName]));
   }
 
+  async exists(id: string): Promise<boolean> {
+    if (!/^[0-9a-f]{24}$/i.test(id)) return false;
+    return (await this.userModel.exists({ _id: id })) !== null;
+  }
+
   async findById(id: string): Promise<UserDocument | null> {
     // A token from another database (or a tampered one) can carry a non-ObjectId id.
     if (!/^[0-9a-f]{24}$/i.test(id)) return null;
