@@ -259,7 +259,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 5 — AI (Gemini)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-5.md](reviews/phase-5.md)
 **Branch:** `phase-5-ai`
 **Review range:** `main..phase-5-ai` (ใช้ `git diff main...HEAD`)
 
