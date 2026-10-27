@@ -340,7 +340,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 8 — ยุบ feature + เปิดหน้าที่บนสุด + รีวิว Google จริง (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-8.md](reviews/phase-8.md)
 **Branch:** `phase-8-google-reviews`
 **Review range:** `main..phase-8-google-reviews` (ใช้ `git diff main...HEAD`)
 
