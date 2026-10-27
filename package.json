@@ -1,0 +1,15 @@
+{
+  "name": "brewmap",
+  "private": true,
+  "description": "BrewMap AI - taste-first café discovery (Next.js web + NestJS API)",
+  "scripts": {
+    "dev": "concurrently --names web,api --prefix-colors yellow,cyan --kill-others-on-fail \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npm --prefix web run dev",
+    "dev:api": "npm --prefix server run start:dev",
+    "install:all": "npm --prefix web install && npm --prefix server install",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
