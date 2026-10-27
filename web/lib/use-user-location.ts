@@ -15,6 +15,7 @@ interface LocationState {
 let state: LocationState = { origin: DEFAULT_ORIGIN, status: "default" };
 const listeners = new Set<() => void>();
 let checkedPermission = false;
+let askedOnEntry = false;
 
 function setState(next: LocationState) {
   state = next;
@@ -49,8 +50,8 @@ export function requestUserLocation() {
 export function useUserLocation(): LocationState {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  // If the user already granted permission earlier, use it silently - never
-  // prompt on page load; prompting only happens via requestUserLocation().
+  // If the user already granted permission earlier, use it silently. The one
+  // prompt on arrival comes from useAskLocationOnEntry() in the root layout.
   useEffect(() => {
     if (checkedPermission || !navigator.permissions) return;
     checkedPermission = true;
@@ -63,4 +64,17 @@ export function useUserLocation(): LocationState {
   }, []);
 
   return snapshot;
+}
+
+/**
+ * Asks for the visitor's location once, when they arrive on any page, so
+ * "near you" and distances use where they really are. Denying is fine: the
+ * site falls back to Tha Phae Gate and never asks again in this visit.
+ */
+export function useAskLocationOnEntry() {
+  useEffect(() => {
+    if (askedOnEntry) return;
+    askedOnEntry = true;
+    if (state.status === "default") requestUserLocation();
+  }, []);
 }

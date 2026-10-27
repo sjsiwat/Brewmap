@@ -4,12 +4,12 @@ import { Reveal } from "@/components/reveal";
 export function Process() {
   return (
     <section id="process" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-28">
+      <div className="page-container py-20 md:py-28">
         <Reveal>
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">
+          <p className="eyebrow">
             How it works
           </p>
-          <h2 className="mt-4 max-w-lg font-display text-3xl tracking-tight text-ink sm:text-4xl">
+          <h2 className="mt-4 max-w-lg heading-section">
             We don&apos;t start with a map. We start with a craving.
           </h2>
         </Reveal>

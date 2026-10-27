@@ -51,7 +51,7 @@ export function FavoriteButton({
       aria-pressed={status === "authenticated" ? saved : undefined}
       aria-label={showLabel ? undefined : label}
       title={failed ? "Couldn't update favorites - try again" : label}
-      className={`inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust ${
+      className={`inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] transition-colors focus-ring ${
         saved ? "text-rust" : "text-muted hover:text-rust"
       } ${className}`}
     >

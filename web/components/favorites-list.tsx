@@ -35,7 +35,7 @@ export function FavoritesList() {
         <button
           type="button"
           onClick={favorites.reload}
-          className="mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring"
         >
           <RotateCw size={14} aria-hidden />
           Try again
@@ -52,7 +52,7 @@ export function FavoritesList() {
         </p>
         <Link
           href="/cafes"
-          className="mt-6 inline-flex items-center gap-2 border border-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-rust hover:bg-rust hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="mt-6 inline-flex items-center gap-2 btn-outline"
         >
           Find your café
           <ArrowUpRight size={14} aria-hidden />

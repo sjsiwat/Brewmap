@@ -85,7 +85,7 @@ export function AiFinder() {
   const dropped = result ? describeFilters(result.relaxed ?? {}) : [];
 
   return (
-    <section aria-labelledby="ai-finder-heading" className="border border-ink">
+    <section id="ai-finder" aria-labelledby="ai-finder-heading" className="scroll-mt-24 border border-ink">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -112,7 +112,7 @@ export function AiFinder() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 bg-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            className="inline-flex items-center justify-center gap-2 bg-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-ring"
           >
             {loading ? "Thinking…" : "Find cafés"}
             <ArrowUpRight size={14} aria-hidden />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/auth";
 import { FavoritesProvider } from "@/lib/favorites";
+import { LocationOnEntry } from "@/components/location-on-entry";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s — BrewMap",
   },
   description:
-    "BrewMap reads what you actually want in a cup — flavor, brewing method, atmosphere, budget — and tells you which Chiang Mai café gets it right, and why.",
+    "Find the right café in Chiang Mai: ask the AI finder in Thai or English, filter 173 real cafés by price, distance, parking and drink, and read AI review summaries.",
 };
 
 export default function RootLayout({
@@ -42,7 +43,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans text-ink bg-paper">
         <AuthProvider>
-          <FavoritesProvider>{children}</FavoritesProvider>
+          <FavoritesProvider>
+            <LocationOnEntry />
+            {children}
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>

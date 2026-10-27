@@ -7,9 +7,6 @@ import { Heart, Menu, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { navLinks } from "@/lib/content";
 
-const accountLink =
-  "font-mono text-xs uppercase tracking-[0.12em] text-ink-soft transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust";
-
 /** Log in, or the user's name + saved cafés + log out. Empty while the session loads. */
 function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void; mobile?: boolean }) {
   const { status, user, logout } = useAuth();
@@ -20,7 +17,7 @@ function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void;
 
   if (status === "anonymous") {
     return (
-      <Link href="/login" onClick={onNavigate} className={mobile ? "py-4 font-display text-2xl text-ink" : accountLink}>
+      <Link href="/login" onClick={onNavigate} className={mobile ? "py-4 font-display text-2xl text-ink" : "nav-link"}>
         Log in
       </Link>
     );
@@ -45,7 +42,7 @@ function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void;
       <Link
         href="/me/favorites"
         onClick={onNavigate}
-        className={mobile ? "flex items-center gap-3 border-b border-line py-4 font-display text-2xl text-ink" : `inline-flex items-center gap-1.5 ${accountLink}`}
+        className={mobile ? "flex items-center gap-3 border-b border-line py-4 font-display text-2xl text-ink" : `inline-flex items-center gap-1.5 nav-link`}
       >
         <Heart size={mobile ? 18 : 13} aria-hidden />
         Saved
@@ -58,7 +55,7 @@ function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void;
         onClick={onLogout}
         disabled={loggingOut}
         title={mobile ? undefined : `Logged in as ${user?.displayName}`}
-        className={mobile ? "py-2 text-left font-mono text-xs uppercase tracking-[0.12em] text-ink-soft" : accountLink}
+        className={mobile ? "py-2 text-left font-mono text-xs uppercase tracking-[0.12em] text-ink-soft" : "nav-link"}
       >
         {loggingOut ? "Logging out…" : logoutFailed ? "Log out failed · retry" : "Log out"}
       </button>
@@ -93,10 +90,10 @@ export function SiteHeader() {
           : "bg-paper border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
+      <div className="page-container flex items-center justify-between py-5">
         <Link
           href="/"
-          className="font-display text-xl tracking-tight text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="font-display text-xl tracking-tight text-ink focus-ring"
         >
           BrewMap
         </Link>
@@ -109,7 +106,7 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="font-mono text-xs uppercase tracking-[0.12em] text-ink-soft transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+              className="nav-link"
             >
               {link.label}
             </a>
@@ -120,7 +117,7 @@ export function SiteHeader() {
           <AccountLinks />
           <Link
             href="/cafes"
-            className="border border-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-rust hover:bg-rust hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            className="btn-outline"
           >
             Find your café
           </Link>
@@ -132,7 +129,7 @@ export function SiteHeader() {
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="flex items-center justify-center text-ink lg:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="flex items-center justify-center text-ink lg:hidden focus-ring"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>

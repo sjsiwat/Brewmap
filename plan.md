@@ -320,6 +320,25 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 7 — เนื้อหาตามจริง + CSS กลาง + ร้านใกล้ผู้ใช้ (owner สั่ง 2026-10-27)
+**Status:** `awaiting-review`
+**Branch:** `phase-7-real-content`
+**Review range:** `main..phase-7-real-content` (ใช้ `git diff main...HEAD`)
+
+- [x] 7.1 **CSS กลาง** ใน `web/app/globals.css` (`@utility` ของ Tailwind v4): `focus-ring`, `page-container`, `eyebrow`, `label-mono`, `heading-section`, `heading-page`, `nav-link`, `btn-outline` — แทนชุด class ที่ซ้ำกันทั้งเว็บ (focus ring 26 จุด, page container 22, eyebrow 12…)
+- [x] 7.2 **ลบส่วน "Our view" และ "From café owner"** (testimonial คนสมมติ) ออกจากหน้าแรก + ลบไฟล์ component
+- [x] 7.3 **การ์ด hero ใช้ร้านจริงตามตำแหน่งผู้ใช้** (แทน "94% match / Analog Coffee" ที่แต่งขึ้น): ร้าน rating สูงสุดในรัศมี 3 กม. หรือร้านที่ใกล้ที่สุดถ้าไม่มี · แสดง specialty, atmosphere, ราคา, ระยะทาง, rating จริง · กดเข้าหน้าร้านได้
+- [x] 7.4 **ขอสิทธิ์ตำแหน่งตอนเข้าเว็บ** ทุกหน้า (ครั้งเดียวต่อการเปิด) ผ่าน `LocationOnEntry` ใน root layout · ปฏิเสธได้ → ใช้ประตูท่าแพ + ปุ่ม "Use my location"
+- [x] 7.5 **Feature กดดูได้จริง** ทั้ง 6 ข้อ → `/cafes#ai-finder`, `/cafes#filters`, ตัวอย่างหน้าร้าน `#reviewers-say` / `#reviews`, `/me/favorites`, หน้าร้าน (มี `scroll-mt` กัน header บัง)
+- [x] 7.6 **ลบสิ่งที่ระบบไม่มี:** Interactive Coffee Map, Top Lists, Personalized Recommendations, ขั้น "Learn", สัญญาณ Flavor/Brewing method, ตัวเลข "2 min / 6 signals", อีเมล `hello@brewmap.co`, ลิงก์โซเชียลที่ชี้หน้าแรกของ Instagram/LINE/X, ประโยค "café data is mocked" · เขียนใหม่ตามจริง: hero stats (173 ร้าน, TH·EN, 173 สรุป), สิ่งที่ match ได้, ขั้นตอน Describe → Filter → Match → Save & review, About (stack จริง), footer (ลิงก์ภายในเว็บ), meta description
+- [x] 7.7 `Reveal as="li"` — เดิม `<ul>` มี `<div>` เป็นลูก (HTML ไม่ถูกต้อง)
+
+ทดสอบ: headless Chrome จำลองตำแหน่ง — นิมมาน → "Top rated within 3 km" 2.1 km · แม่ริม → "Nearest café" 6.4 km · ปฏิเสธ → จากประตูท่าแพ + ปุ่มขอใหม่ · ลิงก์ feature ครบ 6 ข้อเจอหน้าและ anchor · QA 7 หน้า × 375/768/1440 = 0 ปัญหา (overflow, ชื่อปุ่ม, contrast, console, focus ring)
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews
