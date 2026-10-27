@@ -102,8 +102,8 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 2 — ต่อ Frontend เข้า API
-**Status:** `awaiting-review` · D1 = (a) strict filter · D2 = (a) static + revalidate
-**Branch:** `phase-2-web-api` · PR #2 (draft)
+**Status:** `approved` — [reviews/phase-2.md](reviews/phase-2.md) · D1 = (a) strict filter · D2 = (a) static + revalidate
+**Branch:** `phase-2-web-api` · PR #2
 **Review range:** `75bf9e0..phase-2-web-api` (ใช้ `git diff 75bf9e0..phase-2-web-api`) · สรุป docs Next 16 (2.1) อยู่ใน commit message ของ `b35d5f6`
 
 - [x] 2.1 อ่าน `web/node_modules/next/dist/docs/` เรื่อง data fetching / caching / revalidate ของ Next 16 แล้วสรุปสั้น ๆ ใน PR/commit message (ตาม `web/AGENTS.md`)
