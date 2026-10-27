@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { CafesModule } from './cafes/cafes.module';
+import { FavoritesModule } from './favorites/favorites.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -19,6 +20,7 @@ import { HealthController } from './health/health.controller';
     ThrottlerModule.forRoot([{ limit: 100, ttl: 60_000 }]),
     AuthModule,
     CafesModule,
+    FavoritesModule,
   ],
   controllers: [HealthController],
 })
