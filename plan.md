@@ -294,21 +294,24 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ทดสอบใน Chrome: AI Finder (ไทย) แสดงผล + เหตุผล + ข้อความ "skip: Quiet, Nimman" · หน้าร้านแสดง "What reviewers say" · ไม่มี console error
 
-**ข้อจำกัด:** free tier 15 requests/นาที — 1 การค้นหา = 2 requests → ราว 7 การค้นหา/นาทีทั้งเว็บ (เกินแล้วได้ 503 "taking a break") · production ควรเปิด billing หรือยอมรับข้อจำกัดนี้
+**Billing:** owner เปิด billing แล้ว (2026-10-27) — ยิงพร้อมกัน 20 requests ผ่านหมด ไม่ติดเพดาน 15/นาที ของ free tier แล้ว · จำกัดต่อผู้ใช้ 10 การค้นหา/นาที เหมือนเดิม
 
 **Gate:** Phase 4 gate · **Acceptance:** ลอง 5 ประโยคตัวอย่าง (ไทย 3 / อังกฤษ 2) แล้วผลลัพธ์สมเหตุสมผล จดผลไว้ใน review request
 
 ---
 
 ### Phase 6 — Deploy + QA
-**Status:** `todo` · D3 = (a) rewrite · D4 = Vercel + Render
+**Status:** `in-progress` — รอ owner ทำขั้นตอนบน dashboard (สร้าง/ล็อกอินบัญชี + ใส่ secret ซึ่ง Claude ทำแทนไม่ได้) · D3 = (a) rewrite · D4 = Vercel + Render
+**Branch:** `phase-6-deploy`
 
-- [ ] 6.1 Deploy server (Render) — env ครบ, health check path `/api/health`
-- [ ] 6.2 Atlas Network Access อนุญาต IP ของ host
-- [ ] 6.3 Deploy web (Vercel) — ทำ cookie ตาม D3
-- [ ] 6.4 Seed production + รัน review summary
-- [ ] 6.5 QA ตาม PRD: 375 / 768 / 1440px, keyboard nav, contrast, console errors, overflow
-- [ ] 6.6 Root README: architecture diagram, ลิงก์ production, ลิงก์ API docs
+- [ ] 6.1 Deploy server (Render) — เตรียม `render.yaml` แล้ว (Node 22, `npm ci --include=dev && npm run build`, health `/api/health`, `NODE_ENV=production`, `TRUST_PROXY=1`, `JWT_SECRET` ให้ Render สุ่ม, secret เป็น `sync: false`) · ทดสอบ build + รันแบบ production ในเครื่องแล้ว: health 200, `/api/docs` 404, cookie `HttpOnly; Secure; SameSite=Lax`, ไม่มี `X-Powered-By` · **รอ owner:** Render → New → Blueprint
+- [ ] 6.2 Atlas Network Access `0.0.0.0/0` (Render free ไม่มี IP คงที่) · **รอ owner**
+- [ ] 6.3 Deploy web (Vercel) — Root Directory `web`, env `API_URL` + `PROXY_SECRET` · **รอ owner**
+- [x] 6.4 Seed production + review summary — Atlas มีครบแล้ว (173 ร้าน, `aiSummary` 173/173) ใช้ cluster เดิม
+- [x] 6.5 QA (headless Chrome ผ่าน CDP, 7 หน้า × 375/768/1440): ไม่มี overflow แนวนอน · ไม่มีปุ่ม/ลิงก์/รูปที่ไม่มีชื่อ · Tab ผ่านทุกจุดและเห็น focus ring ทุกจุด · แก้แล้ว:
+  - contrast WCAG AA: `muted` #7a7267 → #676057, `rust` #b8451f → #a73e1c, เพิ่ม `rust-bright` #d97a52 สำหรับข้อความบนพื้น ink (เดิม 2.7–4.1:1 → ≥ 4.6:1)
+  - console error: ผู้ใช้ที่ยังไม่ login ได้ 401 จาก `/auth/me` → เพิ่ม `GET /api/auth/session` (200 `{ user | null }`) ให้เว็บใช้แทน
+- [x] 6.6 Root README: แผนภาพ architecture (mermaid), ขั้นตอน deploy, ตารางลิงก์ production (เติมหลัง deploy)
 
 ---
 
