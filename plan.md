@@ -235,6 +235,29 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 4c — ปิดความเสี่ยงที่เหลือ + กฎข้อมูลสมัครสมาชิก (owner สั่ง 2026-10-27)
+**Status:** `approved` — [reviews/phase-4c.md](reviews/phase-4c.md)
+**Branch:** `phase-4c-hardening`
+**Review range:** `bae6305..phase-4c-hardening` (ใช้ `git diff main...HEAD`)
+
+- [x] 4c.1 **กฎสมัครสมาชิก** (server `RegisterDto` = ตัวจริง, web `lib/validation.ts` = สำเนาไว้เตือนก่อนส่ง)
+  - อีเมล: ASCII เท่านั้น, ต้องมี TLD, ห้าม IP domain / display name / จุดซ้อน-ขึ้นต้น-ลงท้าย, ≤ 254 · ตัดช่องว่าง + ตัวพิมพ์เล็ก
+  - รหัสผ่าน: 8–72 ตัว เฉพาะอังกฤษ/ตัวเลข/สัญลักษณ์ (**ห้ามภาษาไทย**, เว้นวรรค, อีโมจิ) ต้องมีตัวอักษร ≥ 1 และตัวเลข ≥ 1 → ขีด 72 bytes ของ bcrypt = 72 ตัวพอดี (แทน 4b.2)
+  - ชื่อ: 2–30 ตัว ตัวอักษรไทย/อังกฤษ ตัวเลข เว้นวรรคเดียว และ `. _ - '` ขึ้นต้นด้วยตัวอักษร/ตัวเลข · ห้าม `<>`, อีโมจิ, zero-width
+  - ฟอร์มสมัคร: คำแนะนำใต้ช่อง, error รายช่อง (`aria-invalid`), focus ช่องแรกที่ผิด, 400 แสดงข้อความจาก server
+- [x] 4c.2 **Logout เพิกถอน JWT จริง** — `User.tokenVersion` ใส่ใน token เป็น `ver`; guard เทียบทุกคำขอ; logout เพิ่มเลข → cookie ที่ถูกคัดลอกไว้ใช้ไม่ได้ทันที (ออกจากทุกอุปกรณ์)
+- [x] 4c.3 **Rate limit การเขียนต่อผู้ใช้** — รีวิว POST/PATCH/DELETE และ favorites PUT/DELETE 30 ครั้ง/นาที/route นับตามบัญชี (`UserThrottlerGuard`)
+- [x] 4c.4 **Swagger** `/api/docs` ปิดเมื่อ `NODE_ENV=production` (เปิดได้ด้วย `SWAGGER=true`)
+- [x] 4c.5 **js-yaml** ≥ 5.5 ใต้ `@nestjs/swagger` ผ่าน `overrides` (Swagger 12 ต้องใช้ Nest 12) → server audit 0
+- [x] 4c.6 **CSP เต็ม** แบบไม่ใช้ nonce (nonce บังคับทุกหน้าเป็น dynamic → เสีย ISR): `default-src 'self'`, OSM เป็น frame เดียวที่อนุญาต, `object-src 'none'`, `base-uri`/`form-action 'self'`
+- [x] 4c.7 **ข้อมูลส่วนบุคคลในไฟล์ scrape** — ลบชื่อ/รูปโปรไฟล์/ลิงก์ผู้รีวิว/รูปรีวิว/review id ออกจาก `raw-full173.json`, `raw-top60.json` (build script ได้ผลเท่าเดิม) · commit เก่ายังมีอยู่ — การเขียน history ใหม่ต้องให้ owner อนุมัติแยก
+
+ทดสอบใน Chrome: ฟอร์มสมัครที่กรอกผิดแสดง error ครบ 3 ช่อง · สมัครชื่อไทยแล้วถูกจัดรูปแบบ · 400 จาก server แสดงข้อความตรง · หน้าร้าน + แผนที่ OSM ไม่มี CSP violation · ❤️ → logout → `/me` 401 · ลบผู้ใช้ QA ออกจาก Atlas แล้ว
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ### Phase 5 — AI (Gemini)
 **Status:** `todo`
 
@@ -271,7 +294,5 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
-- (security, ยอมรับไว้ก่อน) JWT แบบ stateless: logout ลบแค่ cookie — token ที่ถูกขโมยไปใช้ได้จนหมดอายุ 7 วัน → ถ้าต้องการ ให้เพิ่ม `tokenVersion` ใน user
-- (security) CSP แบบเต็ม (`script-src` + nonce) — ตอนนี้มีแค่ `frame-ancestors`
-- (security) Swagger `/api/docs` เปิดใน production · rate limit การโพสต์รีวิว · `@nestjs/swagger` 12 (js-yaml moderate)
+- (security) เขียน git history ใหม่เพื่อลบข้อมูลผู้รีวิวในไฟล์ scrape เก่า (ทำลาย history — owner ต้องอนุมัติ)
 - อัปเกรด NestJS 11 → 12

@@ -86,6 +86,9 @@
     "testEnvironment": "node"
   },
   "overrides": {
-    "multer": "^2.5.0"
+    "multer": "^2.5.0",
+    "@nestjs/swagger": {
+      "js-yaml": "^5.5.0"
+    }
   }
 }

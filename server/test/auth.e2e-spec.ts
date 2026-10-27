@@ -12,7 +12,7 @@ import { seedCafes } from '../scripts/seed';
 
 const USER = {
   email: 'siwat@example.com',
-  password: 'correct-horse',
+  password: 'correct-horse-9',
   displayName: 'Siwat',
 };
 
@@ -73,17 +73,78 @@ describe('Auth + Favorites API (e2e)', () => {
         .expect(409);
     });
 
-    it('measures the password limit in bytes, as bcrypt does -> 400', async () => {
-      // 30 Thai letters = 90 bytes: bcrypt would ignore everything after byte 72.
-      await http()
+    it('enforces the email, password and name rules -> 400', async () => {
+      const ok = {
+        email: 'rules@example.com',
+        password: 'Brew1234',
+        displayName: 'Ploy',
+      };
+      const bad: Record<string, unknown>[] = [
+        // email
+        { ...ok, email: 'plainaddress' },
+        { ...ok, email: 'no-tld@example' },
+        { ...ok, email: 'two@@example.com' },
+        { ...ok, email: '.dot@example.com' },
+        { ...ok, email: 'dot.@example.com' },
+        { ...ok, email: 'dou..ble@example.com' },
+        { ...ok, email: 'space in@example.com' },
+        { ...ok, email: 'ไทย@example.com' },
+        { ...ok, email: 'user@ตัวอย่าง.com' },
+        { ...ok, email: 'user@-bad.com' },
+        { ...ok, email: 'user@[127.0.0.1]' },
+        { ...ok, email: 'Name <user@example.com>' },
+        { ...ok, email: `${'a'.repeat(250)}@x.co` },
+        // password
+        { ...ok, password: 'รหัสผ่าน1234' },
+        { ...ok, password: 'Brew1234ก' },
+        { ...ok, password: 'Brew 1234' },
+        { ...ok, password: 'Brew1234☕' },
+        { ...ok, password: 'Brew123' },
+        { ...ok, password: 'brewmapcafe' },
+        { ...ok, password: '12345678' },
+        { ...ok, password: `A1${'x'.repeat(71)}` },
+        // name
+        { ...ok, displayName: 'P' },
+        { ...ok, displayName: '   ' },
+        { ...ok, displayName: 'x'.repeat(31) },
+        { ...ok, displayName: '<script>' },
+        { ...ok, displayName: 'Ploy ☕' },
+        { ...ok, displayName: '-Ploy' },
+        { ...ok, displayName: 'Ploy\u200bP' },
+        { ...ok, displayName: 'Ploy\u0000P' },
+      ];
+      // Each case comes from its own forwarded visitor, so the 10/min register
+      // limit doesn't turn the later cases into 429s.
+      process.env.PROXY_SECRET = 'e2e-rules-secret';
+      try {
+        for (const [i, body] of bad.entries()) {
+          const res = await http()
+            .post('/api/auth/register')
+            .set({
+              'x-client-ip': `198.51.100.${i + 1}`,
+              'x-proxy-secret': 'e2e-rules-secret',
+            })
+            .send(body);
+          expect({ body, status: res.status }).toEqual({ body, status: 400 });
+        }
+      } finally {
+        delete process.env.PROXY_SECRET;
+      }
+    });
+
+    it('accepts well-formed values and normalises them', async () => {
+      const res = await http()
         .post('/api/auth/register')
-        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(30) })
-        .expect(400);
-      // 24 Thai letters = 72 bytes: fine.
-      await http()
-        .post('/api/auth/register')
-        .send({ ...USER, email: 'thai@example.com', password: 'ก'.repeat(24) })
+        .send({
+          email: '  First.Last+cafe@Mail.Example.co.th ',
+          password: `Aa1!${'x'.repeat(68)}`,
+          displayName: "  ปลาย   O'Neil-Brew_2.  ",
+        })
         .expect(201);
+      expect(res.body).toMatchObject({
+        email: 'first.last+cafe@mail.example.co.th',
+        displayName: "ปลาย O'Neil-Brew_2.",
+      });
     });
 
     it('validates the body -> 400', async () => {
@@ -136,11 +197,57 @@ describe('Auth + Favorites API (e2e)', () => {
       await agent.post('/api/auth/logout').expect(204);
     });
 
+    it('logout revokes the token itself, not just the cookie', async () => {
+      const loginOnce = () =>
+        http()
+          .post('/api/auth/login')
+          .send({ email: USER.email, password: USER.password })
+          .expect(200)
+          .then((res) => authCookie(res)!.split(';')[0]);
+      const phone = await loginOnce();
+      const laptop = await loginOnce();
+      await http().get('/api/auth/me').set('Cookie', phone).expect(200);
+
+      // A copy of the phone's cookie, kept after logout, no longer works...
+      await http().post('/api/auth/logout').set('Cookie', phone).expect(204);
+      await http().get('/api/auth/me').set('Cookie', phone).expect(401);
+      await http()
+        .put(`/api/me/favorites/${slugs[0]}`)
+        .set('Cookie', phone)
+        .expect(401);
+      // ...and logout signs out every session of that account.
+      await http().get('/api/auth/me').set('Cookie', laptop).expect(401);
+
+      // Logging in again issues a fresh token that works.
+      const fresh = await loginOnce();
+      await http().get('/api/auth/me').set('Cookie', fresh).expect(200);
+      // Replaying the old cookie's logout can't revoke the new session.
+      await http().post('/api/auth/logout').set('Cookie', phone).expect(204);
+      await http().get('/api/auth/me').set('Cookie', fresh).expect(200);
+    });
+
     it('rejects an empty password before checking it -> 400', async () => {
       await http()
         .post('/api/auth/login')
         .send({ email: USER.email, password: '' })
         .expect(400);
+    });
+
+    it('applies the register email rules at login too -> 400', async () => {
+      // Its own visitor IP, so it doesn't use up this client's login quota.
+      process.env.PROXY_SECRET = 'e2e-login-secret';
+      try {
+        await http()
+          .post('/api/auth/login')
+          .set({
+            'x-client-ip': '198.51.100.150',
+            'x-proxy-secret': 'e2e-login-secret',
+          })
+          .send({ email: 'dou..ble@example.com', password: USER.password })
+          .expect(400);
+      } finally {
+        delete process.env.PROXY_SECRET;
+      }
     });
 
     it('/me without a valid cookie -> 401', async () => {
@@ -230,6 +337,48 @@ describe('Auth + Favorites API (e2e)', () => {
     await agent.get('/api/auth/me').expect(401);
     await agent.get('/api/me/favorites').expect(401);
     await agent.put(`/api/me/favorites/${slugs[0]}`).expect(401);
+  });
+
+  it('rate-limits favorite writes per user, not per IP -> 429', async () => {
+    // Own visitor IPs, so this doesn't touch the auth buckets other tests rely on.
+    process.env.PROXY_SECRET = 'e2e-write-secret';
+    const asVisitor = (ip: string) => ({
+      'x-client-ip': ip,
+      'x-proxy-secret': 'e2e-write-secret',
+    });
+    try {
+      const sessionFor = async (email: string, ip: string) => {
+        const body = { email, password: 'Brew1234', displayName: 'Writer' };
+        await http()
+          .post('/api/auth/register')
+          .set(asVisitor(ip))
+          .send(body)
+          .expect(201);
+        const res = await http()
+          .post('/api/auth/login')
+          .set(asVisitor(ip))
+          .send({ email, password: body.password })
+          .expect(200);
+        return authCookie(res)!.split(';')[0];
+      };
+      const busy = await sessionFor(
+        'writer-busy@example.com',
+        '198.51.100.201',
+      );
+      const other = await sessionFor(
+        'writer-other@example.com',
+        '198.51.100.202',
+      );
+
+      const put = (cookie: string) =>
+        http().put(`/api/me/favorites/${slugs[0]}`).set('Cookie', cookie);
+      for (let i = 0; i < 30; i++) await put(busy).expect(204);
+      await put(busy).expect(429);
+      // Same IP, different account: its own quota.
+      await put(other).expect(204);
+    } finally {
+      delete process.env.PROXY_SECRET;
+    }
   });
 
   // Last: it uses up the login rate limit for this client.

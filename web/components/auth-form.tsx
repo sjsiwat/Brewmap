@@ -6,6 +6,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { ApiError } from "@/lib/api";
 import { safeNextPath, useAuth } from "@/lib/auth";
+import {
+  EMAIL_MAX,
+  NAME_MAX,
+  PASSWORD_MAX,
+  PASSWORD_MIN,
+  emailError,
+  validateRegister,
+  type FieldErrors,
+  type RegisterField,
+} from "@/lib/validation";
 
 type Mode = "login" | "register";
 
@@ -41,10 +51,11 @@ function errorText(error: unknown, mode: Mode): string {
     case 429:
       return "Too many attempts. Wait a minute, then try again.";
     case 400:
+      // Register: the server's own rule message, e.g. "Password must include at
+      // least one number". Login: a bad value can't match any account anyway.
       return mode === "register"
-        ? "Check the fields: a valid email, a name, and a password of 8–72 characters (about 24 in Thai)."
-        : // e.g. a password over the 72-byte limit: it can't match any account.
-          "That email and password don't match an account.";
+        ? error.message
+        : "That email and password don't match an account.";
     default:
       return error.status >= 500
         ? "Something went wrong on our side. Try again in a moment."
@@ -55,12 +66,21 @@ function errorText(error: unknown, mode: Mode): string {
 const inputClass =
   "mt-2 w-full border-0 border-b border-ink bg-transparent px-0 py-2 text-base text-ink placeholder:text-muted focus:border-rust focus:outline-none focus:ring-0";
 const labelClass = "font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted";
+const hintClass = "mt-2 block text-xs text-muted";
+const fieldErrorClass = "mt-2 block text-xs text-rust";
+
+const HINTS: Record<RegisterField, string> = {
+  displayName: `2–${NAME_MAX} letters (Thai or English), numbers, spaces and . _ - '`,
+  email: "An address like name@example.com",
+  password: `${PASSWORD_MIN}–${PASSWORD_MAX} English letters, numbers or symbols, with at least one letter and one number. No Thai.`,
+};
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const { status, login, register } = useAuth();
   const router = useRouter();
   const next = safeNextPath(useSearchParams().get("next"));
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const copy = COPY[mode];
 
@@ -74,12 +94,27 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email") ?? "");
     const password = String(form.get("password") ?? "");
+    const displayName = String(form.get("displayName") ?? "");
+
+    const errors: FieldErrors =
+      mode === "register"
+        ? validateRegister({ displayName, email, password })
+        : { email: emailError(email), password: password ? undefined : "Enter your password." };
+    if (!errors.email) delete errors.email;
+    if (!errors.password) delete errors.password;
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setError(null);
+      const first = (["displayName", "email", "password"] as const).find((f) => errors[f]);
+      event.currentTarget.querySelector<HTMLInputElement>(`[name="${first}"]`)?.focus();
+      return;
+    }
 
     setError(null);
     setSubmitting(true);
     try {
       if (mode === "register") {
-        await register(email, password, String(form.get("displayName") ?? ""));
+        await register(email, password, displayName);
       } else {
         await login(email, password);
       }
@@ -106,6 +141,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
       <form
         onSubmit={onSubmit}
+        noValidate
         className="border-t border-ink pt-8 md:col-span-6 md:col-start-7"
       >
         <div className="flex flex-col gap-8">
@@ -116,11 +152,14 @@ export function AuthForm({ mode }: { mode: Mode }) {
                 name="displayName"
                 type="text"
                 required
-                maxLength={50}
+                maxLength={NAME_MAX + 20}
                 autoComplete="nickname"
                 placeholder="What should we call you?"
+                aria-invalid={fieldErrors.displayName ? true : undefined}
+                aria-describedby="displayName-note"
                 className={inputClass}
               />
+              <FieldNote id="displayName-note" error={fieldErrors.displayName} hint={HINTS.displayName} />
             </label>
           )}
           <label className="block">
@@ -129,10 +168,20 @@ export function AuthForm({ mode }: { mode: Mode }) {
               name="email"
               type="email"
               required
-              maxLength={254}
+              maxLength={EMAIL_MAX}
               autoComplete="email"
+              inputMode="email"
+              autoCapitalize="none"
+              spellCheck={false}
               placeholder="you@example.com"
+              aria-invalid={fieldErrors.email ? true : undefined}
+              aria-describedby="email-note"
               className={inputClass}
+            />
+            <FieldNote
+              id="email-note"
+              error={fieldErrors.email}
+              hint={mode === "register" ? HINTS.email : undefined}
             />
           </label>
           <label className="block">
@@ -141,11 +190,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
               name="password"
               type="password"
               required
-              minLength={mode === "register" ? 8 : undefined}
-              maxLength={72}
+              minLength={mode === "register" ? PASSWORD_MIN : undefined}
+              maxLength={PASSWORD_MAX}
               autoComplete={mode === "register" ? "new-password" : "current-password"}
-              placeholder={mode === "register" ? "At least 8 characters" : undefined}
+              placeholder={mode === "register" ? `At least ${PASSWORD_MIN} characters` : undefined}
+              aria-invalid={fieldErrors.password ? true : undefined}
+              aria-describedby="password-note"
               className={inputClass}
+            />
+            <FieldNote
+              id="password-note"
+              error={fieldErrors.password}
+              hint={mode === "register" ? HINTS.password : undefined}
             />
           </label>
         </div>
@@ -176,4 +232,20 @@ export function AuthForm({ mode }: { mode: Mode }) {
       </form>
     </div>
   );
+}
+
+/** The rule under a field, swapped for the problem once the user has tried to submit. */
+function FieldNote({ id, error, hint }: { id: string; error?: string; hint?: string }) {
+  if (error) {
+    return (
+      <span id={id} className={fieldErrorClass}>
+        {error}
+      </span>
+    );
+  }
+  return hint ? (
+    <span id={id} className={hintClass}>
+      {hint}
+    </span>
+  ) : null;
 }

@@ -12,7 +12,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { CurrentUserId, JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  UserThrottlerGuard,
+  WRITE_RATE_LIMIT,
+} from '../auth/user-throttler.guard';
 import {
   CreateReviewDto,
   MyReviewDto,
@@ -48,7 +53,8 @@ export class ReviewsController {
 
   /** One review per user per café: a second one -> 409. */
   @Post('cafes/:slug/reviews')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserThrottlerGuard)
+  @Throttle(WRITE_RATE_LIMIT)
   create(
     @CurrentUserId() userId: string,
     @Param('slug') slug: string,
@@ -59,7 +65,8 @@ export class ReviewsController {
 
   /** Author only (403 otherwise). */
   @Patch('reviews/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserThrottlerGuard)
+  @Throttle(WRITE_RATE_LIMIT)
   update(
     @CurrentUserId() userId: string,
     @Param('id') id: string,
@@ -70,7 +77,8 @@ export class ReviewsController {
 
   /** Author only (403 otherwise). */
   @Delete('reviews/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserThrottlerGuard)
+  @Throttle(WRITE_RATE_LIMIT)
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @CurrentUserId() userId: string,
