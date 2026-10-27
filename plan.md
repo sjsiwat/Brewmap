@@ -200,14 +200,17 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 4 — Reviews
-**Status:** `todo`
+**Status:** `awaiting-review`
+**Branch:** `phase-4-reviews`
+**Review range:** `c93f9b0..phase-4-reviews` (ใช้ `git diff c93f9b0..phase-4-reviews`)
+**ทดสอบใน Chrome 2026-10-27:** เขียน (ไม่เลือกดาว → เตือน) / แก้ (ล้าง "what you had", ป้าย edited) / ลบ (ยืนยัน 2 ขั้น) · ผู้ใช้อื่นไม่เห็นปุ่มแก้/ลบ และ API ตอบ 403 · ค่าเฉลี่ย 3.5 จาก 2 รีวิว · Show more 10 → 12 ไม่ซ้ำ · 375/768px ไม่มี horizontal scroll · API ล่ม → error + Try again ใช้ได้ · session หมดตอนโพสต์ → ไป login · ไม่มี console error
 
-- [ ] 4.1 `Review` schema — `userId`, `cafeId`, `rating` (1–5), `text` (10–1000 ตัวอักษร), `drinkOrdered?`, timestamps · unique `(userId, cafeId)` = 1 รีวิวต่อคนต่อร้าน
-- [ ] 4.2 `GET /api/cafes/:slug/reviews` (pagination, ใหม่สุดก่อน)
-- [ ] 4.3 `POST` (ต้อง login), `PATCH` / `DELETE` เฉพาะเจ้าของรีวิว (คนอื่น → 403)
-- [ ] 4.4 เพิ่ม `communityRating`, `communityReviewCount` ใน cafe — คำนวณใหม่ทุกครั้งที่รีวิวเปลี่ยน (แยกจาก `rating` ของ Google)
-- [ ] 4.5 Frontend: รายการรีวิว + ฟอร์มเขียน/แก้/ลบ ในหน้าร้าน
-- [ ] 4.6 e2e: สร้าง / แก้ / ลบ / แก้ของคนอื่น / รีวิวซ้ำ / ค่า community rating ถูกต้อง
+- [x] 4.1 `Review` schema — `userId`, `cafeId`, `rating` (1–5), `text` (10–1000 ตัวอักษร), `drinkOrdered?`, timestamps · unique `(userId, cafeId)` = 1 รีวิวต่อคนต่อร้าน
+- [x] 4.2 `GET /api/cafes/:slug/reviews` (pagination, ใหม่สุดก่อน) + `GET /api/cafes/:slug/reviews/mine` สำหรับฟอร์มของผู้ใช้
+- [x] 4.3 `POST` (ต้อง login), `PATCH` / `DELETE` เฉพาะเจ้าของรีวิว (คนอื่น → 403)
+- [x] 4.4 เพิ่ม `communityRating`, `communityReviewCount` ใน cafe — คำนวณใหม่ทุกครั้งที่รีวิวเปลี่ยน (แยกจาก `rating` ของ Google)
+- [x] 4.5 Frontend: รายการรีวิว + ฟอร์มเขียน/แก้/ลบ ในหน้าร้าน
+- [x] 4.6 e2e: สร้าง / แก้ / ลบ / แก้ของคนอื่น / รีวิวซ้ำ / ค่า community rating ถูกต้อง
 
 **Gate:** Phase 3 gate · **Acceptance:** seed ใหม่แล้ว `communityRating` ไม่หาย
 
