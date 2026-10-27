@@ -14,7 +14,7 @@ describe('toUserResponse', () => {
     });
     const res = toUserResponse(user);
     expect(res).toEqual({
-      id: user.id as string,
+      id: user.id,
       email: 'siwat@example.com',
       displayName: 'Siwat',
       role: 'user',
