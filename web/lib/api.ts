@@ -175,3 +175,64 @@ export function addFavorite(slug: string): Promise<void> {
 export function removeFavorite(slug: string): Promise<void> {
   return apiFetch<void>(`/me/favorites/${encodeURIComponent(slug)}`, { method: "DELETE" });
 }
+
+/** Mirrors ReviewResponseDto in server/src/reviews/dto/review.dto.ts. */
+export interface Review {
+  id: string;
+  rating: number;
+  text: string;
+  drinkOrdered?: string;
+  createdAt: string;
+  updatedAt: string;
+  author: { id: string; displayName: string };
+}
+
+export interface ReviewPage {
+  items: Review[];
+  total: number;
+  page: number;
+  limit: number;
+  communityRating: number | null;
+  communityReviewCount: number;
+}
+
+export interface ReviewInput {
+  rating: number;
+  text: string;
+  /** "" clears it when editing. */
+  drinkOrdered?: string;
+}
+
+const reviewsPath = (slug: string) => `/cafes/${encodeURIComponent(slug)}/reviews`;
+
+export function getReviews(
+  slug: string,
+  query: { page?: number; limit?: number },
+  init?: RequestInit,
+): Promise<ReviewPage> {
+  return apiFetch<ReviewPage>(`${reviewsPath(slug)}${buildQuery(query)}`, {
+    cache: "no-store",
+    ...init,
+  });
+}
+
+/** The logged-in user's review of this café, or null. */
+export async function getMyReview(slug: string, init?: RequestInit): Promise<Review | null> {
+  const { review } = await apiFetch<{ review: Review | null }>(`${reviewsPath(slug)}/mine`, {
+    cache: "no-store",
+    ...init,
+  });
+  return review;
+}
+
+export function createReview(slug: string, input: ReviewInput): Promise<Review> {
+  return apiFetch<Review>(reviewsPath(slug), sendJson("POST", input));
+}
+
+export function updateReview(id: string, input: ReviewInput): Promise<Review> {
+  return apiFetch<Review>(`/reviews/${encodeURIComponent(id)}`, sendJson("PATCH", input));
+}
+
+export function deleteReview(id: string): Promise<void> {
+  return apiFetch<void>(`/reviews/${encodeURIComponent(id)}`, { method: "DELETE" });
+}

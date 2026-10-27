@@ -76,6 +76,13 @@ export class Cafe {
 
   @Prop({ type: GeoPointSchema, required: true })
   location: GeoPoint;
+
+  /** Average of BrewMap reviews (1 decimal), null until the first one. Separate from Google's `rating`. */
+  @Prop({ type: Number, default: null, min: 1, max: 5 })
+  communityRating: number | null;
+
+  @Prop({ type: Number, default: 0, min: 0 })
+  communityReviewCount: number;
 }
 
 export type CafeDocument = HydratedDocument<Cafe>;
