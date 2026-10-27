@@ -208,4 +208,46 @@ describe('Auth + Favorites API (e2e)', () => {
     }
     expect(status).toBe(429);
   });
+
+  // Runs after the test above, so this client's own bucket is already full.
+  describe('rate limit behind the web proxy', () => {
+    const SECRET = 'e2e-proxy-secret';
+    const badLogin = { email: USER.email, password: 'wrong-password' };
+    const loginAs = (headers: Record<string, string>) =>
+      http().post('/api/auth/login').set(headers).send(badLogin);
+
+    beforeAll(() => {
+      process.env.PROXY_SECRET = SECRET;
+    });
+    afterAll(() => {
+      delete process.env.PROXY_SECRET;
+    });
+
+    it('ignores x-client-ip without the right secret', async () => {
+      await loginAs({ 'x-client-ip': '203.0.113.1' }).expect(429);
+      await loginAs({
+        'x-client-ip': '203.0.113.1',
+        'x-proxy-secret': 'wrong-secret!!!!',
+      }).expect(429);
+      await loginAs({
+        'x-client-ip': 'not-an-ip',
+        'x-proxy-secret': SECRET,
+      }).expect(429);
+    });
+
+    it('limits each forwarded visitor separately', async () => {
+      const visitorA = {
+        'x-client-ip': '203.0.113.10',
+        'x-proxy-secret': SECRET,
+      };
+      const visitorB = {
+        'x-client-ip': '203.0.113.20',
+        'x-proxy-secret': SECRET,
+      };
+
+      for (let i = 0; i < 10; i++) await loginAs(visitorA).expect(401);
+      await loginAs(visitorA).expect(429);
+      await loginAs(visitorB).expect(401);
+    });
+  });
 });

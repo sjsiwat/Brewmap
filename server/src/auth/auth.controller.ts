@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
 import { UserResponseDto } from '../users/user-response.dto';
 import {
@@ -18,6 +18,7 @@ import {
   authCookieOptions,
 } from './auth.constants';
 import { AuthService } from './auth.service';
+import { ClientIpThrottlerGuard } from './client-ip-throttler.guard';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { CurrentUserId, JwtAuthGuard } from './jwt-auth.guard';
 
@@ -31,7 +32,7 @@ export class AuthController {
 
   /** Creates the account. Does not log in - call /auth/login next. */
   @Post('register')
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(ClientIpThrottlerGuard)
   @Throttle(AUTH_RATE_LIMIT)
   register(@Body() dto: RegisterDto): Promise<UserResponseDto> {
     return this.authService.register(dto);
@@ -39,7 +40,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(ClientIpThrottlerGuard)
   @Throttle(AUTH_RATE_LIMIT)
   async login(
     @Body() dto: LoginDto,

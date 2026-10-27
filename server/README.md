@@ -37,7 +37,22 @@ API docs (Swagger): http://localhost:4000/api/docs
 | PUT / DELETE | `/api/me/favorites/:slug` | 🔒 Add / remove → 204 (safe to repeat), unknown café → 404 |
 
 🔒 = needs the `access_token` cookie, otherwise 401. `register` and `login` are
-rate-limited to 10 requests per minute per IP (429).
+rate-limited to 10 requests per minute per visitor (429).
+
+### Rate limiting behind the web proxy
+
+Browsers reach the API through the web app's `/api` rewrite, so every request
+arrives from the web server's address. `web/proxy.ts` forwards the visitor's IP
+in `x-client-ip` together with `PROXY_SECRET`; the API only trusts that header
+when the secret matches, otherwise it uses `req.ip`.
+
+| Env | Local | Production (Vercel + Render) |
+|---|---|---|
+| `PROXY_SECRET` (server **and** web, same value) | empty | long random value |
+| `TRUST_PROXY` (server) | empty | `1` (Render's load balancer) |
+
+Leave `PROXY_SECRET` empty when the web app runs with plain `next start`: there
+`x-real-ip` / `x-forwarded-for` come from the client and can't be trusted.
 
 Example: `/api/cafes?lat=18.7876&lng=98.9933&radiusKm=3&maxPrice=120&parking=true`
 
