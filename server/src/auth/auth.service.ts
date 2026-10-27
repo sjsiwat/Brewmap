@@ -55,11 +55,22 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const payload: JwtPayload = { sub: user.id };
+    const payload: JwtPayload = { sub: user.id, ver: user.tokenVersion ?? 0 };
     return {
       user: toUserResponse(user),
       token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  /** Revokes the session behind `token`. Never throws: logging out always works. */
+  async logout(token: string | undefined): Promise<void> {
+    if (!token) return;
+    try {
+      const { sub, ver } = await this.jwtService.verifyAsync<JwtPayload>(token);
+      await this.usersService.revokeTokens(sub, ver ?? 0);
+    } catch {
+      // Expired or forged - nothing to revoke.
+    }
   }
 
   async me(userId: string): Promise<UserResponseDto> {

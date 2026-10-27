@@ -197,6 +197,35 @@ describe('Auth + Favorites API (e2e)', () => {
       await agent.post('/api/auth/logout').expect(204);
     });
 
+    it('logout revokes the token itself, not just the cookie', async () => {
+      const loginOnce = () =>
+        http()
+          .post('/api/auth/login')
+          .send({ email: USER.email, password: USER.password })
+          .expect(200)
+          .then((res) => authCookie(res)!.split(';')[0]);
+      const phone = await loginOnce();
+      const laptop = await loginOnce();
+      await http().get('/api/auth/me').set('Cookie', phone).expect(200);
+
+      // A copy of the phone's cookie, kept after logout, no longer works...
+      await http().post('/api/auth/logout').set('Cookie', phone).expect(204);
+      await http().get('/api/auth/me').set('Cookie', phone).expect(401);
+      await http()
+        .put(`/api/me/favorites/${slugs[0]}`)
+        .set('Cookie', phone)
+        .expect(401);
+      // ...and logout signs out every session of that account.
+      await http().get('/api/auth/me').set('Cookie', laptop).expect(401);
+
+      // Logging in again issues a fresh token that works.
+      const fresh = await loginOnce();
+      await http().get('/api/auth/me').set('Cookie', fresh).expect(200);
+      // Replaying the old cookie's logout can't revoke the new session.
+      await http().post('/api/auth/logout').set('Cookie', phone).expect(204);
+      await http().get('/api/auth/me').set('Cookie', fresh).expect(200);
+    });
+
     it('rejects an empty password before checking it -> 400', async () => {
       await http()
         .post('/api/auth/login')

@@ -25,9 +25,22 @@ export class UsersService {
     return new Map(users.map((u) => [u._id.toString(), u.displayName]));
   }
 
-  async exists(id: string): Promise<boolean> {
-    if (!/^[0-9a-f]{24}$/i.test(id)) return false;
-    return (await this.userModel.exists({ _id: id })) !== null;
+  /** The user's current token version, or null when the account is gone. */
+  async tokenVersion(id: string): Promise<number | null> {
+    if (!/^[0-9a-f]{24}$/i.test(id)) return null;
+    const user = await this.userModel
+      .findById(id, { tokenVersion: 1 })
+      .lean<{ tokenVersion?: number }>();
+    return user ? (user.tokenVersion ?? 0) : null;
+  }
+
+  /** Revokes tokens carrying `version`; a no-op if they were already revoked. */
+  async revokeTokens(id: string, version: number): Promise<void> {
+    if (!/^[0-9a-f]{24}$/i.test(id)) return;
+    await this.userModel.updateOne(
+      { _id: id, tokenVersion: version === 0 ? { $in: [0, null] } : version },
+      { $inc: { tokenVersion: 1 } },
+    );
   }
 
   async findById(id: string): Promise<UserDocument | null> {

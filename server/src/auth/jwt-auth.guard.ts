@@ -14,8 +14,9 @@ type AuthedRequest = Request & { userId?: string };
 
 /**
  * Requires a valid JWT in the httpOnly `access_token` cookie for a user that
- * still exists; sets `req.userId`. Without the existence check a deleted
- * account's token kept writing favorites and reviews until it expired.
+ * still exists and whose tokenVersion matches the token's `ver`; sets
+ * `req.userId`. Without the check a deleted account's token, or one copied
+ * before logout, kept writing favorites and reviews until it expired.
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -37,7 +38,9 @@ export class JwtAuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException();
     }
-    if (!(await this.usersService.exists(payload.sub))) {
+    // Gone account, or a token revoked by logout.
+    const version = await this.usersService.tokenVersion(payload.sub);
+    if (version === null || version !== (payload.ver ?? 0)) {
       throw new UnauthorizedException();
     }
     req.userId = payload.sub;
