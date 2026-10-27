@@ -321,7 +321,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 7 — เนื้อหาตามจริง + CSS กลาง + ร้านใกล้ผู้ใช้ (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-7.md](reviews/phase-7.md)
 **Branch:** `phase-7-real-content`
 **Review range:** `main..phase-7-real-content` (ใช้ `git diff main...HEAD`)
 
