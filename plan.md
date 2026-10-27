@@ -304,7 +304,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 **Status:** `in-progress` — รอ owner ทำขั้นตอนบน dashboard (สร้าง/ล็อกอินบัญชี + ใส่ secret ซึ่ง Claude ทำแทนไม่ได้) · D3 = (a) rewrite · D4 = Vercel + Render
 **Branch:** `phase-6-deploy`
 
-- [ ] 6.1 Deploy server (Render) — เตรียม `render.yaml` แล้ว (Node 22, `npm ci --include=dev && npm run build`, health `/api/health`, `NODE_ENV=production`, `TRUST_PROXY=1`, `JWT_SECRET` ให้ Render สุ่ม, secret เป็น `sync: false`) · ทดสอบ build + รันแบบ production ในเครื่องแล้ว: health 200, `/api/docs` 404, cookie `HttpOnly; Secure; SameSite=Lax`, ไม่มี `X-Powered-By` · **รอ owner:** Render → New → Blueprint
+- [ ] 6.1 Deploy server (Render) — เตรียม `render.yaml` แล้ว (Node 22, `npm ci --include=dev && npm run build`, health `/api/health`, `NODE_ENV=production`, `TRUST_PROXY=1`, `JWT_SECRET` ให้ Render สุ่ม, secret เป็น `sync: false`) · ทดสอบ build + รันแบบ production ในเครื่องแล้ว: health 200, `/api/docs` 404, cookie `HttpOnly; Secure; SameSite=Lax`, ไม่มี `X-Powered-By` · Render build ครั้งแรกล้ม: `npm ci` ของ npm 10 (มากับ Node 22) อ่าน lockfile ที่สร้างด้วย npm 11 ไม่ได้ (`Missing: webpack@5.112.2`) → สร้าง `server/package-lock.json` ใหม่ด้วย npm 10, ทดสอบ `npm ci` ผ่านทั้ง npm 10/11 (web lockfile ผ่าน npm 10 อยู่แล้ว) · **รอ owner:** Render → New → Blueprint
 - [ ] 6.2 Atlas Network Access `0.0.0.0/0` (Render free ไม่มี IP คงที่) · **รอ owner**
 - [ ] 6.3 Deploy web (Vercel) — Root Directory `web`, env `API_URL` + `PROXY_SECRET` · **รอ owner**
 - [x] 6.4 Seed production + review summary — Atlas มีครบแล้ว (173 ร้าน, `aiSummary` 173/173) ใช้ cluster เดิม
