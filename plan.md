@@ -39,14 +39,19 @@
 - 1 phase = 1 branch: `phase-N-<ชื่อ>` แตกจาก `main` ที่อัปเดตล่าสุด
 - `Review range` = `<commit ก่อนเริ่ม phase>..<commit ล่าสุด>` ให้ reviewer ใช้ `git diff`
 
-### วิธีสั่งงาน (semi-auto)
-| ฝั่ง | Prompt ที่ใช้ |
-|---|---|
-| Claude Code | `ทำงานต่อตาม plan.md` |
-| Antigravity | `ตรวจงานตาม REVIEW.md` |
+### วิธีสั่งงาน (auto)
+Owner สั่ง Claude ครั้งเดียว: `ทำงานต่อตาม plan.md` → Claude ทำ phase จนจบ แล้วเรียก Antigravity เอง:
 
-> **อยากให้ฝั่ง Claude auto:** ใช้ `/loop ทำงานต่อตาม plan.md` — Claude จะเช็กเป็นระยะว่ามี review ใหม่หรือยัง ถ้า approved ก็ไปต่อเอง ถ้า changes-requested ก็แก้เอง
-> ฝั่ง Antigravity ต้องสั่งเองหรือตั้ง automation ในตัว Antigravity (Claude สั่ง Antigravity ข้ามโปรแกรมไม่ได้)
+```bash
+# รันที่ root ของ repo ขณะ checkout branch ของ phase
+agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..." --print-timeout 1500s > <scratchpad>/review.md
+```
+- Antigravity รัน Gate เองได้เฉพาะคำสั่งใน allow-list (ดู `REVIEW.md` → "คำสั่งที่อนุญาต") — ไม่มีสิทธิ์เขียนไฟล์
+- Claude บันทึก stdout ลง `reviews/phase-N.md` **ตามนั้นทุกตัวอักษร** แล้วอ่าน Verdict
+  - `APPROVED` → merge เข้า main, push, ไป phase ถัดไป
+  - `CHANGES_REQUESTED` → แก้, เขียน `## Response`, เรียก `agy` ตรวจรอบใหม่
+- ถ้า `agy` ถูกปฏิเสธสิทธิ์หรือ error → Claude หยุดและแจ้ง owner (ห้ามตรวจแทนเอง)
+- ถ้าตรวจเกิน 3 รอบแล้วยังไม่ผ่าน → หยุดและให้ owner ตัดสิน
 
 ---
 

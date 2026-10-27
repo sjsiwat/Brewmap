@@ -6,12 +6,25 @@
 ## ขั้นตอน
 
 1. เปิด `plan.md` หา phase ที่ `Status: awaiting-review` (ถ้าไม่มี → ตอบว่า "ไม่มีงานรอตรวจ" แล้วจบ)
-2. ดู `Review range` ของ phase นั้น แล้วรัน `git diff <range>` และ `git log --oneline <range>`
+2. ดูโค้ดที่เปลี่ยนด้วย `git diff main...HEAD` และ `git log --oneline main..HEAD` (Claude checkout branch ของ phase ไว้ให้แล้ว)
 3. ถ้าเป็นรอบแก้ (มีไฟล์ `reviews/phase-N.md` อยู่แล้ว) → อ่าน findings เดิมและ `## Response` ของ Claude ก่อน แล้วตรวจว่าแก้ครบจริง
-4. รัน **Gate** ของ phase ตามที่เขียนใน `plan.md` ทุกคำสั่ง และจดผล
+4. รัน **Gate** ตามรายการ "คำสั่งที่อนุญาต" ด้านล่าง (ทุกคำสั่งที่เกี่ยวกับ phase นั้น) และจดผล
 5. ตรวจตาม checklist ด้านล่าง
-6. เขียน/ต่อท้ายไฟล์ `reviews/phase-N.md` ตาม template (phase 0–1 ตรวจรวมกัน ใช้ `reviews/phase-0-1.md`)
+6. **พิมพ์**ผลตรวจทั้งไฟล์ออกทาง stdout ตาม template (Claude เป็นคนบันทึกลง `reviews/phase-N.md` ให้ตามนั้นทุกตัวอักษร) — ถ้ามีไฟล์รีวิวเดิม ให้พิมพ์เฉพาะ `## Round N` ใหม่
 7. **ห้าม** แก้ `Status` ใน `plan.md` — Claude จะอ่าน verdict แล้วอัปเดตเอง
+
+## คำสั่งที่อนุญาต (headless)
+
+`agy` อนุญาตเฉพาะคำสั่งที่ข้อความตรงตัวเท่านั้น (wildcard ใช้ไม่ได้) — **ห้ามใส่ `cd ... &&` นำหน้า** ให้ตั้ง working directory แทน
+
+| Working dir | คำสั่ง |
+|---|---|
+| root | `git diff main...HEAD` · `git log --oneline main..HEAD` |
+| `server/` | `npx tsc --noEmit` · `npx eslint "{src,apps,libs,test}/**/*.ts"` · `npm test` · `npm run test:e2e` · `npm run build` |
+| `web/` | `npx tsc --noEmit` · `npm run lint` · `npm run build` |
+
+ห้ามรัน `npm run lint` ใน `server/` — script นั้นมี `--fix` จะแก้โค้ด
+ห้ามอ่าน `server/.env` (มี secret)
 
 ## Checklist
 
