@@ -163,6 +163,23 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 3b — รีเช็ก Phase 3 (owner สั่ง 2026-10-27)
+**Status:** `awaiting-review`
+**Branch:** `phase-3b-recheck-fixes`
+**Review range:** `2eba272..phase-3b-recheck-fixes` (ใช้ `git diff 2eba272..phase-3b-recheck-fixes`)
+
+บั๊กที่เจอจากการทดสอบซ้ำใน Chrome (ยืนยันก่อนแก้ และทดสอบซ้ำหลังแก้ทุกข้อ):
+- [x] 3b.1 **Open redirect** — `/login?next=/%5Cexample.com` พาผู้ใช้ที่ login แล้วไป `https://example.com` → `safeNextPath` parse เป็น URL และต้องอยู่ใน origin เดียวกัน
+- [x] 3b.2 กด ❤️ รัว ๆ → state ซ้ำ (หน้า Saved แสดงร้านเดียว 5 ครั้ง) และ PUT/DELETE แซงกันได้ → ล็อกต่อร้านระหว่างที่ request ยังไม่จบ + dedupe
+- [x] 3b.3 Session หมด/ถูก logout จากที่อื่น แล้วกด ❤️ → ค้างที่ "try again" → 401 จบ session ฝั่ง UI และพาไป `/login?next=`
+- [x] 3b.4 Log out ตอน API ล่ม → uncaught exception, หน้าจอไม่เปลี่ยน → แสดง "Log out failed · retry"
+
+ทดสอบซ้ำแล้วผ่าน: flow ปกติ (login / ❤️ / Saved / logout), ข้อความ 429, ไม่มี console error
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ### Phase 4 — Reviews
 **Status:** `todo`
 
