@@ -321,3 +321,29 @@ Start with **Chiang Mai**.
 Expand to cities across Thailand.
 
 Eventually become the "Spotify for Coffee"—where every recommendation is personalized to each user's taste.
+---
+
+# Run locally
+
+The repo has two apps: `web/` (Next.js) and `server/` (NestJS API on MongoDB Atlas).
+
+```bash
+# 1. install root + both apps
+npm install
+npm run install:all
+
+# 2. env files
+cp server/.env.example server/.env   # fill in MONGODB_URI
+cp web/.env.example web/.env.local   # NEXT_PUBLIC_API_URL=http://localhost:4000/api
+
+# 3. load café data into MongoDB (safe to re-run)
+npm run seed
+
+# 4. start web + api together
+npm run dev
+```
+
+- Web: http://localhost:3000
+- API: http://localhost:4000/api · Swagger: http://localhost:4000/api/docs
+
+`npm run build` in `web/` prerenders every café page from the API, so keep the server running while building (if it is down, the build still succeeds and pages render on first request).
