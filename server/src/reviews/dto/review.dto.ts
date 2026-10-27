@@ -7,6 +7,7 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
 import type { Review } from '../schemas/review.schema';
 
@@ -32,15 +33,21 @@ export class CreateReviewDto {
   drinkOrdered?: string;
 }
 
+// Like @IsOptional, but only for a missing field: an explicit null must fail
+// validation (400) instead of reaching the required schema fields (500).
+const unlessMissing = ValidateIf(
+  (_obj: object, value: unknown) => value !== undefined,
+);
+
 /** Any subset of the fields. `drinkOrdered: ""` clears it. */
 export class UpdateReviewDto {
-  @IsOptional()
+  @unlessMissing
   @IsInt()
   @Min(1)
   @Max(5)
   rating?: number;
 
-  @IsOptional()
+  @unlessMissing
   @Transform(trim)
   @IsString()
   @MinLength(10)
