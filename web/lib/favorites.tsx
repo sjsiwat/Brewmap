@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { Cafe } from "@/lib/cafes";
@@ -10,7 +10,11 @@ interface FavoritesContextValue {
   cafes: Cafe[];
   status: "idle" | "loading" | "ready" | "error";
   isFavorite: (slug: string) => boolean;
-  /** Optimistic: flips immediately and rolls back if the API call fails. */
+  /**
+   * Optimistic: flips immediately and rolls back if the API call fails. Clicks on a
+   * café whose previous toggle is still in flight are ignored, so requests can't
+   * overtake each other and leave the UI and the server disagreeing.
+   */
   toggle: (cafe: Cafe) => Promise<void>;
   reload: () => void;
 }
@@ -21,7 +25,7 @@ const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 const NO_CAFES: Cafe[] = [];
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, endSession } = useAuth();
   const userId = user?.id ?? null;
   const [state, setState] = useState<{
     userId: string | null;
@@ -29,6 +33,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     status: FavoritesContextValue["status"];
   }>({ userId: null, cafes: [], status: "idle" });
   const [attempt, setAttempt] = useState(0);
+  const pending = useRef(new Set<string>());
 
   useEffect(() => {
     if (!userId) return;
@@ -54,24 +59,27 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback(
     async (cafe: Cafe) => {
-      if (!userId) return;
+      if (!userId || pending.current.has(cafe.slug)) return;
+      pending.current.add(cafe.slug);
+
       const wasFavorite = current.cafes.some((c) => c.slug === cafe.slug);
+      const without = (cafes: Cafe[]) => cafes.filter((c) => c.slug !== cafe.slug);
       const update = (fn: (cafes: Cafe[]) => Cafe[]) =>
         setState((prev) => (prev.userId === userId ? { ...prev, cafes: fn(prev.cafes) } : prev));
 
-      update((cafes) =>
-        wasFavorite ? cafes.filter((c) => c.slug !== cafe.slug) : [cafe, ...cafes],
-      );
+      update((cafes) => (wasFavorite ? without(cafes) : [cafe, ...without(cafes)]));
       try {
         await (wasFavorite ? api.removeFavorite(cafe.slug) : api.addFavorite(cafe.slug));
       } catch (error) {
-        update((cafes) =>
-          wasFavorite ? [cafe, ...cafes] : cafes.filter((c) => c.slug !== cafe.slug),
-        );
+        update((cafes) => (wasFavorite ? [cafe, ...without(cafes)] : without(cafes)));
+        // Session expired or was ended elsewhere: show the visitor as logged out.
+        if (error instanceof api.ApiError && error.status === 401) endSession();
         throw error;
+      } finally {
+        pending.current.delete(cafe.slug);
       }
     },
-    [userId, current.cafes],
+    [userId, current.cafes, endSession],
   );
 
   const value = useMemo<FavoritesContextValue>(
