@@ -13,17 +13,20 @@ import {
 } from "lucide-react";
 import {
   cafes,
+  distanceToCafe,
   distanceOptions,
   drinkTypeOptions,
-  flavorOptions,
   parkingOptions,
+  formatPrice,
   priceOptions,
   type MatchOption,
 } from "@/lib/cafes";
+import { formatKm } from "@/lib/geo";
+import { useUserLocation } from "@/lib/use-user-location";
+import { LocationOrigin } from "@/components/location-origin";
 import { Reveal } from "@/components/reveal";
 
 interface Criteria {
-  flavor: string;
   price: string;
   distance: string;
   parking: string;
@@ -31,7 +34,6 @@ interface Criteria {
 }
 
 const defaultCriteria: Criteria = {
-  flavor: "Any",
   price: "Any",
   distance: "Any",
   parking: "Any",
@@ -43,7 +45,6 @@ const fields: Array<{
   label: string;
   options: MatchOption[];
 }> = [
-  { key: "flavor", label: "Flavor", options: flavorOptions },
   { key: "price", label: "Price", options: priceOptions },
   { key: "distance", label: "Distance", options: distanceOptions },
   { key: "parking", label: "Parking", options: parkingOptions },
@@ -57,30 +58,36 @@ function findOption(options: MatchOption[], label: string) {
 export function CafeFinder() {
   const [draft, setDraft] = useState<Criteria>(defaultCriteria);
   const [applied, setApplied] = useState<Criteria | null>(null);
+  const { origin } = useUserLocation();
 
   const results = useMemo(() => {
+    const withDistance = cafes.map((cafe) => ({
+      cafe,
+      distanceKm: distanceToCafe(origin, cafe),
+    }));
+
     if (!applied) {
-      return [...cafes]
-        .sort((a, b) => b.rating - a.rating)
-        .map((cafe) => ({ cafe, matchPercent: null as number | null }));
+      return withDistance
+        .sort((a, b) => b.cafe.rating - a.cafe.rating)
+        .map((entry) => ({ ...entry, matchPercent: null as number | null }));
     }
 
     const activeFields = fields.filter((field) => applied[field.key] !== "Any");
 
-    return cafes
-      .map((cafe) => {
+    return withDistance
+      .map(({ cafe, distanceKm }) => {
         const score = activeFields.reduce((total, field) => {
           const option = findOption(field.options, applied[field.key]);
-          return option?.test?.(cafe) ? total + 1 : total;
+          return option?.test?.(cafe, { distanceKm }) ? total + 1 : total;
         }, 0);
         const matchPercent =
           activeFields.length > 0
             ? Math.round((score / activeFields.length) * 100)
             : null;
-        return { cafe, score, matchPercent };
+        return { cafe, distanceKm, score, matchPercent };
       })
       .sort((a, b) => b.score - a.score || b.cafe.rating - a.cafe.rating);
-  }, [applied]);
+  }, [applied, origin]);
 
   const activeCount = applied
     ? fields.filter((field) => applied[field.key] !== "Any").length
@@ -158,13 +165,17 @@ export function CafeFinder() {
         </form>
       </Reveal>
 
-      <p className="mt-6 font-mono text-xs uppercase tracking-[0.1em] text-muted">
+      <div className="mt-6">
+        <LocationOrigin />
+      </div>
+
+      <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted">
         {results.length} café{results.length === 1 ? "" : "s"}
         {applied ? " ranked by match" : " · sorted by rating"}
       </p>
 
       <div className="mt-6 border-t border-ink">
-        {results.map(({ cafe, matchPercent }, i) => {
+        {results.map(({ cafe, distanceKm, matchPercent }, i) => {
           return (
             <Reveal key={cafe.slug} delay={Math.min(i * 0.03, 0.3)}>
               <Link href={`/cafes/${cafe.slug}`} className="block">
@@ -186,7 +197,7 @@ export function CafeFinder() {
                     <h3 className="font-display text-2xl text-ink">{cafe.name}</h3>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
                       <MapPin size={12} aria-hidden />
-                      {cafe.area} · {cafe.distance}
+                      {cafe.area} · {formatKm(distanceKm)}
                     </p>
                   </motion.div>
 
@@ -220,7 +231,7 @@ export function CafeFinder() {
                       {cafe.parking && <ParkingCircle size={14} aria-label="Parking available" />}
                     </div>
 
-                    <p className="font-display text-lg text-rust">{cafe.price}</p>
+                    <p className="font-display text-lg text-rust">{formatPrice(cafe.priceAvg)}</p>
 
                     <motion.span
                       variants={{ rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }}
