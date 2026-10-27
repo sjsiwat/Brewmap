@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, Geist_Mono } from "next/font/google";
+import { AuthProvider } from "@/lib/auth";
+import { FavoritesProvider } from "@/lib/favorites";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -39,7 +41,9 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans text-ink bg-paper">
-        {children}
+        <AuthProvider>
+          <FavoritesProvider>{children}</FavoritesProvider>
+        </AuthProvider>
       </body>
     </html>
   );

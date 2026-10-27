@@ -1,9 +1,11 @@
 import type { Cafe, DrinkType } from "@/lib/cafes";
 
-// Inlined at build time (NEXT_PUBLIC_*), so the same value is used on the server and in the browser.
-export const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api"
-).replace(/\/$/, "");
+// The browser goes through the /api rewrite in next.config.ts (same origin, so the
+// httpOnly auth cookie is sent); server components call the API directly.
+export const API_URL =
+  typeof window === "undefined"
+    ? (process.env.API_URL ?? "http://localhost:4000/api").replace(/\/$/, "")
+    : "/api";
 
 export class ApiError extends Error {
   constructor(
@@ -73,6 +75,7 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
     response = await fetch(`${API_URL}${path}`, {
+      credentials: "include",
       ...init,
       headers: { Accept: "application/json", ...init?.headers },
     });
@@ -83,7 +86,16 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     throw new ApiError(response.status, await errorMessage(response));
   }
+  if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
+}
+
+function sendJson(method: string, body: unknown): RequestInit {
+  return {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  };
 }
 
 export function getCafes(query: CafeQuery, init?: RequestInit): Promise<CafePage> {
@@ -109,4 +121,51 @@ export async function getAllCafeSlugs(init?: RequestInit): Promise<string[]> {
     slugs.push(...result.items.map((cafe) => cafe.slug));
     if (slugs.length >= result.total || result.items.length === 0) return slugs;
   }
+}
+
+/** Mirrors UserResponseDto in server/src/users/user-response.dto.ts. */
+export interface User {
+  id: string;
+  email: string;
+  displayName: string;
+  role: "user" | "owner" | "admin";
+}
+
+export function register(body: {
+  email: string;
+  password: string;
+  displayName: string;
+}): Promise<User> {
+  return apiFetch<User>("/auth/register", sendJson("POST", body));
+}
+
+/** Sets the httpOnly `access_token` cookie on success. */
+export function login(body: { email: string; password: string }): Promise<User> {
+  return apiFetch<User>("/auth/login", sendJson("POST", body));
+}
+
+export function logout(): Promise<void> {
+  return apiFetch<void>("/auth/logout", { method: "POST" });
+}
+
+/** The logged-in user, or null when there is no valid session. */
+export async function getMe(init?: RequestInit): Promise<User | null> {
+  try {
+    return await apiFetch<User>("/auth/me", { cache: "no-store", ...init });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) return null;
+    throw error;
+  }
+}
+
+export function getFavorites(init?: RequestInit): Promise<Cafe[]> {
+  return apiFetch<Cafe[]>("/me/favorites", { cache: "no-store", ...init });
+}
+
+export function addFavorite(slug: string): Promise<void> {
+  return apiFetch<void>(`/me/favorites/${encodeURIComponent(slug)}`, { method: "PUT" });
+}
+
+export function removeFavorite(slug: string): Promise<void> {
+  return apiFetch<void>(`/me/favorites/${encodeURIComponent(slug)}`, { method: "DELETE" });
 }
