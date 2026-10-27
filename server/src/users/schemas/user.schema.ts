@@ -24,6 +24,13 @@ export class User {
 
   @Prop({ type: String, enum: USER_ROLES, default: 'user' })
   role: UserRole;
+
+  /**
+   * Copied into each JWT as `ver`. Logging out bumps it, which revokes every
+   * token issued before - a stolen or copied cookie stops working too.
+   */
+  @Prop({ type: Number, default: 0 })
+  tokenVersion: number;
 }
 
 export type UserDocument = HydratedDocument<User>;

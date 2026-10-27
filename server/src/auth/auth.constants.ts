@@ -4,9 +4,10 @@ export const AUTH_COOKIE = 'access_token';
 
 export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
 
-/** JWT payload: `sub` is the user id. */
+/** JWT payload: `sub` is the user id, `ver` the user's tokenVersion at login. */
 export interface JwtPayload {
   sub: string;
+  ver: number;
 }
 
 export function authCookieOptions(): CookieOptions {

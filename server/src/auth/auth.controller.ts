@@ -5,12 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { UserResponseDto } from '../users/user-response.dto';
 import {
   AUTH_COOKIE,
@@ -54,10 +55,18 @@ export class AuthController {
     return user;
   }
 
-  /** Always succeeds, so logging out twice (or with an expired cookie) is fine. */
+  /**
+   * Revokes the token server-side (on every device) and clears the cookie.
+   * Always succeeds, so logging out twice (or with an expired cookie) is fine.
+   */
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
-  logout(@Res({ passthrough: true }) res: Response): void {
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<void> {
+    const cookies = req.cookies as Record<string, string> | undefined;
+    await this.authService.logout(cookies?.[AUTH_COOKIE]);
     res.clearCookie(AUTH_COOKIE, authCookieOptions());
   }
 
