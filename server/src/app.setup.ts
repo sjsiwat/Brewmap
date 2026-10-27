@@ -10,11 +10,14 @@ export function configureApp(app: INestApplication): void {
   // Express "trust proxy": how many proxies sit in front of us (e.g. 1 for
   // Render's load balancer), so req.ip is the caller and not the proxy. Off by
   // default - trusting X-Forwarded-For with no proxy lets callers spoof it.
-  const trustProxy = config.get<string>('TRUST_PROXY');
-  if (trustProxy) {
+  const trustProxy = config.get<string>('TRUST_PROXY')?.trim();
+  if (trustProxy && trustProxy !== 'false') {
     (app.getHttpAdapter().getInstance() as Application).set(
       'trust proxy',
-      /^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProxy,
+      // A hop count, `true`, or an address/subnet list as Express accepts it.
+      /^\d+$/.test(trustProxy)
+        ? Number(trustProxy)
+        : trustProxy === 'true' || trustProxy,
     );
   }
 

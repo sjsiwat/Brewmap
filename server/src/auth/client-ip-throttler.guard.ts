@@ -7,8 +7,11 @@ import { isIP } from 'net';
 export const CLIENT_IP_HEADER = 'x-client-ip';
 export const PROXY_SECRET_HEADER = 'x-proxy-secret';
 
-function secretMatches(given: string | undefined, expected: string): boolean {
-  if (!given) return false;
+function secretMatches(
+  given: string | string[] | undefined,
+  expected: string,
+): boolean {
+  if (typeof given !== 'string' || !given) return false;
   const a = Buffer.from(given);
   const b = Buffer.from(expected);
   return a.length === b.length && timingSafeEqual(a, b);
@@ -30,10 +33,7 @@ export class ClientIpThrottlerGuard extends ThrottlerGuard {
       secret &&
       typeof clientIp === 'string' &&
       isIP(clientIp) &&
-      secretMatches(
-        req.headers[PROXY_SECRET_HEADER] as string | undefined,
-        secret,
-      )
+      secretMatches(req.headers[PROXY_SECRET_HEADER], secret)
     ) {
       return Promise.resolve(clientIp);
     }
