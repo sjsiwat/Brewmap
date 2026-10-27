@@ -1,9 +1,10 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
+import { configureApp } from '../src/app.setup';
 import {
   CafeResponseDto,
   PaginatedCafesDto,
@@ -27,14 +28,7 @@ describe('Cafes API (e2e)', () => {
       imports: [AppModule],
     }).compile();
     app = moduleRef.createNestApplication();
-    app.setGlobalPrefix('api');
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-      }),
-    );
+    configureApp(app);
     await app.init();
   }, 120_000);
 
@@ -106,6 +100,23 @@ describe('Cafes API (e2e)', () => {
     await get('/api/cafes?minPrice=200&maxPrice=100').expect(400);
     await get('/api/cafes?drinkType=Beer').expect(400);
     await get('/api/cafes?unknown=1').expect(400);
+  });
+
+  it('treats empty query params as not set', async () => {
+    const all = await get('/api/cafes?limit=1').expect(200);
+    const total = (all.body as PaginatedCafesDto).total;
+
+    const emptyCoords = await get('/api/cafes?lat=&lng=&limit=1').expect(200);
+    const coordsBody = emptyCoords.body as PaginatedCafesDto;
+    expect(coordsBody.total).toBe(total);
+    expect(coordsBody.items[0]).not.toHaveProperty('distanceKm');
+
+    const emptyFilters = await get(
+      '/api/cafes?maxPrice=&minPrice=&drinkType=&parking=&sort=&limit=1',
+    ).expect(200);
+    expect((emptyFilters.body as PaginatedCafesDto).total).toBe(total);
+
+    await get('/api/cafes?page=').expect(400);
   });
 
   it('GET /api/cafes/top respects tag and minReviews', async () => {
