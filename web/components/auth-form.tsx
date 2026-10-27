@@ -130,10 +130,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
   }`;
 
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-12 md:gap-6 md:px-10 md:py-24">
+    <div className="page-container grid grid-cols-1 gap-12 py-16 md:grid-cols-12 md:gap-6 md:py-24">
       <div className="md:col-span-5">
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">{copy.eyebrow}</p>
-        <h1 className="mt-6 font-display text-4xl tracking-tight text-ink sm:text-5xl">
+        <p className="eyebrow">{copy.eyebrow}</p>
+        <h1 className="mt-6 heading-page">
           {copy.title}
         </h1>
         <p className="mt-5 max-w-md text-base leading-relaxed text-ink-soft">{copy.body}</p>
@@ -214,7 +214,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center justify-between gap-6 bg-ink px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            className="inline-flex items-center justify-between gap-6 bg-ink px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-ring"
           >
             {submitting ? copy.busy : copy.submit}
             <ArrowUpRight size={16} aria-hidden />
@@ -223,7 +223,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
             {mode === "login" ? "No account yet? " : "Already have an account? "}
             <Link
               href={otherHref}
-              className="text-ink underline decoration-line underline-offset-4 transition-colors hover:text-rust hover:decoration-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+              className="text-ink underline decoration-line underline-offset-4 transition-colors hover:text-rust hover:decoration-rust focus-ring"
             >
               {mode === "login" ? "Create one" : "Log in"}
             </Link>

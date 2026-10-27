@@ -14,9 +14,9 @@ const TEXT_MAX = 1000;
 
 const label = "font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted";
 const outlineButton =
-  "inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust";
+  "inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-60 focus-ring";
 const textButton =
-  "font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust";
+  "font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust disabled:cursor-wait disabled:opacity-60 focus-ring";
 
 const dateFormat = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
@@ -149,7 +149,7 @@ function ReviewForm({
         <button
           type="submit"
           disabled={saving}
-          className="bg-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="bg-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-ring"
         >
           {saving ? "Saving…" : submitLabel}
         </button>
@@ -341,7 +341,7 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
           Been to {cafeName}?{" "}
           <Link
             href={`/login?next=${encodeURIComponent(pathname)}`}
-            className="text-ink underline decoration-line underline-offset-4 transition-colors hover:text-rust hover:decoration-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            className="text-ink underline decoration-line underline-offset-4 transition-colors hover:text-rust hover:decoration-rust focus-ring"
           >
             Log in to write a review
           </Link>
@@ -408,11 +408,11 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
   const others = list?.items.filter((r) => r.id !== mine?.id) ?? [];
 
   return (
-    <section aria-labelledby="reviews-heading" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
+    <section id="reviews" aria-labelledby="reviews-heading" className="scroll-mt-24 border-b border-line">
+      <div className="page-container py-16 md:py-20">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">From BrewMap regulars</p>
+            <p className="eyebrow">From BrewMap regulars</p>
             <h2 id="reviews-heading" className="mt-4 font-display text-3xl tracking-tight text-ink">
               Community reviews
             </h2>

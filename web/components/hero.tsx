@@ -4,9 +4,9 @@ import { HeroVisual } from "@/components/hero-visual";
 export function Hero() {
   return (
     <section id="discover" className="border-b border-line">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 pt-16 pb-20 md:px-10 md:pt-24 md:pb-28 lg:grid-cols-12 lg:gap-8">
+      <div className="page-container grid grid-cols-1 gap-12 pt-16 pb-20 md:pt-24 md:pb-28 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-7">
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">
+          <p className="eyebrow">
             Café discovery — Chiang Mai
           </p>
 
@@ -17,10 +17,10 @@ export function Hero() {
           </h1>
 
           <p className="mt-8 max-w-md text-lg leading-relaxed text-ink-soft">
-            Most map apps sort cafés by distance and star rating. BrewMap
-            reads what you actually want — a chocolate-forward flat white, a
-            quiet table for six hours of work, a matcha that isn&apos;t too
-            sweet — and tells you exactly which café gets it right, and why.
+            Most map apps sort cafés by distance and star rating. Tell BrewMap
+            what you actually want — a quiet table to work at, matcha under
+            150 baht, somewhere with parking near Nimman — and it picks real
+            Chiang Mai cafés that fit, and says why.
           </p>
 
           <dl className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-6">

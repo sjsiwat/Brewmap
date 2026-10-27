@@ -3,8 +3,6 @@ import { Hero } from "@/components/hero";
 import { FeatureShowcase } from "@/components/feature-showcase";
 import { CapabilityIndex } from "@/components/capability-index";
 import { Process } from "@/components/process";
-import { PointOfView } from "@/components/point-of-view";
-import { Testimonial } from "@/components/testimonial";
 import { FinalCta } from "@/components/final-cta";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -17,8 +15,6 @@ export default function Home() {
         <FeatureShowcase />
         <CapabilityIndex />
         <Process />
-        <PointOfView />
-        <Testimonial />
         <FinalCta />
       </main>
       <SiteFooter />

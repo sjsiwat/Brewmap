@@ -94,7 +94,7 @@ export function CafeFinder() {
           className="border border-line bg-paper-raised"
         >
           <div className="flex items-center justify-between border-b border-line px-5 py-3">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">
+            <span className="label-mono">
               Match engine
             </span>
             <span className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
@@ -112,7 +112,7 @@ export function CafeFinder() {
             >
               <label
                 htmlFor={field.key}
-                className="pointer-events-none font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted"
+                className="pointer-events-none label-mono"
               >
                 {field.label}
               </label>
@@ -140,7 +140,7 @@ export function CafeFinder() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 text-left transition-colors hover:bg-ink/90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            className="flex w-full items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 text-left transition-colors hover:bg-ink/90 focus-ring"
           >
             <div>
               <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust-bright">
@@ -277,7 +277,7 @@ export function CafeFinder() {
             <button
               type="button"
               onClick={search.retry}
-              className="inline-flex items-center gap-2 self-start border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+              className="inline-flex items-center gap-2 self-start border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring"
             >
               <RotateCw size={14} aria-hidden />
               Try again
@@ -291,7 +291,7 @@ export function CafeFinder() {
           type="button"
           onClick={search.loadMore}
           disabled={search.status === "loading"}
-          className="mt-8 w-full border border-ink px-5 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust disabled:cursor-wait disabled:opacity-60"
+          className="mt-8 w-full border border-ink px-5 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring disabled:cursor-wait disabled:opacity-60"
         >
           {search.status === "loading"
             ? "Loading…"

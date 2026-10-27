@@ -36,12 +36,12 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
 
   return (
     <section className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
+      <div className="page-container py-16 md:py-20">
         <Reveal>
           <div className="flex items-center justify-between gap-6">
             <Link
               href="/cafes"
-              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-ring"
             >
               <ArrowLeft size={14} aria-hidden />
               All cafés
@@ -49,11 +49,11 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
             <FavoriteButton cafe={cafe} showLabel />
           </div>
 
-          <p className="mt-8 flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-rust">
+          <p className="mt-8 flex items-center gap-1.5 eyebrow">
             <MapPin size={13} aria-hidden />
             {cafe.area} · {cafe.address}
           </p>
-          <h1 className="mt-3 max-w-2xl font-display text-4xl tracking-tight text-ink sm:text-5xl">
+          <h1 className="mt-3 max-w-2xl heading-page">
             {cafe.name}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">
@@ -72,7 +72,7 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
 
         {cafe.aiSummary && (cafe.aiSummary.pros.length > 0 || cafe.aiSummary.cons.length > 0) && (
           <Reveal delay={0.05}>
-            <div className="mt-12 grid grid-cols-1 gap-8 border-t border-ink pt-6 md:grid-cols-12">
+            <div id="reviewers-say" className="mt-12 grid scroll-mt-24 grid-cols-1 gap-8 border-t border-ink pt-6 md:grid-cols-12">
               <div className="md:col-span-4">
                 <p className="flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
                   <Sparkles size={13} aria-hidden />
@@ -133,14 +133,14 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
           <Reveal delay={0.1} className="lg:col-span-7">
             <div className="border border-line bg-paper-raised">
               <div className="flex items-center justify-between border-b border-line px-5 py-3">
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">
+                <span className="label-mono">
                   Location
                 </span>
                 <a
                   href={osmViewUrl(cafe.lat, cafe.lng)}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+                  className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust hover:underline focus-ring"
                 >
                   View larger map
                 </a>

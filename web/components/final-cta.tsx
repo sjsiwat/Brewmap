@@ -5,11 +5,11 @@ import { Reveal } from "@/components/reveal";
 export function FinalCta() {
   return (
     <section className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:px-10 md:py-32">
+      <div className="page-container py-24 md:py-32">
         <Reveal>
           <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl">
-              <h2 className="font-display text-4xl tracking-tight text-ink sm:text-5xl">
+              <h2 className="heading-page">
                 Still not sure where to go for coffee tonight?
               </h2>
               <p className="mt-5 text-base leading-relaxed text-ink-soft">
@@ -20,7 +20,7 @@ export function FinalCta() {
 
             <Link
               href="/cafes"
-              className="group flex shrink-0 items-center gap-3 border border-ink px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-rust hover:bg-rust hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+              className="group flex shrink-0 items-center gap-3 border border-ink px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-rust hover:bg-rust hover:text-paper focus-ring"
             >
               Let&apos;s find your cup
               <ArrowUpRight

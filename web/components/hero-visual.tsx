@@ -1,9 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { heroSignals, heroMatch } from "@/lib/content";
+import { ArrowUpRight, LocateFixed, Star } from "lucide-react";
+import { getCafes, type CafeResult } from "@/lib/api";
+import { formatPrice } from "@/lib/cafes";
+import { DEFAULT_ORIGIN_LABEL, formatKm, haversineKm } from "@/lib/geo";
+import { requestUserLocation, useUserLocation } from "@/lib/use-user-location";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -17,19 +21,82 @@ const rowVariants: Variants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
+/** Best-rated café this close counts as "near you"; otherwise show the nearest one. */
+const NEAR_KM = 3;
+
+interface Pick {
+  cafe: CafeResult;
+  /** "top": best rated within NEAR_KM. "nearest": nothing that close, so the closest café. */
+  basis: "top" | "nearest";
+}
+
+/**
+ * The hero card: a real café picked for where the visitor is - the best-rated
+ * one within 3 km, or the nearest if none is that close. Uses Tha Phae Gate
+ * until the visitor shares their location.
+ */
 export function HeroVisual() {
   const reduceMotion = useReducedMotion();
+  const { origin, status } = useUserLocation();
+  const [pick, setPick] = useState<Pick | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (status === "locating") return;
+    const controller = new AbortController();
+    const near = { lat: origin.lat, lng: origin.lng, limit: 1 };
+    (async () => {
+      const top = await getCafes({ ...near, radiusKm: NEAR_KM, sort: "rating" }, { signal: controller.signal });
+      if (top.items[0]) return { cafe: top.items[0], basis: "top" } satisfies Pick;
+      const closest = await getCafes({ ...near, sort: "distance" }, { signal: controller.signal });
+      return closest.items[0] ? ({ cafe: closest.items[0], basis: "nearest" } satisfies Pick) : null;
+    })()
+      .then((next) => {
+        setPick(next);
+        setFailed(next === null);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setFailed(true);
+      });
+    return () => controller.abort();
+  }, [origin.lat, origin.lng, status]);
+
+  const fromYou = status === "device";
+  const cafe = pick?.cafe;
+  const km = cafe ? (cafe.distanceKm ?? haversineKm(origin, cafe)) : null;
+  const signals = [
+    { label: "Specialty", value: cafe?.specialty },
+    { label: "Atmosphere", value: cafe?.atmosphere },
+    { label: "Price", value: cafe ? formatPrice(cafe.priceAvg) : undefined },
+    {
+      label: "Distance",
+      value: km === null ? undefined : `${formatKm(km)} ${fromYou ? "from you" : `from ${DEFAULT_ORIGIN_LABEL}`}`,
+    },
+  ];
 
   return (
     <div className="border border-line bg-paper-raised">
-      <div className="flex items-center justify-between border-b border-line px-5 py-3">
-        <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">
-          Match engine
-        </span>
-        <span className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
-          <span className="h-1.5 w-1.5 bg-rust" aria-hidden />
-          Live read
-        </span>
+      <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3">
+        <span className="label-mono">{fromYou ? "Near you" : `Near ${DEFAULT_ORIGIN_LABEL}`}</span>
+        {status === "locating" ? (
+          <span className="label-mono" aria-live="polite">
+            Locating you…
+          </span>
+        ) : fromYou ? (
+          <span className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
+            <span className="h-1.5 w-1.5 bg-rust" aria-hidden />
+            Your location
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={requestUserLocation}
+            className="focus-ring inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust hover:underline"
+          >
+            <LocateFixed size={12} aria-hidden />
+            Use my location
+          </button>
+        )}
       </div>
 
       <motion.dl
@@ -37,20 +104,19 @@ export function HeroVisual() {
         whileInView={reduceMotion ? undefined : "visible"}
         viewport={{ once: true }}
         variants={reduceMotion ? undefined : containerVariants}
+        aria-busy={!cafe && !failed}
       >
-        {heroSignals.map((signal, i) => (
+        {signals.map((signal, i) => (
           <motion.div
             key={signal.label}
             variants={reduceMotion ? undefined : rowVariants}
             className={`flex items-baseline justify-between gap-4 px-5 py-3.5 ${
-              i !== heroSignals.length - 1 ? "border-b border-line" : ""
+              i !== signals.length - 1 ? "border-b border-line" : ""
             }`}
           >
-            <dt className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">
-              {signal.label}
-            </dt>
-            <dd className="text-right font-sans text-sm text-ink-soft">
-              {signal.value}
+            <dt className="label-mono shrink-0">{signal.label}</dt>
+            <dd className="line-clamp-2 text-right font-sans text-sm text-ink-soft">
+              {signal.value ?? (failed ? "—" : "…")}
             </dd>
           </motion.div>
         ))}
@@ -63,17 +129,33 @@ export function HeroVisual() {
         transition={{ duration: 0.5, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <Link
-          href="/cafes"
-          className="group flex items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 transition-colors hover:bg-ink/90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          href={cafe ? `/cafes/${cafe.slug}` : "/cafes"}
+          className="focus-ring group flex items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 transition-colors hover:bg-ink/90"
         >
-          <div>
+          <div className="min-w-0">
             <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust-bright">
-              {heroMatch.score}
+              {!cafe
+                ? failed
+                  ? "Browse all cafés"
+                  : "Finding a café near you…"
+                : pick?.basis === "top"
+                  ? `Top rated within ${NEAR_KM} km`
+                  : "Nearest café"}
             </p>
-            <p className="mt-1 font-display text-lg text-paper">
-              {heroMatch.name}
-            </p>
-            <p className="font-sans text-xs text-paper/60">{heroMatch.area}</p>
+            {cafe && (
+              <>
+                <p className="mt-1 truncate font-display text-lg text-paper">{cafe.name}</p>
+                <p className="flex items-center gap-1.5 font-sans text-xs text-paper/70">
+                  {cafe.area}
+                  <span aria-hidden>·</span>
+                  <Star size={11} className="fill-current" aria-hidden />
+                  {cafe.rating.toFixed(1)}
+                  <span className="sr-only">Google rating</span>
+                  <span aria-hidden>·</span>
+                  {cafe.reviewCount.toLocaleString()} reviews
+                </p>
+              </>
+            )}
           </div>
           <ArrowUpRight
             className="shrink-0 text-paper/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"

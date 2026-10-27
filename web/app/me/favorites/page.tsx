@@ -15,15 +15,15 @@ export default function FavoritesPage() {
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <section className="border-b border-line">
-          <div className="mx-auto max-w-6xl px-6 pt-16 pb-12 md:px-10 md:pt-24 md:pb-16">
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">Your shortlist</p>
-            <h1 className="mt-6 max-w-2xl font-display text-4xl tracking-tight text-ink sm:text-5xl">
+          <div className="page-container pt-16 pb-12 md:pt-24 md:pb-16">
+            <p className="eyebrow">Your shortlist</p>
+            <h1 className="mt-6 max-w-2xl heading-page">
               Cafés you saved for later.
             </h1>
           </div>
         </section>
         <section className="flex-1">
-          <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+          <div className="page-container py-12 md:py-16">
             <FavoritesList />
           </div>
         </section>

@@ -1,3 +1,8 @@
+/**
+ * Site copy. Everything here describes what BrewMap really does today - no
+ * features, numbers or quotes the product can't back up.
+ */
+
 export interface NavLink {
   label: string;
   href: string;
@@ -10,23 +15,8 @@ export const navLinks: NavLink[] = [
   { label: "About", href: "/about" },
 ];
 
-export interface Signal {
-  label: string;
-  value: string;
-}
-
-export const heroSignals: Signal[] = [
-  { label: "Flavor", value: "Chocolate, low acidity" },
-  { label: "Atmosphere", value: "Quiet, workable" },
-  { label: "Budget", value: "~120฿" },
-  { label: "Distance", value: "1.2 km" },
-];
-
-export const heroMatch = {
-  score: "94% match",
-  name: "Analog Coffee",
-  area: "Nimman, Chiang Mai",
-};
+/** How many cafés are in the database (Google Maps listings, Chiang Mai). */
+export const CAFE_COUNT = 173;
 
 export interface StatItem {
   value: string;
@@ -34,74 +24,84 @@ export interface StatItem {
 }
 
 export const heroStats: StatItem[] = [
-  { value: "2 min", label: "Average decision time" },
-  { value: "6", label: "Taste signals read per search" },
-  { value: "2026", label: "Starting in Chiang Mai" },
+  { value: String(CAFE_COUNT), label: "Real cafés in Chiang Mai" },
+  { value: "TH · EN", label: "Ask the AI finder in either" },
+  { value: String(CAFE_COUNT), label: "AI review summaries" },
 ];
+
+/** A café page that shows the AI summary and community reviews, for linking to. */
+const SAMPLE_CAFE = "/cafes/the-baristro-asian-style";
 
 export interface Feature {
   index: string;
   name: string;
   description: string;
   category: string;
-  status: string;
-  result: string;
+  detail: string;
+  href: string;
+  cta: string;
 }
 
 export const features: Feature[] = [
   {
     index: "01",
-    name: "Coffee Finder",
+    name: "AI Coffee Finder",
     description:
-      "Describe what you're craving in plain language. The system matches it to real cafés, not keywords.",
+      "Describe what you want in a sentence, in Thai or English. Gemini turns it into filters, we search the real café data, and each pick comes with the reason it fits.",
     category: "Discovery",
-    status: "Live — 2026",
-    result: "Cuts café-picking time from 25 minutes to under 2.",
+    detail: "If nothing matches every wish, it says which one it let go of.",
+    href: "/cafes#ai-finder",
+    cta: "Try the finder",
   },
   {
     index: "02",
-    name: "Smart Search",
+    name: "Filters & Sort",
     description:
-      "Filter by flavor note, brewing method, and atmosphere — not just neighborhood and star rating.",
+      "Narrow the list by price, distance, parking and drink type, then sort by rating, distance, review count or price.",
     category: "Discovery",
-    status: "Live — 2026",
-    result: "Surfaces cafés generic map search never would.",
+    detail: "Distances are measured from where you are, once you share your location.",
+    href: "/cafes#filters",
+    cta: "Open the filters",
   },
   {
     index: "03",
-    name: "Interactive Coffee Map",
+    name: "AI Review Summary",
     description:
-      "Every pin carries a taste profile and specialty, so browsing the map already narrows the choice.",
-    category: "Discovery",
-    status: "Live — 2026",
-    result: "Turns idle browsing into a shortlist.",
+      "Every café's Google reviews condensed into what people loved and what to watch out for.",
+    category: "Insights",
+    detail: `Written by AI from review text only, for all ${CAFE_COUNT} cafés.`,
+    href: `${SAMPLE_CAFE}#reviewers-say`,
+    cta: "See an example",
   },
   {
     index: "04",
-    name: "Review Summary",
+    name: "Community Reviews",
     description:
-      "Thousands of reviews condensed into what actually matters: what's good, what to expect, what to skip.",
-    category: "Insights",
-    status: "Beta",
-    result: "Replaces 2,000 reviews with three lines worth reading.",
+      "Log in to rate a café from one to five and say why. BrewMap keeps its own community rating next to Google's.",
+    category: "Community",
+    detail: "One review per person per café, editable any time.",
+    href: `${SAMPLE_CAFE}#reviews`,
+    cta: "Read and write reviews",
   },
   {
     index: "05",
-    name: "Top Lists",
+    name: "Saved Cafés",
     description:
-      "Curated rankings judged one craft at a time — pour-over, matcha, roastery, quiet-work cafés.",
-    category: "Editorial",
-    status: "Live — 2026",
-    result: "Gives every craft its own leaderboard, not one blended score.",
+      "Tap the heart on any café to keep it on your shortlist, and find them all in one place later.",
+    category: "Personal",
+    detail: "Tied to your account, so they follow you between devices.",
+    href: "/me/favorites",
+    cta: "Your saved cafés",
   },
   {
     index: "06",
-    name: "Personalized Recommendations",
+    name: "Café Pages",
     description:
-      "The system tracks what you actually order and revisit, and sharpens its taste model after every trip.",
-    category: "Personalization",
-    status: "Rolling out",
-    result: "Gets more accurate the more you use it — not more generic.",
+      "Hours, Google rating, price, parking, pets, tags and a map for each café, with distance from you.",
+    category: "Details",
+    detail: "Open in OpenStreetMap for directions.",
+    href: SAMPLE_CAFE,
+    cta: "View a café",
   },
 ];
 
@@ -110,14 +110,15 @@ export interface Capability {
   description: string;
 }
 
+/** What the filters and the AI finder actually work with. */
 export const capabilities: Capability[] = [
-  { label: "Coffee style", description: "Latte, flat white, pour-over, cold brew, espresso." },
-  { label: "Flavor profile", description: "Chocolate, fruity, floral, low or high acidity." },
-  { label: "Brewing method", description: "Manual pour-over, espresso-based, batch, cold." },
-  { label: "Atmosphere", description: "Quiet and workable, social, scenic, fast turnover." },
-  { label: "Budget", description: "What you'd actually pay for this cup, today." },
-  { label: "Distance", description: "How far you're realistically willing to go." },
-  { label: "Community reviews", description: "What real visitors noticed, weighted by relevance." },
+  { label: "Drink type", description: "Coffee, tea (matcha included) or non-coffee." },
+  { label: "Specialty & tags", description: "Quiet, work-friendly, roastery, matcha, dessert, garden and more." },
+  { label: "Area", description: "17 areas, from Nimman and the Old City to Mae Rim." },
+  { label: "Budget", description: "Typical drink price in baht." },
+  { label: "Distance", description: "From your location, or Tha Phae Gate if you'd rather not share." },
+  { label: "Parking & pets", description: "Somewhere to park, and whether your dog can come." },
+  { label: "Ratings", description: "Google rating and review count, plus BrewMap's own community rating." },
 ];
 
 export interface ProcessStep {
@@ -131,39 +132,26 @@ export const processSteps: ProcessStep[] = [
     index: "01",
     title: "Describe",
     description:
-      "Tell BrewMap what you want in a sentence — no filters to configure, no categories to browse first.",
+      "Type what you're after, like “quiet café with parking near Nimman”, or set the filters yourself.",
   },
   {
     index: "02",
-    title: "Analyze",
+    title: "Filter",
     description:
-      "The system reads flavor, brewing method, atmosphere, budget, and distance from what you said.",
+      "The AI turns your sentence into filters, and the server checks every one before it searches.",
   },
   {
     index: "03",
     title: "Match",
     description:
-      "You get a ranked shortlist — each café attached to the specific reason it was recommended.",
+      "You get up to five cafés, each with a short reason written only from that café's data.",
   },
   {
     index: "04",
-    title: "Learn",
+    title: "Save & review",
     description:
-      "Every visit refines the model, so the next match is closer to your taste than the last.",
+      "Keep the ones you like, then come back after your visit to rate and review.",
   },
-];
-
-export const testimonial = {
-  quote:
-    "Before BrewMap, we only showed up for people typing ‘coffee near me.’ Now we get customers who searched for quiet, chocolate-forward, no fruit notes — and those are the ones who order the good stuff and stay for two hours. Our weekday afternoons used to be dead. Now they're half our matcha sales.",
-  name: "Nualjan Srisawat",
-  role: "Owner, Ink & Oat Coffee — Nimman",
-};
-
-export const footerSocials = [
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "LINE", href: "https://line.me" },
-  { label: "X", href: "https://x.com" },
 ];
 
 export interface AboutFact {
@@ -175,16 +163,16 @@ export const aboutFacts: AboutFact[] = [
   { label: "Maker", value: "Siwat Jankam" },
   { label: "Role", value: "Solo developer & designer" },
   { label: "Based in", value: "Chiang Mai, Thailand" },
-  { label: "Built with", value: "Next.js, TypeScript, Tailwind" },
-  { label: "Status", value: "Prototype, actively iterating" },
+  { label: "Built with", value: "Next.js, NestJS, MongoDB, Gemini" },
+  { label: "Status", value: "Prototype, live and iterating" },
 ];
 
 export const aboutCopy = {
   eyebrow: "About",
   heading: "One person, one bad coffee decision too many.",
   paragraphs: [
-    "BrewMap started as a database design exercise — three collections, a handful of mock orders, nothing more. But the real problem behind it was personal: too many afternoons spent scrolling reviews for a café that turned out too loud, too far, or nothing like what I actually wanted to drink.",
-    "So I kept building. What began as a schema for users, menus, and orders became a full front-end prototype — a chance to think through a product end to end, from data model to the page you're looking at right now.",
-    "BrewMap is still a prototype, built solo as coursework in Chiang Mai. The café data here is mocked, but the problem it's solving isn't.",
+    "BrewMap started as a database design exercise: three collections, a handful of mock orders, nothing more. But the real problem behind it was personal: too many afternoons spent scrolling reviews for a café that turned out too loud, too far, or nothing like what I actually wanted to drink.",
+    "So I kept building. What began as a schema became a full product: a Next.js site, a NestJS API on MongoDB, accounts, saved cafés, community reviews and an AI finder.",
+    `The ${CAFE_COUNT} cafés come from real Google Maps listings. Their specialties, tags and review summaries were derived from real review text with AI, so double-check hours and prices before you go.`,
   ],
 };

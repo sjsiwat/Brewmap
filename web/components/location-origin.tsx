@@ -27,7 +27,7 @@ export function LocationOrigin() {
         <button
           type="button"
           onClick={requestUserLocation}
-          className="inline-flex items-center gap-1.5 uppercase text-rust transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="inline-flex items-center gap-1.5 uppercase text-rust transition-colors hover:underline focus-ring"
         >
           <LocateFixed size={13} aria-hidden />
           Use my location

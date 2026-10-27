@@ -4,13 +4,13 @@ import { Reveal } from "@/components/reveal";
 export function AboutContent() {
   return (
     <section className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-24">
+      <div className="page-container py-16 md:py-24">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">
+            <p className="eyebrow">
               {aboutCopy.eyebrow}
             </p>
-            <h1 className="mt-6 max-w-xl font-display text-4xl tracking-tight text-ink sm:text-5xl">
+            <h1 className="mt-6 max-w-xl heading-page">
               {aboutCopy.heading}
             </h1>
 

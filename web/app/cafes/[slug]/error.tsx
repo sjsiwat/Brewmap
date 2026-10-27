@@ -18,12 +18,12 @@ export default function CafeError({
         <section className="border-b border-line">
           <div
             role="alert"
-            className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20"
+            className="page-container py-16 md:py-20"
           >
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-rust">
+            <p className="eyebrow">
               Café unavailable
             </p>
-            <h1 className="mt-4 max-w-xl font-display text-3xl tracking-tight text-ink sm:text-4xl">
+            <h1 className="mt-4 max-w-xl heading-section">
               We couldn&apos;t load this café right now.
             </h1>
             <p className="mt-4 max-w-lg text-base leading-relaxed text-ink-soft">
@@ -33,14 +33,14 @@ export default function CafeError({
               <button
                 type="button"
                 onClick={() => unstable_retry()}
-                className="inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+                className="inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring"
               >
                 <RotateCw size={14} aria-hidden />
                 Try again
               </button>
               <Link
                 href="/cafes"
-                className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+                className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-ring"
               >
                 <ArrowLeft size={14} aria-hidden />
                 All cafés
