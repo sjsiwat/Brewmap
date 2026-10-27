@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
+import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { Cafe } from "@/lib/cafes";
 import { useFavorites } from "@/lib/favorites";
@@ -32,7 +33,11 @@ export function FavoriteButton({
     setFailed(false);
     try {
       await favorites.toggle(cafe);
-    } catch {
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        router.push(`/login?next=${encodeURIComponent(pathname)}`);
+        return;
+      }
       setFailed(true);
     }
   }

@@ -13,6 +13,8 @@ interface AuthContextValue {
   /** Creates the account, then logs in with the same credentials. */
   register: (email: string, password: string, displayName: string) => Promise<User>;
   logout: () => Promise<void>;
+  /** The API said the session is gone (401): treat the user as logged out locally. */
+  endSession: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -62,9 +64,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStatus("anonymous");
   }, []);
 
+  const endSession = useCallback(() => {
+    setUser(null);
+    setStatus("anonymous");
+  }, []);
+
   const value = useMemo(
-    () => ({ user, status, login, register, logout }),
-    [user, status, login, register, logout],
+    () => ({ user, status, login, register, logout, endSession }),
+    [user, status, login, register, logout, endSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -76,7 +83,20 @@ export function useAuth(): AuthContextValue {
   return context;
 }
 
-/** Only same-site paths, so `?next=https://evil.example` can't redirect off BrewMap. */
+const NEXT_BASE = "https://brewmap.invalid";
+
+/**
+ * Only same-site paths, so `?next=` can't redirect off BrewMap. Parsed as a URL
+ * rather than prefix-checked: browsers read `/\evil.example` as `//evil.example`.
+ */
 export function safeNextPath(next: string | null): string {
-  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/cafes";
+  if (!next || !next.startsWith("/")) return "/cafes";
+  try {
+    const url = new URL(next, NEXT_BASE);
+    // Dot segments can normalise to a protocol-relative path: `/.//evil` -> `//evil`.
+    if (url.origin !== NEXT_BASE || url.pathname.startsWith("//")) return "/cafes";
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return "/cafes";
+  }
 }
