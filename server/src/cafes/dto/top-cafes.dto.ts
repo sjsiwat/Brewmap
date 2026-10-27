@@ -1,9 +1,11 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { emptyToUndefined } from './query-cafes.dto';
 
 export class TopCafesDto {
   /** Restrict the ranking to one tag, e.g. "Matcha" for "Top 10 Matcha". */
   @IsOptional()
+  @Transform(emptyToUndefined)
   @IsString()
   tag?: string;
 
