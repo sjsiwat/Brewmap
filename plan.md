@@ -200,7 +200,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 4 — Reviews
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-4.md](reviews/phase-4.md)
 **Branch:** `phase-4-reviews`
 **Review range:** `c93f9b0..phase-4-reviews` (ใช้ `git diff c93f9b0..phase-4-reviews`)
 **ทดสอบใน Chrome 2026-10-27:** เขียน (ไม่เลือกดาว → เตือน) / แก้ (ล้าง "what you had", ป้าย edited) / ลบ (ยืนยัน 2 ขั้น) · ผู้ใช้อื่นไม่เห็นปุ่มแก้/ลบ และ API ตอบ 403 · ค่าเฉลี่ย 3.5 จาก 2 รีวิว · Show more 10 → 12 ไม่ซ้ำ · 375/768px ไม่มี horizontal scroll · API ล่ม → error + Try again ใช้ได้ · session หมดตอนโพสต์ → ไป login · ไม่มี console error
