@@ -182,7 +182,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 3c — Rate limit ต่อผู้ใช้หลัง /api proxy (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-3c.md](reviews/phase-3c.md)
 **Branch:** `phase-3c-trust-proxy`
 **Review range:** `8e2f647..phase-3c-trust-proxy` (ใช้ `git diff 8e2f647..phase-3c-trust-proxy`)
 
