@@ -10,7 +10,7 @@ export class UserResponseDto {
 
 export function toUserResponse(user: UserDocument): UserResponseDto {
   return {
-    id: user.id as string,
+    id: user.id,
     email: user.email,
     displayName: user.displayName,
     role: user.role,

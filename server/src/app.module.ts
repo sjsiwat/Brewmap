@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './auth/auth.module';
 import { CafesModule } from './cafes/cafes.module';
 import { HealthController } from './health/health.controller';
 
@@ -13,6 +15,9 @@ import { HealthController } from './health/health.controller';
         uri: config.getOrThrow<string>('MONGODB_URI'),
       }),
     }),
+    // Limits are set per route with @Throttle (auth endpoints only).
+    ThrottlerModule.forRoot([{ limit: 100, ttl: 60_000 }]),
+    AuthModule,
     CafesModule,
   ],
   controllers: [HealthController],
