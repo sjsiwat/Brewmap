@@ -97,7 +97,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - [x] 1.9 `server/README.md`
 - [x] 1.10 Commit + กรอก Review range
 
-**Gate (server):** `npx tsc --noEmit` · `npm run lint` · `npm test` · `npm run test:e2e` · `npm run build`
+**Gate (server):** `npx tsc --noEmit` · `npm run lint` · `npm test` · `npm run test:e2e` · `npm run build` (ตั้งแต่ Phase 2b รวมเป็น `npm run gate:server` ที่ root)
 
 ---
 
@@ -120,6 +120,19 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 **Gate:** server gate ทั้งหมด + web: `npx tsc --noEmit` · `npm run lint` · `npm run build` (ตอน build ต้องมี server รันอยู่ ถ้าเลือก D2a)
 **Acceptance:** ปิด server แล้วหน้าเว็บแสดง error state ไม่ crash · เปิด server แล้วทุกหน้าทำงานเหมือนเดิม · ไม่มี console error ที่ 375 / 768 / 1440px
+
+---
+
+### Phase 2b — แก้ข้อเสนอแนะจาก review Phase 2 + Gate ของ reviewer
+**Status:** `approved` — [reviews/phase-2b.md](reviews/phase-2b.md) (owner สั่ง 2026-10-27)
+**Branch:** `phase-2b-review-followups`
+**Review range:** `5f03977..phase-2b-review-followups` (ใช้ `git diff 5f03977..phase-2b-review-followups`)
+
+- [x] 2b.1 (review 2 #1) `useCafeSearch.retry()` ยิงใหม่เฉพาะหน้าที่ error — หน้าที่โหลดสำเร็จแล้วไม่ถูกยิงซ้ำ
+- [x] 2b.2 (review 2 #2) `tag` / `area` (และ `tag` ของ `/top`) ใช้ `emptyToUndefined` + e2e
+- [x] 2b.3 Root script `gate:server` / `gate:web` ให้ reviewer รัน Gate จาก root ได้ · server เพิ่ม `typecheck`, `lint:check` (ไม่ --fix) · web เพิ่ม `typecheck` · อัปเดต allow-list ใน `REVIEW.md`
+
+**Gate:** `npm run gate:server` · `npm run gate:web` (ที่ root, เปิด API ไว้)
 
 ---
 

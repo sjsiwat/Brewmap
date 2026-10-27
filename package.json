@@ -7,7 +7,9 @@
     "dev:web": "npm --prefix web run dev",
     "dev:api": "npm --prefix server run start:dev",
     "install:all": "npm --prefix web install && npm --prefix server install",
-    "seed": "npm --prefix server run seed"
+    "seed": "npm --prefix server run seed",
+    "gate:server": "npm --prefix server run typecheck && npm --prefix server run lint:check && npm --prefix server test && npm --prefix server run test:e2e && npm --prefix server run build",
+    "gate:web": "npm --prefix web run typecheck && npm --prefix web run lint && npm --prefix web run build"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"

@@ -31,12 +31,13 @@ export function useCafeSearch(query: Omit<CafeQuery, "page">): CafeSearch {
   const queryKey = JSON.stringify(query);
   const [pages, setPages] = useState({ queryKey, count: 1 });
   const pageCount = pages.queryKey === queryKey ? pages.count : 1;
+  // Bumped by retry() to re-run the fetch effect for pages that failed.
   const [attempt, setAttempt] = useState(0);
   const [results, setResults] = useState<Record<string, PageResult>>({});
   // Keys already fetched or in flight, so re-renders don't refetch.
   const requested = useRef(new Set<string>());
 
-  const pageKey = (page: number) => `${attempt}|${queryKey}|${page}`;
+  const pageKey = (page: number) => `${queryKey}|${page}`;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -45,7 +46,7 @@ export function useCafeSearch(query: Omit<CafeQuery, "page">): CafeSearch {
     const params = JSON.parse(queryKey) as CafeQuery;
 
     for (let page = 1; page <= pageCount; page++) {
-      const key = `${attempt}|${queryKey}|${page}`;
+      const key = `${queryKey}|${page}`;
       if (requestedKeys.has(key)) continue;
       requestedKeys.add(key);
       inFlight.add(key);
@@ -95,6 +96,16 @@ export function useCafeSearch(query: Omit<CafeQuery, "page">): CafeSearch {
     error,
     hasMore: status === "ready" && total !== null && items.length < total,
     loadMore: () => setPages({ queryKey, count: pageCount + 1 }),
-    retry: () => setAttempt((n) => n + 1),
+    retry: () => {
+      // Drop only the failed pages so pages that already loaded aren't fetched again.
+      const failed = Object.keys(results).filter((key) => "error" in results[key]);
+      failed.forEach((key) => requested.current.delete(key));
+      setResults((prev) => {
+        const next = { ...prev };
+        failed.forEach((key) => delete next[key]);
+        return next;
+      });
+      setAttempt((n) => n + 1);
+    },
   };
 }
