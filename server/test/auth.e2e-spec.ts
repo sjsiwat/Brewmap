@@ -233,6 +233,23 @@ describe('Auth + Favorites API (e2e)', () => {
         .expect(400);
     });
 
+    it('applies the register email rules at login too -> 400', async () => {
+      // Its own visitor IP, so it doesn't use up this client's login quota.
+      process.env.PROXY_SECRET = 'e2e-login-secret';
+      try {
+        await http()
+          .post('/api/auth/login')
+          .set({
+            'x-client-ip': '198.51.100.150',
+            'x-proxy-secret': 'e2e-login-secret',
+          })
+          .send({ email: 'dou..ble@example.com', password: USER.password })
+          .expect(400);
+      } finally {
+        delete process.env.PROXY_SECRET;
+      }
+    });
+
     it('/me without a valid cookie -> 401', async () => {
       await http().get('/api/auth/me').expect(401);
       await http()
