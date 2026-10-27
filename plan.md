@@ -236,7 +236,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 4c — ปิดความเสี่ยงที่เหลือ + กฎข้อมูลสมัครสมาชิก (owner สั่ง 2026-10-27)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-4c.md](reviews/phase-4c.md)
 **Branch:** `phase-4c-hardening`
 **Review range:** `bae6305..phase-4c-hardening` (ใช้ `git diff main...HEAD`)
 
