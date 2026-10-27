@@ -122,6 +122,13 @@ describe('Auth + Favorites API (e2e)', () => {
       await agent.post('/api/auth/logout').expect(204);
     });
 
+    it('rejects an empty password before checking it -> 400', async () => {
+      await http()
+        .post('/api/auth/login')
+        .send({ email: USER.email, password: '' })
+        .expect(400);
+    });
+
     it('/me without a valid cookie -> 401', async () => {
       await http().get('/api/auth/me').expect(401);
       await http()
