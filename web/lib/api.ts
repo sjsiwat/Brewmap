@@ -154,14 +154,16 @@ export function logout(): Promise<void> {
   return apiFetch<void>("/auth/logout", { method: "POST" });
 }
 
-/** The logged-in user, or null when there is no valid session. */
+/**
+ * The logged-in user, or null when there is no valid session. Uses /auth/session,
+ * which answers 200 either way, so logged-out visitors get no 401 in the console.
+ */
 export async function getMe(init?: RequestInit): Promise<User | null> {
-  try {
-    return await apiFetch<User>("/auth/me", { cache: "no-store", ...init });
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 401) return null;
-    throw error;
-  }
+  const { user } = await apiFetch<{ user: User | null }>("/auth/session", {
+    cache: "no-store",
+    ...init,
+  });
+  return user;
 }
 
 export function getFavorites(init?: RequestInit): Promise<Cafe[]> {

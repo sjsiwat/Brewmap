@@ -20,7 +20,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 /**
- * Session state from `GET /api/auth/me`. The token itself lives in an httpOnly
+ * Session state from `GET /api/auth/session`. The token itself lives in an httpOnly
  * cookie, so this only ever knows *who* is logged in, never the token.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {

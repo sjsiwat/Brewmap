@@ -143,7 +143,7 @@ export function CafeFinder() {
             className="flex w-full items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 text-left transition-colors hover:bg-ink/90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
           >
             <div>
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
+              <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust-bright">
                 Confirm
               </p>
               <p className="mt-1 font-display text-lg text-paper">

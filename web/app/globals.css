@@ -5,10 +5,12 @@
   --color-paper-raised: #eee7d9;
   --color-ink: #211d19;
   --color-ink-soft: #423c35;
-  --color-muted: #7a7267;
+  --color-muted: #676057;
   --color-line: #d9d0bf;
-  --color-rust: #b8451f;
+  --color-rust: #a73e1c;
   --color-rust-soft: #e8ddd0;
+  /* Rust for text on ink backgrounds: 5.5:1 there, where --color-rust is 2.7:1. */
+  --color-rust-bright: #d97a52;
 }
 
 @theme inline {
@@ -20,6 +22,7 @@
   --color-line: var(--color-line);
   --color-rust: var(--color-rust);
   --color-rust-soft: var(--color-rust-soft);
+  --color-rust-bright: var(--color-rust-bright);
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter);
