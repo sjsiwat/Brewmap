@@ -216,6 +216,25 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 4b — ตรวจความปลอดภัย + บั๊กทั้งระบบ (owner สั่ง 2026-10-27)
+**Status:** `approved` — [reviews/phase-4b.md](reviews/phase-4b.md)
+**Branch:** `phase-4b-security-recheck`
+**Review range:** `58a26b7..phase-4b-security-recheck` (ใช้ `git diff 58a26b7..phase-4b-security-recheck`)
+
+ตรวจแล้วไม่พบปัญหา: ไม่มี secret/`.env` ใน git history · ไม่มี `dangerouslySetInnerHTML` (รีวิวที่มี `<script>` แสดงเป็นข้อความ) · NoSQL injection ทาง body/query/param → 400/404 · body 2MB → 413 · JWT `alg: none` → 401 · CORS ตอบเฉพาะ origin ของเว็บ · `page` ใหญ่มาก → 200 ว่าง · open redirect ทุกรูปแบบเดิมยังปิดอยู่บน Next ใหม่
+
+- [x] 4b.1 Dependencies: `next` 16.2.10 → 16.4.3 (critical: Proxy bypass, DoS) + postcss/sharp/nanoid ฯลฯ · `multer` ≥ 2.5 ผ่าน `overrides` → web audit 0
+- [x] 4b.2 **รหัสผ่านเกิน 72 bytes** — bcrypt ตัดที่ 72 bytes แต่ DTO นับเป็นตัวอักษร → รหัสไทย 30 ตัว (90 bytes) สมัครได้ แล้ว login ด้วยรหัสที่ 6 ตัวท้ายต่างกันได้ 200 → ตรวจเป็น bytes ทั้ง register/login + e2e
+- [x] 4b.3 **Token ของบัญชีที่ถูกลบ** ยังเพิ่ม favorite (204) และโพสต์รีวิว (201) ได้จนหมดอายุ → `JwtAuthGuard` เช็กว่าผู้ใช้ยังอยู่ + e2e
+- [x] 4b.5 (review 4b #1) `?page=1e20` + `lat`/`lng` → 500 → `page` ≤ 10,000
+- [x] 4b.4 Security headers บนเว็บ (X-Frame-Options/CSP frame-ancestors, nosniff, Referrer-Policy, Permissions-Policy) · ปิด `X-Powered-By` ทั้งเว็บและ API
+
+ทดสอบใน Chrome บน Next 16.4.3: สมัคร (รหัสไทยเกิน → ข้อความชัด) · ❤️ · เขียนรีวิว · แผนที่ · หน้า Saved · open redirect · ไม่มี console error
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ### Phase 5 — AI (Gemini)
 **Status:** `todo`
 
@@ -252,4 +271,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
+- (security, ยอมรับไว้ก่อน) JWT แบบ stateless: logout ลบแค่ cookie — token ที่ถูกขโมยไปใช้ได้จนหมดอายุ 7 วัน → ถ้าต้องการ ให้เพิ่ม `tokenVersion` ใน user
+- (security) CSP แบบเต็ม (`script-src` + nonce) — ตอนนี้มีแค่ `frame-ancestors`
+- (security) Swagger `/api/docs` เปิดใน production · rate limit การโพสต์รีวิว · `@nestjs/swagger` 12 (js-yaml moderate)
 - อัปเกรด NestJS 11 → 12

@@ -66,6 +66,8 @@ export class QueryReviewsDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  // Far beyond any real list; stops huge values overflowing the skip (500).
+  @Max(10_000)
   page: number = 1;
 
   @IsOptional()
