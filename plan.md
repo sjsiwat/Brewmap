@@ -250,7 +250,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - [x] 4c.4 **Swagger** `/api/docs` ปิดเมื่อ `NODE_ENV=production` (เปิดได้ด้วย `SWAGGER=true`)
 - [x] 4c.5 **js-yaml** ≥ 5.5 ใต้ `@nestjs/swagger` ผ่าน `overrides` (Swagger 12 ต้องใช้ Nest 12) → server audit 0
 - [x] 4c.6 **CSP เต็ม** แบบไม่ใช้ nonce (nonce บังคับทุกหน้าเป็น dynamic → เสีย ISR): `default-src 'self'`, OSM เป็น frame เดียวที่อนุญาต, `object-src 'none'`, `base-uri`/`form-action 'self'`
-- [x] 4c.7 **ข้อมูลส่วนบุคคลในไฟล์ scrape** — ลบชื่อ/รูปโปรไฟล์/ลิงก์ผู้รีวิว/รูปรีวิว/review id ออกจาก `raw-full173.json`, `raw-top60.json` (build script ได้ผลเท่าเดิม) · commit เก่ายังมีอยู่ — การเขียน history ใหม่ต้องให้ owner อนุมัติแยก
+- [x] 4c.7 **ข้อมูลส่วนบุคคลในไฟล์ scrape** — ลบชื่อ/รูปโปรไฟล์/ลิงก์ผู้รีวิว/รูปรีวิว/review id ออกจาก `raw-full173.json`, `raw-top60.json` (build script ได้ผลเท่าเดิม) + คำตอบของร้าน (`reply_*` เรียกชื่อผู้รีวิว) · **เขียน git history ใหม่ทุก branch แล้ว** (owner สั่ง 2026-10-27, `git filter-repo` + force push) — ไม่มี commit ไหนเหลือชื่อ/รูปผู้รีวิว
 
 ทดสอบใน Chrome: ฟอร์มสมัครที่กรอกผิดแสดง error ครบ 3 ช่อง · สมัครชื่อไทยแล้วถูกจัดรูปแบบ · 400 จาก server แสดงข้อความตรง · หน้าร้าน + แผนที่ OSM ไม่มี CSP violation · ❤️ → logout → `/me` 401 · ลบผู้ใช้ QA ออกจาก Atlas แล้ว
 
@@ -294,5 +294,4 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
-- (security) เขียน git history ใหม่เพื่อลบข้อมูลผู้รีวิวในไฟล์ scrape เก่า (ทำลาย history — owner ต้องอนุมัติ)
 - อัปเกรด NestJS 11 → 12

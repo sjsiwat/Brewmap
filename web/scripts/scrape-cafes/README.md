@@ -93,6 +93,7 @@ data provider) before any commercial/production use.
 ## Privacy
 
 The raw scrape files keep each review's rating, text and date only. Reviewer
-names, profile photos, profile links, review photos and Google review ids were
-removed (Phase 4c), and the pipeline above never used them. Older commits still
-contain them; rewriting history to purge them is a separate, owner-approved step.
+names, profile photos, profile links, review photos, Google review ids and the
+owner's replies (which greet the reviewer by name) were removed (Phase 4c), and
+the pipeline above never used them. The git history was rewritten the same way
+(owner-approved, 2026-10-27), so no older commit has them either.
