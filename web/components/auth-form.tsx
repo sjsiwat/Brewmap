@@ -43,7 +43,8 @@ function errorText(error: unknown, mode: Mode): string {
     case 400:
       return mode === "register"
         ? "Check the fields: a valid email, a name, and a password of 8–72 characters (about 24 in Thai)."
-        : "Enter a valid email and your password.";
+        : // e.g. a password over the 72-byte limit: it can't match any account.
+          "That email and password don't match an account.";
     default:
       return error.status >= 500
         ? "Something went wrong on our side. Try again in a moment."

@@ -88,6 +88,9 @@ describe('Reviews API (e2e)', () => {
       communityReviewCount: 0,
     });
     await http().get('/api/cafes/no-such-cafe/reviews').expect(404);
+    // Huge pages used to overflow the skip and return 500.
+    await http().get(`/api/cafes/${slug}/reviews?page=1e20`).expect(400);
+    await http().get('/api/cafes?page=1e20&lat=18.78&lng=98.99').expect(400);
   });
 
   it('writing needs login and a valid body', async () => {
