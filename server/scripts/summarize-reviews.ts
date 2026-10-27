@@ -8,6 +8,10 @@
  *   npm run ai:summarize -- --force      # redo all
  *   npm run ai:summarize -- --limit 3    # try a few first
  *   npm run ai:summarize -- --dry-run    # print, don't save
+ *   npm run ai:summarize -- --rpm 10     # Gemini requests per minute (default 10)
+ *
+ * The free tier allows ~15 requests/min per model, shared with the live AI
+ * Finder, so requests are paced. A failed café is simply retried next run.
  *
  * Only the review text and star rating are sent to Gemini - never reviewer
  * names, photos or profile links.
@@ -83,6 +87,10 @@ async function main() {
   const force = process.argv.includes('--force');
   const dryRun = process.argv.includes('--dry-run');
   const limit = Number(arg('--limit') ?? Infinity);
+  const rpm = Number(arg('--rpm') ?? 10);
+  if (!(rpm > 0)) throw new Error('--rpm must be a positive number');
+  const gapMs = 60_000 / rpm;
+  let lastRequestAt = 0;
 
   const gemini = new GeminiService(new ConfigService(process.env));
   if (!gemini.modelName) throw new Error('GEMINI_MODEL is not set');
@@ -125,6 +133,9 @@ async function main() {
         continue;
       }
 
+      const wait = lastRequestAt + gapMs - Date.now();
+      if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+      lastRequestAt = Date.now();
       try {
         const output = (await gemini.generateJson({
           system: SYSTEM,

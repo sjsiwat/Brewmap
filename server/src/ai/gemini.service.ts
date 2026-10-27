@@ -93,9 +93,8 @@ export class GeminiService {
       return JSON.parse(text) as unknown;
     } catch (error) {
       // Log the cause for us; callers only ever see a generic message.
-      this.logger.warn(
-        `Gemini request failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(`Gemini request failed: ${message.slice(0, 300)}`);
       throw new AiUnavailableError('Gemini request failed', { cause: error });
     }
   }
