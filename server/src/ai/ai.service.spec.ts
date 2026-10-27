@@ -1,4 +1,4 @@
-import { sanitizeFilters } from './ai.service';
+import { nextRelaxation, sanitizeFilters } from './ai.service';
 
 const context = {
   tags: ['Matcha', 'Quiet', 'Specialty'],
@@ -89,5 +89,29 @@ describe('sanitizeFilters', () => {
     for (const output of [null, 'Matcha', 42, ['Matcha'], undefined]) {
       expect(sanitizeFilters(output, context)).toEqual({});
     }
+  });
+});
+
+describe('nextRelaxation', () => {
+  it('gives up tag, area and drink before price, pets and parking', () => {
+    expect(
+      nextRelaxation({
+        parking: true,
+        maxPrice: 80,
+        tag: 'Quiet',
+        area: 'Nimman',
+      }),
+    ).toEqual({ key: 'tag' });
+    expect(
+      nextRelaxation({ parking: true, maxPrice: 80, area: 'Nimman' }),
+    ).toEqual({ key: 'area' });
+    expect(nextRelaxation({ parking: true, petFriendly: true })).toEqual({
+      key: 'petFriendly',
+    });
+  });
+
+  it('never drops the sort order, and stops when nothing is left', () => {
+    expect(nextRelaxation({ sort: 'reviews' })).toBeNull();
+    expect(nextRelaxation({})).toBeNull();
   });
 });

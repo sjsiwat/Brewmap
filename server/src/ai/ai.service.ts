@@ -30,6 +30,8 @@ const FILTER_KEYS = [
 
 const FILTER_SYSTEM = `You turn a café request from Chiang Mai, Thailand (Thai or English) into search filters.
 Only set a filter the request clearly asks for; leave everything else out.
+Set "parking": true when the request mentions parking or coming by car, and "petFriendly": true when it mentions bringing a dog, cat or pet.
+A specific drink (coffee, matcha, tea, cocoa...) sets "drinkType".
 Prices are typical drink prices in Thai baht (THB).
 "tag" and "area" must be one of the allowed values exactly; pick the single closest tag or leave it out.
 radiusKm and sort "distance" only make sense when the visitor's location is known.
@@ -94,7 +96,16 @@ export class AiService {
       page: 1,
       limit: MAX_RESULTS,
     });
-    const { items } = await this.cafesService.findAll(query);
+    // Nothing matches every filter: drop the least important one at a time
+    // and say which, rather than answering "no café" to a reasonable request.
+    let { items } = await this.cafesService.findAll(query);
+    const relaxed: AppliedFilters = {};
+    for (let step = nextRelaxation(filters); !items.length && step;) {
+      Object.assign(relaxed, { [step.key]: filters[step.key] });
+      delete query[step.key];
+      ({ items } = await this.cafesService.findAll(query));
+      step = nextRelaxation(withoutKeys(filters, relaxed));
+    }
 
     // 4. Explain each match from the café data only. Optional: a failure here
     //    still returns the matches, just without reasons.
@@ -108,7 +119,11 @@ export class AiService {
       cafe,
       reason: reasons.get(cafe.slug) ?? null,
     }));
-    return { filters, items: matches };
+    return {
+      filters: withoutKeys(filters, relaxed),
+      relaxed,
+      items: matches,
+    };
   }
 
   private async explain(
@@ -249,4 +264,33 @@ export function sanitizeFilters(
     delete candidate.maxPrice;
   }
   return candidate;
+}
+
+/** Least important first: what a visitor would give up before the rest. */
+const RELAX_ORDER = [
+  'tag',
+  'area',
+  'drinkType',
+  'minPrice',
+  'maxPrice',
+  'petFriendly',
+  'parking',
+  'radiusKm',
+] as const satisfies readonly (keyof AppliedFilters)[];
+
+/** The next filter to drop when nothing matches, or null when none are left. */
+export function nextRelaxation(
+  filters: AppliedFilters,
+): { key: (typeof RELAX_ORDER)[number] } | null {
+  const key = RELAX_ORDER.find((k) => filters[k] !== undefined);
+  return key ? { key } : null;
+}
+
+function withoutKeys(
+  filters: AppliedFilters,
+  drop: AppliedFilters,
+): AppliedFilters {
+  return Object.fromEntries(
+    Object.entries(filters).filter(([key]) => !(key in drop)),
+  );
 }

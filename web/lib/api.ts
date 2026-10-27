@@ -252,7 +252,10 @@ export interface AiMatch {
 }
 
 export interface AiFindResult {
+  /** The filters the results actually match. */
   filters: AiFilters;
+  /** Filters dropped because nothing matched them all; {} for an exact match. */
+  relaxed: AiFilters;
   items: AiMatch[];
 }
 

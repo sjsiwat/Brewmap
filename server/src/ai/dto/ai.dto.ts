@@ -52,6 +52,9 @@ export class AiMatchDto {
 }
 
 export class AiFindResponseDto {
+  /** The filters the results actually match. */
   filters: AppliedFilters;
+  /** Filters dropped because nothing matched them all; {} for an exact match. */
+  relaxed: AppliedFilters;
   items: AiMatchDto[];
 }

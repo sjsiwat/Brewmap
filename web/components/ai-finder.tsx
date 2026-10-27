@@ -82,6 +82,7 @@ export function AiFinder() {
   }
 
   const chips = result ? describeFilters(result.filters) : [];
+  const dropped = result ? describeFilters(result.relaxed ?? {}) : [];
 
   return (
     <section aria-labelledby="ai-finder-heading" className="border border-ink">
@@ -156,6 +157,13 @@ export function AiFinder() {
                 </span>
               ))}
             </div>
+
+            {dropped.length > 0 && result.items.length > 0 && (
+              <p className="px-5 pt-3 text-sm text-ink-soft md:px-6">
+                Nothing matched everything, so these skip:{" "}
+                <span className="text-ink">{dropped.join(", ")}</span>.
+              </p>
+            )}
 
             {result.items.length === 0 ? (
               <p className="px-5 pt-3 pb-5 text-sm text-ink-soft md:px-6">

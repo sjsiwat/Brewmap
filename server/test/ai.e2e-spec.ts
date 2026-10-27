@@ -88,6 +88,7 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
       tag: 'Matcha',
       maxPrice: 200,
     });
+    expect(body.relaxed).toEqual({});
     expect(body.items.length).toBeGreaterThan(0);
     expect(body.items.length).toBeLessThanOrEqual(5);
     for (const { cafe, reason } of body.items) {
@@ -96,6 +97,28 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
       expect(cafe.priceAvg).toBeLessThanOrEqual(200);
       expect(reason).toBe(`Fits: ${cafe.slug}`);
     }
+  });
+
+  it('relaxes the least important filters until something matches', async () => {
+    // No cafe sells matcha for 10 baht: give up tag, then drink, then price.
+    geminiReplies({
+      drinkType: 'Tea',
+      tag: 'Matcha',
+      maxPrice: 10,
+      parking: true,
+    });
+    const body = (
+      await find({ query: 'matcha for 10 baht with parking' }).expect(200)
+    ).body as AiFindResponseDto;
+
+    expect(body.relaxed).toEqual({
+      tag: 'Matcha',
+      drinkType: 'Tea',
+      maxPrice: 10,
+    });
+    expect(body.filters).toEqual({ parking: true });
+    expect(body.items.length).toBeGreaterThan(0);
+    for (const { cafe } of body.items) expect(cafe.parking).toBe(true);
   });
 
   it('drops invalid or made-up filters instead of trusting them', async () => {
