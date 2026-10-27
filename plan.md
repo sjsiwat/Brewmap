@@ -66,7 +66,7 @@
 ### Phase 0 — Setup backend
 **Status:** `awaiting-review`
 **Branch:** `feat/nest-backend` (แตกจาก `fix/cafe-data-model`)
-**Review range:** _(กรอกหลัง commit)_
+**Review range:** `6f5676e..feat/nest-backend` (ใช้ `git diff 6f5676e..feat/nest-backend`)
 
 - [x] 0.1 Scaffold NestJS 11 ใน `server/`
 - [x] 0.2 `@nestjs/config` + `.env.example` (`MONGODB_URI`, `PORT`, `WEB_ORIGIN`), `.env` อยู่ใน `.gitignore`
