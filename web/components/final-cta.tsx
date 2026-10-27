@@ -10,7 +10,7 @@ export function FinalCta() {
           <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl">
               <h2 className="heading-page">
-                Still not sure where to go for coffee tonight?
+                Still not sure where to go for coffee today?
               </h2>
               <p className="mt-5 text-base leading-relaxed text-ink-soft">
                 Tell BrewMap what you&apos;re craving. It&apos;ll do the
