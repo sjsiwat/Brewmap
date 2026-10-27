@@ -133,6 +133,13 @@ export class CafesService {
     return cafe._id;
   }
 
+  async setCommunityStats(
+    cafeId: Types.ObjectId,
+    stats: { communityRating: number | null; communityReviewCount: number },
+  ): Promise<void> {
+    await this.cafeModel.updateOne({ _id: cafeId }, { $set: stats });
+  }
+
   /** Cafés in the order of `ids`; ids with no café are skipped. */
   async findByIds(ids: Types.ObjectId[]): Promise<CafeResponseDto[]> {
     const cafes = await this.cafeModel
