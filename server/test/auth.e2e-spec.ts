@@ -322,6 +322,48 @@ describe('Auth + Favorites API (e2e)', () => {
     await agent.put(`/api/me/favorites/${slugs[0]}`).expect(401);
   });
 
+  it('rate-limits favorite writes per user, not per IP -> 429', async () => {
+    // Own visitor IPs, so this doesn't touch the auth buckets other tests rely on.
+    process.env.PROXY_SECRET = 'e2e-write-secret';
+    const asVisitor = (ip: string) => ({
+      'x-client-ip': ip,
+      'x-proxy-secret': 'e2e-write-secret',
+    });
+    try {
+      const sessionFor = async (email: string, ip: string) => {
+        const body = { email, password: 'Brew1234', displayName: 'Writer' };
+        await http()
+          .post('/api/auth/register')
+          .set(asVisitor(ip))
+          .send(body)
+          .expect(201);
+        const res = await http()
+          .post('/api/auth/login')
+          .set(asVisitor(ip))
+          .send({ email, password: body.password })
+          .expect(200);
+        return authCookie(res)!.split(';')[0];
+      };
+      const busy = await sessionFor(
+        'writer-busy@example.com',
+        '198.51.100.201',
+      );
+      const other = await sessionFor(
+        'writer-other@example.com',
+        '198.51.100.202',
+      );
+
+      const put = (cookie: string) =>
+        http().put(`/api/me/favorites/${slugs[0]}`).set('Cookie', cookie);
+      for (let i = 0; i < 30; i++) await put(busy).expect(204);
+      await put(busy).expect(429);
+      // Same IP, different account: its own quota.
+      await put(other).expect(204);
+    } finally {
+      delete process.env.PROXY_SECRET;
+    }
+  });
+
   // Last: it uses up the login rate limit for this client.
   it('rate-limits login -> 429', async () => {
     let status = 0;
