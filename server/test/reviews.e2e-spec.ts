@@ -233,6 +233,12 @@ describe('Reviews API (e2e)', () => {
       .patch(`/api/reviews/${aliceReview.id}`)
       .send({ text: 'short' })
       .expect(400);
+    for (const body of [{ rating: null }, { text: null }]) {
+      await alice
+        .patch(`/api/reviews/${aliceReview.id}`)
+        .send(body)
+        .expect(400);
+    }
     await alice
       .patch('/api/reviews/000000000000000000000000')
       .send({ rating: 2 })
