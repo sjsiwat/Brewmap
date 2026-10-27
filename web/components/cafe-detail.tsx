@@ -1,6 +1,9 @@
 import Link from "next/link";
 import {
   ArrowLeft,
+  Minus,
+  Plus,
+  Sparkles,
   Clock,
   MapPin,
   ParkingCircle,
@@ -66,6 +69,48 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
             ))}
           </div>
         </Reveal>
+
+        {cafe.aiSummary && (cafe.aiSummary.pros.length > 0 || cafe.aiSummary.cons.length > 0) && (
+          <Reveal delay={0.05}>
+            <div className="mt-12 grid grid-cols-1 gap-8 border-t border-ink pt-6 md:grid-cols-12">
+              <div className="md:col-span-4">
+                <p className="flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
+                  <Sparkles size={13} aria-hidden />
+                  What reviewers say
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-muted">
+                  Summarised by AI from Google reviews.
+                </p>
+              </div>
+              {cafe.aiSummary.pros.length > 0 && (
+                <div className="md:col-span-4">
+                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">Loved</p>
+                  <ul className="mt-2 space-y-1.5 text-sm text-ink">
+                    {cafe.aiSummary.pros.map((pro) => (
+                      <li key={pro} className="flex gap-2">
+                        <Plus size={14} className="mt-0.5 shrink-0 text-rust" aria-hidden />
+                        {pro}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {cafe.aiSummary.cons.length > 0 && (
+                <div className="md:col-span-4">
+                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">Watch out for</p>
+                  <ul className="mt-2 space-y-1.5 text-sm text-ink-soft">
+                    {cafe.aiSummary.cons.map((con) => (
+                      <li key={con} className="flex gap-2">
+                        <Minus size={14} className="mt-0.5 shrink-0 text-muted" aria-hidden />
+                        {con}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </Reveal>
+        )}
 
         <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <Reveal delay={0.05} className="lg:col-span-5">

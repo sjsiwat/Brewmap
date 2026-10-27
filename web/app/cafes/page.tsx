@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { AiFinder } from "@/components/ai-finder";
 import { CafeFinder } from "@/components/cafe-finder";
 import { Reveal } from "@/components/reveal";
 
@@ -35,6 +36,10 @@ export default function CafesPage() {
 
         <section>
           <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+            <AiFinder />
+            <p className="mt-12 mb-6 font-mono text-xs uppercase tracking-[0.16em] text-muted">
+              Or set the filters yourself
+            </p>
             <CafeFinder />
           </div>
         </section>

@@ -8,10 +8,10 @@ import { join } from 'node:path';
 import mongoose from 'mongoose';
 import { Cafe, CafeSchema } from '../src/cafes/schemas/cafe.schema';
 
-// Community fields are computed from reviews, never part of the source data.
+// Community fields and aiSummary are computed later, never part of the source data.
 type SourceCafe = Omit<
   Cafe,
-  'location' | 'communityRating' | 'communityReviewCount'
+  'location' | 'communityRating' | 'communityReviewCount' | 'aiSummary'
 > & { lat: number; lng: number };
 
 const DATA_PATH = join(__dirname, '..', '..', 'web', 'data', 'cafes.json');
@@ -20,7 +20,10 @@ export function toCafeDocument({
   lat,
   lng,
   ...rest
-}: SourceCafe): Omit<Cafe, 'communityRating' | 'communityReviewCount'> {
+}: SourceCafe): Omit<
+  Cafe,
+  'communityRating' | 'communityReviewCount' | 'aiSummary'
+> {
   return { ...rest, location: { type: 'Point', coordinates: [lng, lat] } };
 }
 
