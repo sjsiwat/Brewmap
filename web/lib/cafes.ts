@@ -24,6 +24,9 @@ export interface Cafe {
   drinkType: DrinkType;
   lat: number;
   lng: number;
+  /** Average of BrewMap reviews (1 decimal), null until the first. Separate from Google's `rating`. */
+  communityRating: number | null;
+  communityReviewCount: number;
 }
 
 export function formatPrice(priceAvg: number): string {

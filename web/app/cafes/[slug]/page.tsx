@@ -4,6 +4,7 @@ import { getAllCafeSlugs, getCafe } from "@/lib/api";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CafeDetail } from "@/components/cafe-detail";
+import { CafeReviews } from "@/components/cafe-reviews";
 
 interface CafePageProps {
   params: Promise<{ slug: string }>;
@@ -54,6 +55,8 @@ export default async function CafePage({ params }: CafePageProps) {
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <CafeDetail cafe={cafe} />
+        {/* Client-side, so reviews stay fresh while the page itself is cached (ISR). */}
+        <CafeReviews slug={cafe.slug} cafeName={cafe.name} />
       </main>
       <SiteFooter />
     </div>
