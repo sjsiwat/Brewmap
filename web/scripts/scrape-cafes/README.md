@@ -89,3 +89,10 @@ Claude API per café in a loop) rather than a hardcoded dict.
 its Terms of Service — this is fine for a class prototype/portfolio project
 but should be swapped for the official **Google Places API** (or a licensed
 data provider) before any commercial/production use.
+
+## Privacy
+
+The raw scrape files keep each review's rating, text and date only. Reviewer
+names, profile photos, profile links, review photos and Google review ids were
+removed (Phase 4c), and the pipeline above never used them. Older commits still
+contain them; rewriting history to purge them is a separate, owner-approved step.
