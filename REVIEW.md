@@ -15,15 +15,16 @@
 
 ## คำสั่งที่อนุญาต (headless)
 
-`agy` อนุญาตเฉพาะคำสั่งที่ข้อความตรงตัวเท่านั้น (wildcard ใช้ไม่ได้) — **ห้ามใส่ `cd ... &&` นำหน้า** ให้ตั้ง working directory แทน
+`agy` อนุญาตเฉพาะคำสั่งที่ข้อความตรงตัวเท่านั้น (wildcard ใช้ไม่ได้) และรันได้ **เฉพาะที่ root ของ repo** — Gate จึงรวมเป็น script ที่ root ให้แล้ว (ห้ามใส่ `cd ... &&` นำหน้า)
 
-| Working dir | คำสั่ง |
-|---|---|
-| root | `git diff main...HEAD` · `git log --oneline main..HEAD` |
-| `server/` | `npx tsc --noEmit` · `npx eslint "{src,apps,libs,test}/**/*.ts"` · `npm test` · `npm run test:e2e` · `npm run build` |
-| `web/` | `npx tsc --noEmit` · `npm run lint` · `npm run build` |
+| Working dir | คำสั่ง | ทำอะไร |
+|---|---|---|
+| root | `git diff main...HEAD` · `git log --oneline main..HEAD` | ดูการเปลี่ยนแปลง |
+| root | `npm run gate:server` | server: `typecheck` (tsc --noEmit) → `lint:check` (eslint ไม่ --fix) → `test` → `test:e2e` → `build` |
+| root | `npm run gate:web` | web: `typecheck` → `lint` → `build` (Claude เปิด API server ไว้ให้ก่อนเรียก `agy`) |
 
-ห้ามรัน `npm run lint` ใน `server/` — script นั้นมี `--fix` จะแก้โค้ด
+ทั้งสอง script หยุดที่คำสั่งแรกที่ fail — ให้จดว่าขั้นไหนไม่ผ่านพร้อม error
+ถ้ารัน Gate ไม่ได้จริง ๆ ให้เขียนใน `### Gate` ว่า "ไม่ได้รัน" และ **ห้ามติ๊ก `[x]`** จากผลของ implementer
 ห้ามอ่าน `server/.env` (มี secret)
 
 ## Checklist
