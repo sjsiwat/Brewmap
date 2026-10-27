@@ -181,6 +181,24 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 
 ---
 
+### Phase 3c — Rate limit ต่อผู้ใช้หลัง /api proxy (owner สั่ง 2026-10-27)
+**Status:** `awaiting-review`
+**Branch:** `phase-3c-trust-proxy`
+**Review range:** `8e2f647..phase-3c-trust-proxy` (ใช้ `git diff 8e2f647..phase-3c-trust-proxy`)
+
+ปัญหา: ทุก request จาก browser มาทาง Next rewrite → API เห็น IP เดียว → login ผิด 10 ครั้งล็อกทุกคน 1 นาที
+ข้อค้นพบ: เปิดแค่ `trust proxy` ไม่ได้ — ทดสอบแล้ว `next start` ส่ง `X-Forwarded-For` ที่ client ใส่มาต่อไปตรง ๆ (ไม่เติม IP จริง) → ปลอม IP ได้ทุก request
+
+- [x] 3c.1 API: `ClientIpThrottlerGuard` เชื่อ `x-client-ip` เฉพาะเมื่อ `x-proxy-secret` ตรงกับ `PROXY_SECRET` (timing-safe) และเป็น IP ที่ถูกต้อง ไม่งั้นใช้ `req.ip` · `TRUST_PROXY` → Express `trust proxy` (ปิดเป็นค่าเริ่มต้น) · e2e 2 เคส
+- [x] 3c.2 Web: `proxy.ts` (Next 16) บน `/api/:path*` — ลบ `x-client-ip`/`x-proxy-secret` ที่ client ส่งมาเสมอ, ใส่ IP จาก `x-real-ip`/`x-forwarded-for` + secret เมื่อมี `PROXY_SECRET`
+- [x] 3c.3 เอกสาร env (`server/README.md`, `.env.example` ทั้งสองฝั่ง): local เว้นว่าง · production ตั้ง `PROXY_SECRET` ค่าเดียวกันทั้งสองฝั่ง + `TRUST_PROXY=1`
+
+ทดสอบจริงผ่าน web proxy: visitor A ผิด 10 ครั้ง → 429 แต่ visitor B ยัง 401 · ยิงตรง API ปลอม `x-client-ip` ไม่มี secret → ถูกนับรวม (429 ครั้งที่ 11) · client ปลอม header ผ่าน proxy → ถูกลบ · login/me/favorites/logout ปกติทั้งโหมดมีและไม่มี secret
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ### Phase 4 — Reviews
 **Status:** `todo`
 
@@ -231,5 +249,4 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
-- (Phase 6) ตั้ง `trust proxy` ให้ server เมื่ออยู่หลัง Vercel rewrite + Render — ไม่งั้น rate limit ของ login/register นับทุกคนเป็น IP เดียว
 - อัปเกรด NestJS 11 → 12
