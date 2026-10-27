@@ -102,19 +102,21 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 2 — ต่อ Frontend เข้า API
-**Status:** `todo` · D1 = (a) strict filter · D2 = (a) static + revalidate
+**Status:** `awaiting-review` · D1 = (a) strict filter · D2 = (a) static + revalidate
+**Branch:** `phase-2-web-api` · PR #2 (draft)
+**Review range:** `75bf9e0..phase-2-web-api` (ใช้ `git diff 75bf9e0..phase-2-web-api`) · สรุป docs Next 16 (2.1) อยู่ใน commit message ของ `b35d5f6`
 
-- [ ] 2.1 อ่าน `web/node_modules/next/dist/docs/` เรื่อง data fetching / caching / revalidate ของ Next 16 แล้วสรุปสั้น ๆ ใน PR/commit message (ตาม `web/AGENTS.md`)
-- [ ] 2.2 `web/lib/api.ts` — typed fetch wrapper, ไม่ส่ง query key ที่ค่าว่าง/undefined, base URL จาก `NEXT_PUBLIC_API_URL`, `ApiError` class, `web/.env.example`
-- [ ] 2.3 ย้าย type `Cafe` ให้ตรงกับ response ของ API (ลบ field ที่ API ไม่ส่ง)
-- [ ] 2.4 `/cafes/[slug]` — ดึงจาก `GET /api/cafes/:slug` ฝั่ง server component, 404 → `notFound()`, ทำตาม D2
-- [ ] 2.5 `/cafes` — ตัวกรองเรียก `GET /api/cafes` ส่ง `lat`/`lng` เมื่อผู้ใช้อนุญาต location, ทำตาม D1, ใช้ `distanceKm` จาก API
-- [ ] 2.6 Loading / error / empty state ทุกหน้าที่ fetch
-- [ ] 2.7 เลิก import `data/cafes.json` ใน runtime ของ web (ไฟล์ยังอยู่ ใช้เป็น seed)
-- [ ] 2.8 Root `package.json` + script `dev` รัน web และ server พร้อมกัน (`concurrently`)
-- [ ] 2.9 Root `README.md` — วิธีรันทั้งระบบในเครื่อง
-- [ ] 2.10 (จาก review 0–1 #1) server: query param ที่เป็น `""` ให้ถือเป็น `undefined` ก่อน `@Type(() => Number)` + e2e test `?lat=&lng=` และ `?maxPrice=`
-- [ ] 2.11 (จาก review 0–1 #2–3) eslint `no-explicit-any` → `error` · ใส่ `NODE_OPTIONS=--experimental-vm-modules` ให้ `test:watch`, `test:cov`
+- [x] 2.1 อ่าน `web/node_modules/next/dist/docs/` เรื่อง data fetching / caching / revalidate ของ Next 16 แล้วสรุปสั้น ๆ ใน PR/commit message (ตาม `web/AGENTS.md`)
+- [x] 2.2 `web/lib/api.ts` — typed fetch wrapper, ไม่ส่ง query key ที่ค่าว่าง/undefined, base URL จาก `NEXT_PUBLIC_API_URL`, `ApiError` class, `web/.env.example`
+- [x] 2.3 ย้าย type `Cafe` ให้ตรงกับ response ของ API (ลบ field ที่ API ไม่ส่ง)
+- [x] 2.4 `/cafes/[slug]` — ดึงจาก `GET /api/cafes/:slug` ฝั่ง server component, 404 → `notFound()`, ทำตาม D2
+- [x] 2.5 `/cafes` — ตัวกรองเรียก `GET /api/cafes` ส่ง `lat`/`lng` เมื่อผู้ใช้อนุญาต location, ทำตาม D1, ใช้ `distanceKm` จาก API
+- [x] 2.6 Loading / error / empty state ทุกหน้าที่ fetch
+- [x] 2.7 เลิก import `data/cafes.json` ใน runtime ของ web (ไฟล์ยังอยู่ ใช้เป็น seed)
+- [x] 2.8 Root `package.json` + script `dev` รัน web และ server พร้อมกัน (`concurrently`)
+- [x] 2.9 Root `README.md` — วิธีรันทั้งระบบในเครื่อง
+- [x] 2.10 (จาก review 0–1 #1) server: query param ที่เป็น `""` ให้ถือเป็น `undefined` ก่อน `@Type(() => Number)` + e2e test `?lat=&lng=` และ `?maxPrice=`
+- [x] 2.11 (จาก review 0–1 #2–3) eslint `no-explicit-any` → `error` · ใส่ `NODE_OPTIONS=--experimental-vm-modules` ให้ `test:watch`, `test:cov`
 
 **Gate:** server gate ทั้งหมด + web: `npx tsc --noEmit` · `npm run lint` · `npm run build` (ตอน build ต้องมี server รันอยู่ ถ้าเลือก D2a)
 **Acceptance:** ปิด server แล้วหน้าเว็บแสดง error state ไม่ crash · เปิด server แล้วทุกหน้าทำงานเหมือนเดิม · ไม่มี console error ที่ 375 / 768 / 1440px
