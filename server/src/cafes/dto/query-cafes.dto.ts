@@ -9,6 +9,7 @@ import {
   IsOptional,
   IsString,
   Max,
+  MaxLength,
   Min,
   ValidateIf,
 } from 'class-validator';
@@ -39,7 +40,34 @@ const toBoolean = ({ value }: TransformArgs) =>
         ? undefined
         : value;
 
+// Trimmed, inner whitespace collapsed; blank means "not set".
+const normaliseSearch = ({ value }: TransformArgs) => {
+  if (typeof value !== 'string') return value;
+  const text = value.trim().replace(/\s+/g, ' ');
+  return text === '' ? undefined : text;
+};
+
+export const SEARCH_MAX = 60;
+
+/**
+ * The words of a name search: letters (any script, with Thai vowel and tone
+ * marks), digits. Punctuation is ignored, so "%arabica" finds "% Arabica".
+ */
+export function searchWords(q: string): string[] {
+  return q
+    .split(/[^\p{L}\p{M}\p{N}]+/u)
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
 export class QueryCafesDto {
+  /** Café name search: every word must appear in the name, any case. */
+  @IsOptional()
+  @Transform(normaliseSearch)
+  @IsString()
+  @MaxLength(SEARCH_MAX)
+  q?: string;
+
   @IsOptional()
   @Type(() => Number)
   @Transform(emptyToUndefined)

@@ -148,4 +148,54 @@ describe('Cafes API (e2e)', () => {
     expect(cafe.lat).toBeCloseTo(18.789, 2);
     await get('/api/cafes/does-not-exist').expect(404);
   });
+
+  describe('name search (q)', () => {
+    const names = async (path: string) =>
+      ((await get(path).expect(200)).body as PaginatedCafesDto).items.map(
+        (c) => c.name,
+      );
+
+    it('finds a café by any part of its name, ignoring case and punctuation', async () => {
+      for (const q of [
+        'arabica',
+        '%ARABICA',
+        '  Arabica   one  ',
+        'nimman arabica',
+      ]) {
+        expect(await names(`/api/cafes?q=${encodeURIComponent(q)}`)).toContain(
+          '% Arabica Chiang Mai One Nimman',
+        );
+      }
+    });
+
+    it('needs every word, and finds nothing for a café we do not have', async () => {
+      expect(await names('/api/cafes?q=arabica%20starbucks')).toEqual([]);
+      expect(await names('/api/cafes?q=starbucks')).toEqual([]);
+    });
+
+    it('combines with filters and with the distance search', async () => {
+      const coffee = await names(
+        '/api/cafes?q=coffee&drinkType=Coffee&limit=50',
+      );
+      expect(coffee.length).toBeGreaterThan(0);
+      for (const name of coffee) expect(name.toLowerCase()).toContain('coffee');
+
+      const near = (
+        await get(
+          `/api/cafes?q=arabica&lat=${ORIGIN.lat}&lng=${ORIGIN.lng}`,
+        ).expect(200)
+      ).body as PaginatedCafesDto;
+      expect(near.items[0].name).toBe('% Arabica Chiang Mai One Nimman');
+      expect(near.items[0].distanceKm).toBeGreaterThan(0);
+    });
+
+    it('treats the text as plain text, not a regex, and limits its length', async () => {
+      await get('/api/cafes?q=(').expect(200);
+      expect(await names('/api/cafes?q=a.*z')).toEqual(
+        await names('/api/cafes?q=a%20z'),
+      );
+      await get(`/api/cafes?q=${'a'.repeat(61)}`).expect(400);
+      await get('/api/cafes?q[$ne]=x').expect(400);
+    });
+  });
 });

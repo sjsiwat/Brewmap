@@ -22,6 +22,8 @@ export type CafeSort = "rating" | "distance" | "reviews" | "price";
 
 /** Mirrors QueryCafesDto in server/src/cafes/dto/query-cafes.dto.ts. */
 export interface CafeQuery {
+  /** Café name search: every word must appear in the name. */
+  q?: string;
   minPrice?: number;
   maxPrice?: number;
   drinkType?: DrinkType;
@@ -263,7 +265,7 @@ export function deleteReview(id: string): Promise<void> {
 export type AiFilters = Partial<
   Pick<
     CafeQuery,
-    "minPrice" | "maxPrice" | "drinkType" | "parking" | "petFriendly" | "tag" | "area" | "radiusKm" | "sort"
+    "q" | "minPrice" | "maxPrice" | "drinkType" | "parking" | "petFriendly" | "tag" | "area" | "radiusKm" | "sort"
   >
 >;
 

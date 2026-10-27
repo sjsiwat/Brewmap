@@ -121,6 +121,37 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
     for (const { cafe } of body.items) expect(cafe.parking).toBe(true);
   });
 
+  it('finds a café the visitor names, and says so when we do not have it', async () => {
+    geminiReplies({ q: 'Arabica' });
+    const named = (await find({ query: 'อยากไป % Arabica' }).expect(200))
+      .body as AiFindResponseDto;
+    expect(named.filters).toEqual({ q: 'Arabica' });
+    expect(named.relaxed).toEqual({});
+    expect(named.items.map((m) => m.cafe.name)).toEqual([
+      '% Arabica Chiang Mai One Nimman',
+    ]);
+
+    geminiReplies({ q: 'Starbucks Reserve', area: 'Nimman' });
+    const missing = (
+      await find({ query: 'Starbucks Reserve Nimman' }).expect(200)
+    ).body as AiFindResponseDto;
+    // We have no such café: the name is dropped, but "Nimman" is kept.
+    expect(missing.relaxed).toEqual({ q: 'Starbucks Reserve' });
+    expect(missing.filters).toEqual({ area: 'Nimman' });
+    expect(missing.items.length).toBeGreaterThan(0);
+    for (const { cafe } of missing.items) expect(cafe.area).toBe('Nimman');
+
+    // A café we have, but not with these filters: the filters go first.
+    geminiReplies({ q: 'Arabica', area: 'Old City' });
+    const elsewhere = (
+      await find({ query: '% Arabica in the Old City' }).expect(200)
+    ).body as AiFindResponseDto;
+    expect(elsewhere.relaxed).toEqual({ area: 'Old City' });
+    expect(elsewhere.items.map((m) => m.cafe.name)).toEqual([
+      '% Arabica Chiang Mai One Nimman',
+    ]);
+  });
+
   it('drops invalid or made-up filters instead of trusting them', async () => {
     geminiReplies({
       maxPrice: -5,

@@ -22,6 +22,7 @@ const EXAMPLES = [
 /** Human-readable chips for the filters the AI applied. */
 function describeFilters(filters: AiFilters): string[] {
   const chips: string[] = [];
+  if (filters.q) chips.push(`“${filters.q}”`);
   if (filters.drinkType) chips.push(filters.drinkType);
   if (filters.tag) chips.push(filters.tag);
   if (filters.area) chips.push(filters.area);

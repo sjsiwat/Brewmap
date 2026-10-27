@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -10,6 +10,7 @@ import {
   ParkingCircle,
   PawPrint,
   RotateCw,
+  Search,
   Star,
 } from "lucide-react";
 import type { CafeQuery } from "@/lib/api";
@@ -54,6 +55,10 @@ const fields: Array<{
 ];
 
 const PAGE_SIZE = 24;
+/** Mirrors SEARCH_MAX in server/src/cafes/dto/query-cafes.dto.ts. */
+const NAME_MAX = 60;
+/** Wait for a pause in typing before searching, so each keystroke isn't a request. */
+const NAME_DEBOUNCE_MS = 300;
 
 /** Strict filtering: every chosen option is sent to the API and must match. */
 function toQuery(criteria: Criteria | null): CafeQuery {
@@ -67,12 +72,22 @@ function toQuery(criteria: Criteria | null): CafeQuery {
 export function CafeFinder() {
   const [draft, setDraft] = useState<Criteria>(defaultCriteria);
   const [applied, setApplied] = useState<Criteria | null>(null);
+  const [nameInput, setNameInput] = useState("");
+  const [name, setName] = useState("");
   const { origin } = useUserLocation();
+
+  // The name search applies as you type (after a short pause); the filters
+  // below still wait for Confirm.
+  useEffect(() => {
+    const timer = setTimeout(() => setName(nameInput.trim().replace(/\s+/g, " ")), NAME_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [nameInput]);
 
   // Always send an origin (the user's location, or the Tha Phae Gate fallback)
   // so every result carries distanceKm and "Within N km" has a centre.
   const search = useCafeSearch({
     ...toQuery(applied),
+    q: name || undefined,
     lat: origin.lat,
     lng: origin.lng,
     sort: "rating",
@@ -85,6 +100,29 @@ export function CafeFinder() {
 
   return (
     <div>
+      <Reveal>
+        <div
+          role="search"
+          className="mb-4 flex items-center gap-3 border border-line bg-paper-raised px-5 py-3.5 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-rust"
+        >
+          <Search size={15} className="shrink-0 text-muted" aria-hidden />
+          <label htmlFor="cafe-name" className="sr-only">
+            Search cafés by name
+          </label>
+          <input
+            id="cafe-name"
+            type="search"
+            value={nameInput}
+            onChange={(event) => setNameInput(event.target.value)}
+            maxLength={NAME_MAX}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Search by café name, e.g. Arabica"
+            className="w-full min-w-0 border-0 bg-transparent p-0 font-sans text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-0"
+          />
+        </div>
+      </Reveal>
+
       <Reveal>
         <form
           onSubmit={(event) => {
@@ -167,7 +205,7 @@ export function CafeFinder() {
           ? search.status === "error"
             ? "Couldn't load cafés"
             : "Loading cafés…"
-          : `${search.total} café${search.total === 1 ? "" : "s"}${
+          : `${search.total} café${search.total === 1 ? "" : "s"}${name ? ` named “${name}”` : ""}${
               activeCount > 0 ? " matching every filter" : ""
             } · sorted by rating`}
       </p>
@@ -249,7 +287,9 @@ export function CafeFinder() {
 
         {search.status === "ready" && search.items.length === 0 && (
           <p className="border-b border-line py-10 text-sm text-muted">
-            No cafés match every filter — try loosening one.
+            {name
+              ? `No café named “${name}”${activeCount > 0 ? " matches these filters" : " on BrewMap yet"}. Check the spelling${activeCount > 0 ? " or loosen a filter" : ""}.`
+              : "No cafés match every filter — try loosening one."}
           </p>
         )}
 

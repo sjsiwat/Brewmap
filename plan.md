@@ -360,6 +360,24 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 
 ---
 
+### Phase 9 — ค้นหาร้านด้วยชื่อ (owner สั่ง 2026-10-27)
+**Status:** `approved` — [reviews/phase-9.md](reviews/phase-9.md)
+**Branch:** `phase-9-name-search`
+**Review range:** `main..phase-9-name-search` (ใช้ `git diff main...HEAD`)
+
+ที่มา: owner หา "% Arabica" ไม่เจอ ทั้งที่ร้านมีอยู่ (`arabica-chiang-mai-one-nimman`) เพราะเว็บไม่มีค้นหาด้วยชื่อ และเรียงตาม rating ร้านนี้ (4.4) อยู่ลึก · ส่วน Starbucks Reserve ไม่มีในข้อมูลที่ scrape มาเลย (ต้อง scrape เพิ่ม — แยกเรื่อง)
+
+- [x] 9.1 **API:** `GET /api/cafes?q=` — ทุกคำต้องอยู่ในชื่อร้าน ไม่สนตัวพิมพ์/เครื่องหมาย ("%arabica", "nimman arabica" เจอ) · รองรับภาษาไทย · escape เป็นข้อความธรรมดา (ไม่ใช่ regex) · ≤ 60 ตัว · ใช้ร่วมกับ filter และการค้นตามระยะทางได้
+- [x] 9.2 **หน้า `/cafes`:** ช่อง "Search by café name" เหนือ filter ค้นขณะพิมพ์ (หน่วง 300 ms → 1 request ต่อคำ) · บอกจำนวน "N cafés named …" · ไม่เจอ → "No café named … on BrewMap yet"
+- [x] 9.3 **AI Finder เข้าใจชื่อร้าน:** filter `q` เมื่อคำขอระบุชื่อร้าน/เชน · ร้านที่ไม่มีในระบบ → ทิ้งชื่อก่อนแต่เก็บเงื่อนไขอื่น ("Starbucks Reserve แถวนิมมาน" → ร้านในนิมมาน + "skip: Starbucks Reserve") · ร้านที่มีแต่ไม่ตรงเงื่อนไข → ผ่อนเงื่อนไขอื่นก่อน ชื่อเป็นอย่างสุดท้าย · chip แสดงชื่อ
+- [x] 9.4 tests: e2e ค้นชื่อ (ตัวพิมพ์/เครื่องหมาย, ทุกคำ, ไม่เจอ, ร่วม filter/geo, regex/operator injection, ยาวเกิน) · unit + e2e AI (เก็บ/ทิ้ง q, ลำดับการผ่อน)
+
+ทดสอบกับ Gemini จริง: "อยากไป % Arabica" → % Arabica · "Starbucks Reserve แถวนิมมาน" → 5 ร้านในนิมมาน, relaxed `q` · "one nimman arabica coffee" → % Arabica · เบราว์เซอร์: พิมพ์ "arabica" → 1 ร้าน, "starbucks" → ข้อความไม่พบ · QA 7 หน้า × 3 ขนาด = 0 ปัญหา
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews
