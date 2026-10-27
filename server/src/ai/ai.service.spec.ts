@@ -15,7 +15,7 @@ describe('sanitizeFilters', () => {
           maxPrice: 150,
           drinkType: 'Tea',
           parking: true,
-          petFriendly: false,
+          petFriendly: true,
           tag: 'Matcha',
           area: 'Nimman',
           sort: 'price',
@@ -27,11 +27,20 @@ describe('sanitizeFilters', () => {
       maxPrice: 150,
       drinkType: 'Tea',
       parking: true,
-      petFriendly: false,
+      petFriendly: true,
       tag: 'Matcha',
       area: 'Nimman',
       sort: 'price',
     });
+  });
+
+  it('drops empty strings and false booleans instead of keeping them as filters', () => {
+    const out = sanitizeFilters(
+      { tag: '', area: '', drinkType: '', parking: false, petFriendly: false },
+      context,
+    );
+    expect(out).toEqual({});
+    expect(Object.keys(out)).toEqual([]);
   });
 
   it('drops invalid values one by one, keeping the rest', () => {

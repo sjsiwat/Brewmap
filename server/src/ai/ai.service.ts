@@ -235,9 +235,16 @@ export function sanitizeFilters(
   for (const key of Object.keys(candidate)) {
     const dto = plainToInstance(QueryCafesDto, { [key]: candidate[key] });
     const errors = validateSync(dto, { skipMissingProperties: true });
-    if (errors.some((e) => e.property === key)) delete candidate[key];
-    else candidate[key] = dto[key as keyof QueryCafesDto];
+    const value = dto[key as keyof QueryCafesDto];
+    // "" becomes undefined in the DTO: no filter, not a key holding undefined.
+    if (errors.some((e) => e.property === key) || value === undefined) {
+      delete candidate[key];
+    } else candidate[key] = value;
   }
+
+  // Nobody asks for "no parking": false would only hide cafés, unseen in the UI.
+  if (candidate.parking !== true) delete candidate.parking;
+  if (candidate.petFriendly !== true) delete candidate.petFriendly;
 
   if (
     typeof candidate.tag === 'string' &&
