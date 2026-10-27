@@ -1,15 +1,15 @@
 # Café data pipeline — real Chiang Mai data
 
-`lib/cafes.ts` now contains **173 real cafés** sourced from Google Maps instead
+`data/cafes.json` (loaded by `lib/cafes.ts`) contains **173 real cafés** sourced from Google Maps instead
 of fictional seed data. This folder documents/reproduces how that happened,
 in two rounds:
 
 - **Round 1 (60 cafés)** — `build_cafes.py` + `raw-top60.json` + `enriched-output.json`
 - **Round 2 (+113 cafés → 173 total)** — `build_cafes_full.py` + `raw-full173.json` +
-  `enriched-output-full173.json`, which reuses round 1's `ENRICH`/overrides from
+  `data/cafes.json`, which reuses round 1's `ENRICH`/overrides from
   `build_cafes.py` and adds `enrich2.py` on top for the new 113.
 
-`lib/cafes.ts` is currently built from **round 2's output** (173 cafés). Round 1's
+`data/cafes.json` is built from **round 2's output** (173 cafés). Round 1's
 files are kept for history/diffing — you don't need to re-run them separately.
 
 ## Pipeline
@@ -66,12 +66,12 @@ logic at the top of `build_cafes_full.py`.
   Thai-script names, inconsistent Google admin-area data, and duplicate slugs
   (e.g. two different "Stan's Cafe" locations).
 - `build_cafes_full.py` — merges round 1 + round 2's enrichment dicts, maps raw
-  Google admin areas to friendly district labels, computes real haversine
-  distance from a Tha Phae Gate reference point, formats hours to 24h, and
-  writes the final `Cafe[]` shape. Run with `python3 build_cafes_full.py`
-  from this directory — writes `enriched-output-full173.json`.
-- `enriched-output-full173.json` — the exact 173-café dataset currently pasted
-  into `lib/cafes.ts`.
+  Google admin areas to friendly district labels, stores `priceAvg` as a number,
+  formats hours to 24h, and writes the final `Cafe[]` shape. Run with
+  `python3 build_cafes_full.py` from this directory — writes `../../data/cafes.json`.
+  Distance is **not** stored: the app computes it at runtime from the user's
+  location (falling back to Tha Phae Gate), and the backend will use a
+  MongoDB `2dsphere` index on `lat`/`lng`.
 
 ## Scaling up further
 
