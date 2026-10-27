@@ -7,7 +7,7 @@ import { Reveal } from "@/components/reveal";
 export const metadata: Metadata = {
   title: "Find your café",
   description:
-    "Browse Chiang Mai cafés matched by flavor, atmosphere, budget, and distance — not just star rating.",
+    "Browse Chiang Mai cafés by budget, distance, parking, and drink — not just star rating.",
 };
 
 export default function CafesPage() {
@@ -22,11 +22,11 @@ export default function CafesPage() {
                 Chiang Mai — matched to you
               </p>
               <h1 className="mt-6 max-w-2xl font-display text-4xl tracking-tight text-ink sm:text-5xl">
-                Twenty cafés, one taste at a time.
+                Chiang Mai cafés, one taste at a time.
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-soft">
-                Set what you&apos;re after — flavor, price, distance, parking,
-                even the drink itself — and confirm to see the closest
+                Set what you&apos;re after — price, distance, parking, even
+                the drink itself — and confirm to see every café that
                 matches.
               </p>
             </Reveal>
