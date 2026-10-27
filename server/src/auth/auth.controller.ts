@@ -70,6 +70,15 @@ export class AuthController {
     res.clearCookie(AUTH_COOKIE, authCookieOptions());
   }
 
+  /** `{ user }` with null when logged out - 200 either way, unlike /me. */
+  @Get('session')
+  async session(
+    @Req() req: Request,
+  ): Promise<{ user: UserResponseDto | null }> {
+    const cookies = req.cookies as Record<string, string> | undefined;
+    return { user: await this.authService.session(cookies?.[AUTH_COOKIE]) };
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
   me(@CurrentUserId() userId: string): Promise<UserResponseDto> {

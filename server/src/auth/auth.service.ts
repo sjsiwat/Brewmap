@@ -73,6 +73,24 @@ export class AuthService {
     }
   }
 
+  /**
+   * The logged-in user, or null - never 401. For the web app's "am I logged
+   * in?" check, which would otherwise log a 401 in every visitor's console.
+   * Same checks as JwtAuthGuard: valid signature, account exists, not revoked.
+   */
+  async session(token: string | undefined): Promise<UserResponseDto | null> {
+    if (!token) return null;
+    let payload: JwtPayload;
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(token);
+    } catch {
+      return null;
+    }
+    const user = await this.usersService.findById(payload.sub);
+    if (!user || (user.tokenVersion ?? 0) !== (payload.ver ?? 0)) return null;
+    return toUserResponse(user);
+  }
+
   async me(userId: string): Promise<UserResponseDto> {
     const user = await this.usersService.findById(userId);
     // Token is valid but the account is gone.

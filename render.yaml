@@ -1,0 +1,40 @@
+# Render Blueprint for the BrewMap API (server/). The web app is on Vercel (D4).
+# Render -> New -> Blueprint -> pick this repo. Values marked `sync: false` are
+# secrets: Render asks for them once in its dashboard; they never live in git.
+services:
+  - type: web
+    name: brewmap-api
+    runtime: node
+    rootDir: server
+    plan: free
+    # --include=dev: Nest's compiler is a devDependency, and NODE_ENV=production
+    # below would otherwise make npm skip it.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: node dist/main
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      # Render's load balancer is the one proxy in front of the app.
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      # The Vercel URL, e.g. https://brewmap.vercel.app (no trailing slash).
+      - key: WEB_ORIGIN
+        sync: false
+      # Same random value as PROXY_SECRET on Vercel (`openssl rand -hex 32`).
+      - key: PROXY_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite-preview
+      - key: GEMINI_THINKING_LEVEL
+        value: minimal
+      - key: GEMINI_TIMEOUT_MS
+        value: "15000"

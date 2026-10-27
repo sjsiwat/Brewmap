@@ -197,6 +197,48 @@ describe('Auth + Favorites API (e2e)', () => {
       await agent.post('/api/auth/logout').expect(204);
     });
 
+    it('/session answers 200 with the user or null, never 401', async () => {
+      const none = await http().get('/api/auth/session').expect(200);
+      expect(none.body).toEqual({ user: null });
+      const forged = await http()
+        .get('/api/auth/session')
+        .set('Cookie', 'access_token=not-a-jwt')
+        .expect(200);
+      expect(forged.body).toEqual({ user: null });
+
+      // Its own visitor IP, so it doesn't use up this client's login quota.
+      process.env.PROXY_SECRET = 'e2e-session-secret';
+      let cookie: string;
+      try {
+        const login = await http()
+          .post('/api/auth/login')
+          .set({
+            'x-client-ip': '198.51.100.160',
+            'x-proxy-secret': 'e2e-session-secret',
+          })
+          .send({ email: USER.email, password: USER.password })
+          .expect(200);
+        cookie = authCookie(login)!.split(';')[0];
+      } finally {
+        delete process.env.PROXY_SECRET;
+      }
+      const live = await http()
+        .get('/api/auth/session')
+        .set('Cookie', cookie)
+        .expect(200);
+      const { user } = live.body as { user: UserResponseDto };
+      expect(user).toMatchObject({ email: USER.email });
+      expect(user).not.toHaveProperty('passwordHash');
+
+      // A revoked token reads as logged out too.
+      await http().post('/api/auth/logout').set('Cookie', cookie).expect(204);
+      const stale = await http()
+        .get('/api/auth/session')
+        .set('Cookie', cookie)
+        .expect(200);
+      expect(stale.body).toEqual({ user: null });
+    });
+
     it('logout revokes the token itself, not just the cookie', async () => {
       const loginOnce = () =>
         http()
