@@ -3,8 +3,63 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Heart, Menu, X } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 import { navLinks } from "@/lib/content";
+
+const accountLink =
+  "font-mono text-xs uppercase tracking-[0.12em] text-ink-soft transition-colors hover:text-rust focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust";
+
+/** Log in, or the user's name + saved cafés + log out. Empty while the session loads. */
+function AccountLinks({ onNavigate, mobile = false }: { onNavigate?: () => void; mobile?: boolean }) {
+  const { status, user, logout } = useAuth();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  if (status === "loading") return null;
+
+  if (status === "anonymous") {
+    return (
+      <Link href="/login" onClick={onNavigate} className={mobile ? "py-4 font-display text-2xl text-ink" : accountLink}>
+        Log in
+      </Link>
+    );
+  }
+
+  async function onLogout() {
+    setLoggingOut(true);
+    try {
+      await logout();
+      onNavigate?.();
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
+  return (
+    <div className={mobile ? "flex flex-col gap-1" : "flex items-center gap-5"}>
+      <Link
+        href="/me/favorites"
+        onClick={onNavigate}
+        className={mobile ? "flex items-center gap-3 border-b border-line py-4 font-display text-2xl text-ink" : `inline-flex items-center gap-1.5 ${accountLink}`}
+      >
+        <Heart size={mobile ? 18 : 13} aria-hidden />
+        Saved
+      </Link>
+      <span className={mobile ? "pt-4 font-mono text-xs uppercase tracking-[0.12em] text-muted" : "sr-only"}>
+        Logged in as {user?.displayName}
+      </span>
+      <button
+        type="button"
+        onClick={onLogout}
+        disabled={loggingOut}
+        title={mobile ? undefined : `Logged in as ${user?.displayName}`}
+        className={mobile ? "py-2 text-left font-mono text-xs uppercase tracking-[0.12em] text-ink-soft" : accountLink}
+      >
+        {loggingOut ? "Logging out…" : "Log out"}
+      </button>
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,7 +98,7 @@ export function SiteHeader() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-8 md:flex"
+          className="hidden items-center gap-8 lg:flex"
         >
           {navLinks.map((link) => (
             <a
@@ -56,7 +111,8 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-6 lg:flex">
+          <AccountLinks />
           <Link
             href="/cafes"
             className="border border-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-rust hover:bg-rust hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
@@ -71,7 +127,7 @@ export function SiteHeader() {
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="flex items-center justify-center text-ink md:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="flex items-center justify-center text-ink lg:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -85,7 +141,7 @@ export function SiteHeader() {
             animate={reduceMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-line bg-paper md:hidden"
+            className="overflow-hidden border-t border-line bg-paper lg:hidden"
           >
             <nav
               aria-label="Mobile"
@@ -101,6 +157,7 @@ export function SiteHeader() {
                   {link.label}
                 </a>
               ))}
+              <AccountLinks mobile onNavigate={() => setIsMenuOpen(false)} />
               <Link
                 href="/cafes"
                 onClick={() => setIsMenuOpen(false)}

@@ -137,23 +137,26 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 3 — Auth + Favorites
-**Status:** `todo` · D3 = (a) Next.js rewrite → first-party cookie
+**Status:** `approved` — [reviews/phase-3.md](reviews/phase-3.md) · D3 = (a) Next.js rewrite → first-party cookie
+**Branch:** `phase-3-auth-favorites`
+**Review range:** `1fc0898..phase-3-auth-favorites` (ใช้ `git diff 1fc0898..phase-3-auth-favorites`)
+**Acceptance (ทดสอบใน Chrome 2026-10-27):** refresh แล้วยัง login ✓ · JS มองไม่เห็น `access_token` ✓ · 375 / 768 / 1440px ไม่มี horizontal scroll และไม่มี console error ✓ · ปิด API แล้วขึ้น error state ไม่ crash ✓ (เจอบั๊กข้อความ "Internal Server Error" ผ่าน proxy → แก้ใน `e0ef1ba`)
 
 **Backend**
-- [ ] 3.1 `User` schema — `email` (unique, lowercase), `passwordHash`, `displayName`, `role` (`user` / `owner` / `admin`), timestamps · ห้ามส่ง `passwordHash` ออกใน response
-- [ ] 3.2 `POST /api/auth/register` — DTO validation (email, password ≥ 8), hash ด้วย bcrypt, email ซ้ำ → 409
-- [ ] 3.3 `POST /api/auth/login` — ถูกต้อง → set cookie `access_token` (httpOnly, `sameSite: lax`, `secure` เมื่อ production, อายุ 7 วัน) · ผิด → 401 ข้อความกลาง ๆ ไม่บอกว่า email หรือ password ผิด
-- [ ] 3.4 `POST /api/auth/logout` (ลบ cookie) · `GET /api/auth/me`
-- [ ] 3.5 `JwtAuthGuard` อ่าน token จาก cookie (`cookie-parser`), `JWT_SECRET` จาก env
-- [ ] 3.6 Rate limit `/auth/login` และ `/auth/register` ด้วย `@nestjs/throttler`
-- [ ] 3.7 `Favorite` schema — unique `(userId, cafeId)` · `GET /api/me/favorites` · `PUT /api/me/favorites/:slug` · `DELETE /api/me/favorites/:slug` (กดซ้ำไม่ error)
-- [ ] 3.8 e2e: register → login → me → logout, รหัสผิด, ไม่มี cookie → 401, favorites ซ้ำ/ลบซ้ำ
+- [x] 3.1 `User` schema — `email` (unique, lowercase), `passwordHash`, `displayName`, `role` (`user` / `owner` / `admin`), timestamps · ห้ามส่ง `passwordHash` ออกใน response
+- [x] 3.2 `POST /api/auth/register` — DTO validation (email, password ≥ 8), hash ด้วย bcrypt, email ซ้ำ → 409
+- [x] 3.3 `POST /api/auth/login` — ถูกต้อง → set cookie `access_token` (httpOnly, `sameSite: lax`, `secure` เมื่อ production, อายุ 7 วัน) · ผิด → 401 ข้อความกลาง ๆ ไม่บอกว่า email หรือ password ผิด
+- [x] 3.4 `POST /api/auth/logout` (ลบ cookie) · `GET /api/auth/me`
+- [x] 3.5 `JwtAuthGuard` อ่าน token จาก cookie (`cookie-parser`), `JWT_SECRET` จาก env
+- [x] 3.6 Rate limit `/auth/login` และ `/auth/register` ด้วย `@nestjs/throttler`
+- [x] 3.7 `Favorite` schema — unique `(userId, cafeId)` · `GET /api/me/favorites` · `PUT /api/me/favorites/:slug` · `DELETE /api/me/favorites/:slug` (กดซ้ำไม่ error)
+- [x] 3.8 e2e: register → login → me → logout, รหัสผิด, ไม่มี cookie → 401, favorites ซ้ำ/ลบซ้ำ
 
 **Frontend**
-- [ ] 3.9 หน้า `/login`, `/register` (ดีไซน์ตาม art direction ใน PRD)
-- [ ] 3.10 Auth state จาก `GET /auth/me`, fetch ทุกตัวใช้ `credentials: 'include'`
-- [ ] 3.11 ปุ่ม ❤️ บน list + detail (ถ้ายังไม่ login → พาไปหน้า login), หน้า `/me/favorites`
-- [ ] 3.12 Header แสดงสถานะ login / ปุ่ม logout
+- [x] 3.9 หน้า `/login`, `/register` (ดีไซน์ตาม art direction ใน PRD)
+- [x] 3.10 Auth state จาก `GET /auth/me`, fetch ทุกตัวใช้ `credentials: 'include'`
+- [x] 3.11 ปุ่ม ❤️ บน list + detail (ถ้ายังไม่ login → พาไปหน้า login), หน้า `/me/favorites`
+- [x] 3.12 Header แสดงสถานะ login / ปุ่ม logout
 
 **Gate:** Phase 2 gate + e2e auth ผ่าน
 **Acceptance:** refresh หน้าแล้วยัง login อยู่ · JavaScript ในหน้าเว็บอ่าน token ไม่ได้ (`document.cookie` ไม่มี `access_token`)
@@ -210,4 +213,5 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
+- (Phase 6) ตั้ง `trust proxy` ให้ server เมื่ออยู่หลัง Vercel rewrite + Render — ไม่งั้น rate limit ของ login/register นับทุกคนเป็น IP เดียว
 - อัปเกรด NestJS 11 → 12
