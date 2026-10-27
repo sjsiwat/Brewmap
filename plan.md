@@ -124,7 +124,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 2b — แก้ข้อเสนอแนะจาก review Phase 2 + Gate ของ reviewer
-**Status:** `awaiting-review` (owner สั่ง 2026-10-27)
+**Status:** `approved` — [reviews/phase-2b.md](reviews/phase-2b.md) (owner สั่ง 2026-10-27)
 **Branch:** `phase-2b-review-followups`
 **Review range:** `5f03977..phase-2b-review-followups` (ใช้ `git diff 5f03977..phase-2b-review-followups`)
 
