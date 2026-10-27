@@ -301,17 +301,22 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 6 — Deploy + QA
-**Status:** `in-progress` — รอ owner ทำขั้นตอนบน dashboard (สร้าง/ล็อกอินบัญชี + ใส่ secret ซึ่ง Claude ทำแทนไม่ได้) · D3 = (a) rewrite · D4 = Vercel + Render
+**Status:** `awaiting-review` · D3 = (a) rewrite · D4 = Vercel + Render
+**Production:** web https://brewmap-cafe.vercel.app · API https://brewmap-api.onrender.com/api/health
 **Branch:** `phase-6-deploy`
+**Review range:** `main..phase-6-deploy` (ใช้ `git diff main...HEAD`)
 
-- [ ] 6.1 Deploy server (Render) — เตรียม `render.yaml` แล้ว (Node 22, `npm ci --include=dev && npm run build`, health `/api/health`, `NODE_ENV=production`, `TRUST_PROXY=1`, `JWT_SECRET` ให้ Render สุ่ม, secret เป็น `sync: false`) · ทดสอบ build + รันแบบ production ในเครื่องแล้ว: health 200, `/api/docs` 404, cookie `HttpOnly; Secure; SameSite=Lax`, ไม่มี `X-Powered-By` · Render build ครั้งแรกล้ม: `npm ci` ของ npm 10 (มากับ Node 22) อ่าน lockfile ที่สร้างด้วย npm 11 ไม่ได้ (`Missing: webpack@5.112.2`) → สร้าง `server/package-lock.json` ใหม่ด้วย npm 10, ทดสอบ `npm ci` ผ่านทั้ง npm 10/11 (web lockfile ผ่าน npm 10 อยู่แล้ว) · **รอ owner:** Render → New → Blueprint
-- [ ] 6.2 Atlas Network Access `0.0.0.0/0` (Render free ไม่มี IP คงที่) · **รอ owner**
-- [ ] 6.3 Deploy web (Vercel) — Root Directory `web`, env `API_URL` + `PROXY_SECRET` · **รอ owner**
+- [x] 6.1 Deploy server (Render) — เตรียม `render.yaml` แล้ว (Node 22, `npm ci --include=dev && npm run build`, health `/api/health`, `NODE_ENV=production`, `TRUST_PROXY=1`, `JWT_SECRET` ให้ Render สุ่ม, secret เป็น `sync: false`) · ทดสอบ build + รันแบบ production ในเครื่องแล้ว: health 200, `/api/docs` 404, cookie `HttpOnly; Secure; SameSite=Lax`, ไม่มี `X-Powered-By` · Render build ครั้งแรกล้ม: `npm ci` ของ npm 10 (มากับ Node 22) อ่าน lockfile ที่สร้างด้วย npm 11 ไม่ได้ (`Missing: webpack@5.112.2`) → สร้าง `server/package-lock.json` ใหม่ด้วย npm 10, ทดสอบ `npm ci` ผ่านทั้ง npm 10/11 (web lockfile ผ่าน npm 10 อยู่แล้ว) · owner deploy ผ่าน Blueprint แล้ว: health ok + database connected, 173 ร้าน + aiSummary, `/api/docs` 404, ไม่มี `X-Powered-By`
+- [x] 6.2 Atlas Network Access `0.0.0.0/0` (Render free ไม่มี IP คงที่) · owner ตั้งแล้ว
+- [x] 6.3 Deploy web (Vercel) — Root Directory `web`, env `API_URL` + `PROXY_SECRET` (Production + Preview)
+  - ครั้งแรก `API_URL` ไม่มี `/api` → `/api/*` และหน้าร้าน 404 (`Cannot GET /auth/session`) → owner แก้ env + redeploy · README เตือนเรื่องนี้แล้ว
+  - ตรวจบน production: ทุกหน้า 200, หน้าร้านมี "What reviewers say", `/api/cafes` ผ่าน proxy = 173, AI Finder (ไทย) ตอบ ~3 วินาที, CORS = โดเมน Vercel, headers ครบ + HSTS จาก Vercel
+  - QA บน production (ก่อน merge, ยังเป็นโค้ด main): ไม่มี overflow / ปุ่มไร้ชื่อ / ปัญหา keyboard · contrast + 401 ใน console = ชุดที่ branch นี้แก้แล้ว → ตรวจซ้ำหลัง merge
 - [x] 6.4 Seed production + review summary — Atlas มีครบแล้ว (173 ร้าน, `aiSummary` 173/173) ใช้ cluster เดิม
 - [x] 6.5 QA (headless Chrome ผ่าน CDP, 7 หน้า × 375/768/1440): ไม่มี overflow แนวนอน · ไม่มีปุ่ม/ลิงก์/รูปที่ไม่มีชื่อ · Tab ผ่านทุกจุดและเห็น focus ring ทุกจุด · แก้แล้ว:
   - contrast WCAG AA: `muted` #7a7267 → #676057, `rust` #b8451f → #a73e1c, เพิ่ม `rust-bright` #d97a52 สำหรับข้อความบนพื้น ink (เดิม 2.7–4.1:1 → ≥ 4.6:1)
   - console error: ผู้ใช้ที่ยังไม่ login ได้ 401 จาก `/auth/me` → เพิ่ม `GET /api/auth/session` (200 `{ user | null }`) ให้เว็บใช้แทน
-- [x] 6.6 Root README: แผนภาพ architecture (mermaid), ขั้นตอน deploy, ตารางลิงก์ production (เติมหลัง deploy)
+- [x] 6.6 Root README: แผนภาพ architecture (mermaid), ขั้นตอน deploy, ลิงก์ production
 
 ---
 

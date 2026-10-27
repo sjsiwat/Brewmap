@@ -373,8 +373,8 @@ flowchart LR
 
 | | URL |
 |---|---|
-| Web | _added after deploy_ |
-| API health | _added after deploy_ (`/api/health`) |
+| Web | https://brewmap-cafe.vercel.app |
+| API health | https://brewmap-api.onrender.com/api/health |
 | API docs | off in production; run locally at http://localhost:4000/api/docs, or set `SWAGGER=true` on the API |
 
 # Deploy
@@ -398,7 +398,7 @@ The API goes first, because the web build reads café data from it.
 
 | Key | Value |
 |---|---|
-| `API_URL` | `https://<api>.onrender.com/api` |
+| `API_URL` | `https://<api>.onrender.com/api`. It must end in `/api`; without it every API call and café page returns 404. |
 | `PROXY_SECRET` | the same value as on Render |
 
 **4. Data**: the café data and AI summaries already live in Atlas. If you point to a new cluster, run `npm run seed` and then `npm --prefix server run ai:summarize` with that `MONGODB_URI`.
