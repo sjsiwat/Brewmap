@@ -8,8 +8,7 @@
     "specialty": "Japanese-garden matcha & pink soda",
     "flavor": "Green-tea forward, mixed menu",
     "atmosphere": "Spacious, garden, lively",
-    "price": "~120฿",
-    "distance": "4.4 km",
+    "priceAvg": 120,
     "tags": [
       "Garden",
       "Matcha",
@@ -33,8 +32,7 @@
     "specialty": "Hojicha latte & specialty espresso",
     "flavor": "Mild, delicate aroma",
     "atmosphere": "Stylish, music-driven, indie",
-    "price": "~110฿",
-    "distance": "0.6 km",
+    "priceAvg": 110,
     "tags": [
       "Specialty",
       "Design-forward"
@@ -57,8 +55,7 @@
     "specialty": "Dirty coffee, Chiang Mai-grown beans",
     "flavor": "Balanced, locally roasted",
     "atmosphere": "Relaxed, slow, Old City",
-    "price": "~105฿",
-    "distance": "1.1 km",
+    "priceAvg": 105,
     "tags": [
       "Roastery",
       "Quiet",
@@ -82,8 +79,7 @@
     "specialty": "All-day brunch with live music",
     "flavor": "Approachable, crowd-pleasing",
     "atmosphere": "Warm, lively, live music",
-    "price": "~150฿",
-    "distance": "2.7 km",
+    "priceAvg": 150,
     "tags": [
       "Live music",
       "Brunch",
@@ -107,8 +103,7 @@
     "specialty": "Garden breakfast & smoothie bowls",
     "flavor": "Fresh, fruit-forward",
     "atmosphere": "Garden, quiet mornings",
-    "price": "~150฿",
-    "distance": "0.6 km",
+    "priceAvg": 150,
     "tags": [
       "Garden",
       "Breakfast",
@@ -132,8 +127,7 @@
     "specialty": "Riverside industrial cafe, creative menu",
     "flavor": "Full-bodied, varied",
     "atmosphere": "Industrial, riverside, calm",
-    "price": "~130฿",
-    "distance": "3.2 km",
+    "priceAvg": 130,
     "tags": [
       "River view",
       "Work-friendly",
@@ -157,8 +151,7 @@
     "specialty": "Pistachio-raspberry croissant & Coconut Dirty",
     "flavor": "Buttery pastries, smooth coffee",
     "atmosphere": "Art-gallery, creative, work-friendly",
-    "price": "~140฿",
-    "distance": "2.6 km",
+    "priceAvg": 140,
     "tags": [
       "Art space",
       "Work-friendly",
@@ -182,8 +175,7 @@
     "specialty": "Wood-fired pizza & passionfruit coconut smoothie",
     "flavor": "Not too sweet, balanced",
     "atmosphere": "Calming, family-friendly, garden",
-    "price": "~200฿",
-    "distance": "5.5 km",
+    "priceAvg": 200,
     "tags": [
       "Food-forward",
       "Family",
@@ -207,8 +199,7 @@
     "specialty": "Craft Thai tea flights",
     "flavor": "Thai tea, customizable sweetness",
     "atmosphere": "Small, cozy",
-    "price": "~80฿",
-    "distance": "2.9 km",
+    "priceAvg": 80,
     "tags": [
       "Thai tea",
       "Budget-friendly"
@@ -231,8 +222,7 @@
     "specialty": "Mango sticky rice & Thai milk tea",
     "flavor": "Sweet, dessert-forward",
     "atmosphere": "Quiet, tiny, cozy",
-    "price": "~65฿",
-    "distance": "1.2 km",
+    "priceAvg": 65,
     "tags": [
       "Dessert",
       "Budget-friendly",
@@ -256,8 +246,7 @@
     "specialty": "Riverside roastery, bean flights",
     "flavor": "Varied roast profiles",
     "atmosphere": "Japanese-inspired, riverside, cozy",
-    "price": "~130฿",
-    "distance": "3.3 km",
+    "priceAvg": 130,
     "tags": [
       "Roastery",
       "River view"
@@ -280,8 +269,7 @@
     "specialty": "Ceremonial matcha latte",
     "flavor": "Less sweet, high-grade matcha",
     "atmosphere": "Tranquil, Japanese, cat-friendly",
-    "price": "~130฿",
-    "distance": "2.9 km",
+    "priceAvg": 130,
     "tags": [
       "Matcha",
       "Quiet",
@@ -305,8 +293,7 @@
     "specialty": "Ristretto flat white, award-roasted beans",
     "flavor": "Balanced, flavorful",
     "atmosphere": "Quiet outdoor, lively indoor",
-    "price": "~140฿",
-    "distance": "2.9 km",
+    "priceAvg": 140,
     "tags": [
       "Roastery",
       "Award-winning",
@@ -330,8 +317,7 @@
     "specialty": "Artisan gelato, rotating flavors",
     "flavor": "Creamy, rich",
     "atmosphere": "Playful, neon, unique",
-    "price": "~90฿",
-    "distance": "2.7 km",
+    "priceAvg": 90,
     "tags": [
       "Dessert",
       "Gelato"
@@ -354,8 +340,7 @@
     "specialty": "Cat-café experience + light snacks",
     "flavor": "Simple snack menu",
     "atmosphere": "Playful, cat-filled",
-    "price": "~150฿",
-    "distance": "3.8 km",
+    "priceAvg": 150,
     "tags": [
       "Cat cafe",
       "Pet-friendly",
@@ -379,8 +364,7 @@
     "specialty": "Samoyed dog café & Hainanese chicken rice",
     "flavor": "Savory, food-forward",
     "atmosphere": "Vibrant, dog-filled, shady",
-    "price": "~120฿",
-    "distance": "4.0 km",
+    "priceAvg": 120,
     "tags": [
       "Dog cafe",
       "Pet-friendly",
@@ -404,8 +388,7 @@
     "specialty": "Smoothie bowls & brunch pasta",
     "flavor": "Fresh, approachable",
     "atmosphere": "Ambient, photogenic, brunch",
-    "price": "~180฿",
-    "distance": "2.9 km",
+    "priceAvg": 180,
     "tags": [
       "Brunch",
       "Photogenic",
@@ -429,8 +412,7 @@
     "specialty": "Coffee flight tasting",
     "flavor": "Rich, smooth, vibrant",
     "atmosphere": "Modern, serious coffee culture",
-    "price": "~150฿",
-    "distance": "2.7 km",
+    "priceAvg": 150,
     "tags": [
       "Roastery",
       "Award-winning",
@@ -454,8 +436,7 @@
     "specialty": "Matcha & cappuccino, 3-floor coworking",
     "flavor": "Can be inconsistent",
     "atmosphere": "Multi-floor, laid-back",
-    "price": "~130฿",
-    "distance": "3.4 km",
+    "priceAvg": 130,
     "tags": [
       "Work-friendly",
       "Multi-floor"
@@ -478,8 +459,7 @@
     "specialty": "Koi-carp pond dining",
     "flavor": "Well-made, professional",
     "atmosphere": "Unique, nature, peaceful",
-    "price": "~250฿",
-    "distance": "8.7 km",
+    "priceAvg": 250,
     "tags": [
       "Unique concept",
       "Nature",
@@ -503,8 +483,7 @@
     "specialty": "Latte-art showcase espresso",
     "flavor": "Strong aroma, rich",
     "atmosphere": "Small, busy, artisanal",
-    "price": "~130฿",
-    "distance": "3.0 km",
+    "priceAvg": 130,
     "tags": [
       "Latte art",
       "Specialty",
@@ -528,8 +507,7 @@
     "specialty": "Dachshund café & creative cakes",
     "flavor": "Sweet, creative dessert pairings",
     "atmosphere": "Playful, dog-filled, festive",
-    "price": "~130฿",
-    "distance": "2.6 km",
+    "priceAvg": 130,
     "tags": [
       "Dog cafe",
       "Pet-friendly",
@@ -553,8 +531,7 @@
     "specialty": "Mango sticky rice bingsu",
     "flavor": "Sweet, Thai-dessert fusion",
     "atmosphere": "Lively dessert house",
-    "price": "~180฿",
-    "distance": "2.5 km",
+    "priceAvg": 180,
     "tags": [
       "Dessert",
       "Bingsu"
@@ -577,8 +554,7 @@
     "specialty": "Coconut cream pie & custom-strength coffee",
     "flavor": "Light, not-too-sweet custard",
     "atmosphere": "Humble, dessert-focused",
-    "price": "~110฿",
-    "distance": "2.8 km",
+    "priceAvg": 110,
     "tags": [
       "Dessert",
       "Pie",
@@ -602,8 +578,7 @@
     "specialty": "House-roasted dirty coffee & Thai tea",
     "flavor": "Unique, unexpected, high quality",
     "atmosphere": "Passionate owner-run",
-    "price": "~130฿",
-    "distance": "0.7 km",
+    "priceAvg": 130,
     "tags": [
       "Roastery",
       "Dirty coffee",
@@ -627,8 +602,7 @@
     "specialty": "Single-origin dirty coffee, multi-region beans",
     "flavor": "Nuanced, well-extracted",
     "atmosphere": "Cozy, modern, educational",
-    "price": "~140฿",
-    "distance": "0.4 km",
+    "priceAvg": 140,
     "tags": [
       "Roastery",
       "Specialty",
@@ -652,8 +626,7 @@
     "specialty": "Bean-to-bar Thai chocolate flight",
     "flavor": "Craft chocolate, origin-specific",
     "atmosphere": "Quirky, educational, cat on-site",
-    "price": "~150฿",
-    "distance": "1.0 km",
+    "priceAvg": 150,
     "tags": [
       "Chocolate",
       "Pet-friendly",
@@ -677,8 +650,7 @@
     "specialty": "Matcha & pastries, family bistro",
     "flavor": "Smooth, rich",
     "atmosphere": "Bright, family, spacious",
-    "price": "~150฿",
-    "distance": "3.2 km",
+    "priceAvg": 150,
     "tags": [
       "Family-friendly",
       "Brunch",
@@ -702,8 +674,7 @@
     "specialty": "Farm-to-table dirty latte",
     "flavor": "Rich, concentrated, vanilla-forward",
     "atmosphere": "Calm, no-nonsense, authentic",
-    "price": "~110฿",
-    "distance": "1.2 km",
+    "priceAvg": 110,
     "tags": [
       "Farm-to-table",
       "Dirty coffee",
@@ -727,8 +698,7 @@
     "specialty": "Light-roast drip coffee",
     "flavor": "Light roast, clean",
     "atmosphere": "Relaxed, central, gate view",
-    "price": "~80฿",
-    "distance": "0.1 km",
+    "priceAvg": 80,
     "tags": [
       "Budget-friendly",
       "Pour-over",
@@ -752,8 +722,7 @@
     "specialty": "Eggs Benedict & weekend pizza nights",
     "flavor": "Hearty, Western breakfast",
     "atmosphere": "Casual, open-air",
-    "price": "~180฿",
-    "distance": "2.2 km",
+    "priceAvg": 180,
     "tags": [
       "Breakfast",
       "Open-air"
@@ -776,8 +745,7 @@
     "specialty": "Garden-house café & light meals",
     "flavor": "Can run watery",
     "atmosphere": "Shady garden, calm",
-    "price": "~120฿",
-    "distance": "3.8 km",
+    "priceAvg": 120,
     "tags": [
       "Garden",
       "Guesthouse"
@@ -800,8 +768,7 @@
     "specialty": "Late-night specialty coffee, decaf available",
     "flavor": "Deep, robust, Vietnamese-style",
     "atmosphere": "Late-night, casual",
-    "price": "~110฿",
-    "distance": "3.0 km",
+    "priceAvg": 110,
     "tags": [
       "Late-night",
       "Decaf available"
@@ -824,8 +791,7 @@
     "specialty": "Velvety specialty filter coffee",
     "flavor": "Smooth, cocoa, chocolatey",
     "atmosphere": "Work-friendly, fast wifi",
-    "price": "~100฿",
-    "distance": "1.4 km",
+    "priceAvg": 100,
     "tags": [
       "Work-friendly",
       "Roastery",
@@ -849,8 +815,7 @@
     "specialty": "Rooftop mountain-view coffee",
     "flavor": "Good beans, variable mixes",
     "atmosphere": "Hidden rooftop, nomad-popular",
-    "price": "~120฿",
-    "distance": "2.9 km",
+    "priceAvg": 120,
     "tags": [
       "Scenic view",
       "Digital nomad",
@@ -874,8 +839,7 @@
     "specialty": "Homemade focaccia breakfast",
     "flavor": "Homemade, genuine",
     "atmosphere": "Cozy, quiet, family-run",
-    "price": "~140฿",
-    "distance": "0.6 km",
+    "priceAvg": 140,
     "tags": [
       "Quiet",
       "Homemade",
@@ -899,8 +863,7 @@
     "specialty": "Whimsical themed café & board games",
     "flavor": "Smooth matcha, balanced",
     "atmosphere": "Whimsical, quirky, work-friendly",
-    "price": "~130฿",
-    "distance": "1.1 km",
+    "priceAvg": 130,
     "tags": [
       "Themed",
       "Work-friendly",
@@ -924,8 +887,7 @@
     "specialty": "Es Yen with date sugar, locally grown beans",
     "flavor": "Educational, fermentation notes",
     "atmosphere": "Barn theme, calm, bright",
-    "price": "~90฿",
-    "distance": "2.6 km",
+    "priceAvg": 90,
     "tags": [
       "Educational",
       "Local beans",
@@ -949,8 +911,7 @@
     "specialty": "Strawberry matcha latte & tiramisu",
     "flavor": "Sweet, balanced",
     "atmosphere": "Spacious, co-working, garden",
-    "price": "~80฿",
-    "distance": "4.1 km",
+    "priceAvg": 80,
     "tags": [
       "Work-friendly",
       "Budget-friendly",
@@ -975,8 +936,7 @@
     "specialty": "Purple sweet-potato bun, CMU campus views",
     "flavor": "Average on specialty drinks, solid standard",
     "atmosphere": "Spacious, glass-walled, study-friendly",
-    "price": "~90฿",
-    "distance": "3.7 km",
+    "priceAvg": 90,
     "tags": [
       "Study-friendly",
       "Scenic view",
@@ -1000,8 +960,7 @@
     "specialty": "Hostel café, bean flights to go",
     "flavor": "Good roast selection",
     "atmosphere": "All-white, calm, work-friendly",
-    "price": "~120฿",
-    "distance": "2.9 km",
+    "priceAvg": 120,
     "tags": [
       "Work-friendly",
       "Hostel-cafe"
@@ -1024,8 +983,7 @@
     "specialty": "Turkish eggs & homemade Greek yogurt",
     "flavor": "High quality, house-made",
     "atmosphere": "Chill, cozy, dog-friendly",
-    "price": "~150฿",
-    "distance": "2.6 km",
+    "priceAvg": 150,
     "tags": [
       "Pet-friendly",
       "Work-friendly",
@@ -1049,8 +1007,7 @@
     "specialty": "Bright, clean Americano",
     "flavor": "Bright acidity, clean",
     "atmosphere": "Warm, cozy, unpretentious",
-    "price": "~90฿",
-    "distance": "2.4 km",
+    "priceAvg": 90,
     "tags": [
       "Budget-friendly",
       "Specialty"
@@ -1073,8 +1030,7 @@
     "specialty": "Single-origin Panama Geisha & Honduras",
     "flavor": "Rich, complex, whisky-like",
     "atmosphere": "Casual, chatty, not laptop-focused",
-    "price": "~150฿",
-    "distance": "0.9 km",
+    "priceAvg": 150,
     "tags": [
       "Single-origin",
       "Specialty",
@@ -1098,8 +1054,7 @@
     "specialty": "Premium single-origin cappuccino",
     "flavor": "Premium, well-balanced",
     "atmosphere": "Charming, cozy",
-    "price": "~85฿",
-    "distance": "3.0 km",
+    "priceAvg": 85,
     "tags": [
       "Specialty",
       "Cozy"
@@ -1122,8 +1077,7 @@
     "specialty": "Affogato & bold espresso",
     "flavor": "Bold, pairs with ice cream",
     "atmosphere": "Minimalist, bright, open",
-    "price": "~120฿",
-    "distance": "3.1 km",
+    "priceAvg": 120,
     "tags": [
       "Specialty",
       "Minimalist design"
@@ -1146,8 +1100,7 @@
     "specialty": "Mango sticky rice drink & Thai desserts",
     "flavor": "Sweet, Thai-dessert fusion",
     "atmosphere": "Thai-themed, photogenic, spa-adjacent",
-    "price": "~150฿",
-    "distance": "0.9 km",
+    "priceAvg": 150,
     "tags": [
       "Photogenic",
       "Thai-themed",
@@ -1171,8 +1124,7 @@
     "specialty": "Affogato with coconut ice cream",
     "flavor": "Rich, coconut-forward",
     "atmosphere": "Museum garden, quiet, work-friendly",
-    "price": "~90฿",
-    "distance": "0.8 km",
+    "priceAvg": 90,
     "tags": [
       "Work-friendly",
       "Hidden gem",
@@ -1196,8 +1148,7 @@
     "specialty": "Pour-over & matcha",
     "flavor": "Quality beans, careful brew",
     "atmosphere": "Warm, Thai-style, quiet",
-    "price": "~110฿",
-    "distance": "2.8 km",
+    "priceAvg": 110,
     "tags": [
       "Pour-over",
       "Matcha",
@@ -1222,8 +1173,7 @@
     "specialty": "Cold brew & pour-over flights",
     "flavor": "Clean, educational single-origin",
     "atmosphere": "Quiet, relaxing, educational",
-    "price": "~120฿",
-    "distance": "1.2 km",
+    "priceAvg": 120,
     "tags": [
       "Pour-over",
       "Cold brew",
@@ -1248,8 +1198,7 @@
     "specialty": "Riverside iced peach tea & cocoa latte",
     "flavor": "Not too sweet, fruity",
     "atmosphere": "Riverside, peaceful, no AC",
-    "price": "~70฿",
-    "distance": "2.2 km",
+    "priceAvg": 70,
     "tags": [
       "River view",
       "Pet-friendly",
@@ -1274,8 +1223,7 @@
     "specialty": "Cocoa orange drink & specialty coffee",
     "flavor": "Well-balanced, high quality",
     "atmosphere": "Calm, minimalistic, neighborhood",
-    "price": "~80฿",
-    "distance": "1.1 km",
+    "priceAvg": 80,
     "tags": [
       "Budget-friendly",
       "Quiet",
@@ -1299,8 +1247,7 @@
     "specialty": "Single-origin flat white, roasted on-site",
     "flavor": "Fresh, aromatic, fruity options",
     "atmosphere": "Small, cozy, friendly owners",
-    "price": "~70฿",
-    "distance": "0.5 km",
+    "priceAvg": 70,
     "tags": [
       "Budget-friendly",
       "Roastery",
@@ -1324,8 +1271,7 @@
     "specialty": "Filtered PANGHAI single-origin coffee",
     "flavor": "Premium, well-brewed",
     "atmosphere": "Stylish, relaxing, cushioned seats",
-    "price": "~140฿",
-    "distance": "0.9 km",
+    "priceAvg": 140,
     "tags": [
       "Pour-over",
       "Single-origin",
@@ -1349,8 +1295,7 @@
     "specialty": "Japanese-garden café, seasonal cakes",
     "flavor": "Yummy cakes & coffee",
     "atmosphere": "Minimalist, peaceful, garden",
-    "price": "~130฿",
-    "distance": "10.1 km",
+    "priceAvg": 130,
     "tags": [
       "Garden",
       "Quiet",
@@ -1374,8 +1319,7 @@
     "specialty": "Floral, fruity light-roast pour-over",
     "flavor": "Floral, fruity, light roast",
     "atmosphere": "Chill, attentive service",
-    "price": "~120฿",
-    "distance": "1.5 km",
+    "priceAvg": 120,
     "tags": [
       "Pour-over",
       "Roastery",
@@ -1399,8 +1343,7 @@
     "specialty": "Cold brew & rich espresso",
     "flavor": "Rich, never watered down",
     "atmosphere": "Cozy, modern, small",
-    "price": "~90฿",
-    "distance": "0.7 km",
+    "priceAvg": 90,
     "tags": [
       "Specialty",
       "Cozy"
@@ -1423,8 +1366,7 @@
     "specialty": "Cheese pastry & cheesecake",
     "flavor": "Rich, sweet, crispy",
     "atmosphere": "Peaceful, date-friendly",
-    "price": "~150฿",
-    "distance": "1.3 km",
+    "priceAvg": 150,
     "tags": [
       "Dessert",
       "Parking"
@@ -1447,8 +1389,7 @@
     "specialty": "Crepes & soft matcha latte",
     "flavor": "Delicious, soft, balanced",
     "atmosphere": "Warm, pet-friendly, air-purified",
-    "price": "~130฿",
-    "distance": "3.5 km",
+    "priceAvg": 130,
     "tags": [
       "Pet-friendly",
       "Dessert",
@@ -1472,8 +1413,7 @@
     "specialty": "Fresh croissants & brunch bakery",
     "flavor": "Fresh, high-quality pastry",
     "atmosphere": "Warm, bustling with families",
-    "price": "~140฿",
-    "distance": "1.2 km",
+    "priceAvg": 140,
     "tags": [
       "Bakery",
       "Brunch"
@@ -1496,8 +1436,7 @@
     "specialty": "Personalized drip coffee & craft chocolate drinks",
     "flavor": "Flavorful, award-winning craft",
     "atmosphere": "Rustic, spacious, laid-back",
-    "price": "~130฿",
-    "distance": "1.6 km",
+    "priceAvg": 130,
     "tags": [
       "Pour-over",
       "Roastery",
@@ -1521,8 +1460,7 @@
     "specialty": "Curated matcha flights & homemade desserts",
     "flavor": "Quality matcha, not overly sweet",
     "atmosphere": "Homey, hidden gem",
-    "price": "~120฿",
-    "distance": "4.9 km",
+    "priceAvg": 120,
     "tags": [
       "Matcha",
       "Hidden gem"
@@ -1545,8 +1483,7 @@
     "specialty": "Vintage-styled breakfast cafe",
     "flavor": "Generous portions, quality",
     "atmosphere": "Nostalgic, vintage, laptop-friendly",
-    "price": "~140฿",
-    "distance": "2.4 km",
+    "priceAvg": 140,
     "tags": [
       "Work-friendly",
       "Breakfast"
@@ -1569,8 +1506,7 @@
     "specialty": "House-grown & roasted single-origin coffee",
     "flavor": "High quality, house-roasted",
     "atmosphere": "Cute, quiet, cozy",
-    "price": "~110฿",
-    "distance": "1.3 km",
+    "priceAvg": 110,
     "tags": [
       "Roastery",
       "Quiet",
@@ -1594,8 +1530,7 @@
     "specialty": "Coconut coffee & Thai-style espresso",
     "flavor": "Nice, flavorful, pricey for size",
     "atmosphere": "Small, popping up, cozy",
-    "price": "~110฿",
-    "distance": "2.8 km",
+    "priceAvg": 110,
     "tags": [
       "Grab-and-go",
       "Cozy"
@@ -1618,8 +1553,7 @@
     "specialty": "Free-roaming cat cafe & Japanese garden",
     "flavor": "Tasty drinks, snacks",
     "atmosphere": "Garden, playful, cat-filled",
-    "price": "~90฿",
-    "distance": "4.9 km",
+    "priceAvg": 90,
     "tags": [
       "Cat cafe",
       "Pet-friendly",
@@ -1643,8 +1577,7 @@
     "specialty": "Nitro cold brew flights",
     "flavor": "Creative, bold",
     "atmosphere": "Dark, stylish, cozy",
-    "price": "~150฿",
-    "distance": "3.0 km",
+    "priceAvg": 150,
     "tags": [
       "Cold brew",
       "Creative menu",
@@ -1668,8 +1601,7 @@
     "specialty": "Fairytale-themed brunch cafe",
     "flavor": "Fresh, beautifully plated",
     "atmosphere": "Charming, boutique, fairytale",
-    "price": "~170฿",
-    "distance": "1.5 km",
+    "priceAvg": 170,
     "tags": [
       "Brunch",
       "Photogenic",
@@ -1693,8 +1625,7 @@
     "specialty": "Quiet boutique co-working cafe",
     "flavor": "Nice drinks, a bit pricier",
     "atmosphere": "Cozy, quiet, hidden gem",
-    "price": "~140฿",
-    "distance": "0.6 km",
+    "priceAvg": 140,
     "tags": [
       "Work-friendly",
       "Quiet",
@@ -1718,8 +1649,7 @@
     "specialty": "House-roasted flat white",
     "flavor": "Outstanding, balanced, not too bitter",
     "atmosphere": "Minimalist, relaxing, AC'd",
-    "price": "~100฿",
-    "distance": "3.3 km",
+    "priceAvg": 100,
     "tags": [
       "Roastery",
       "Parking",
@@ -1743,8 +1673,7 @@
     "specialty": "Diverse single-origin beans",
     "flavor": "Exceptional quality for price",
     "atmosphere": "Small, calm, study-friendly",
-    "price": "~90฿",
-    "distance": "3.3 km",
+    "priceAvg": 90,
     "tags": [
       "Roastery",
       "Study-friendly",
@@ -1768,8 +1697,7 @@
     "specialty": "Matcha Cream Maple Sea Salt",
     "flavor": "Balanced sweet-salty, well-sourced",
     "atmosphere": "Calm on weekdays, crowded weekends",
-    "price": "~140฿",
-    "distance": "1.8 km",
+    "priceAvg": 140,
     "tags": [
       "Matcha",
       "Specialty"
@@ -1792,8 +1720,7 @@
     "specialty": "Black-coffee-only, global origin beans",
     "flavor": "Bold, origin-specific, no milk",
     "atmosphere": "Tiny, hidden, purist",
-    "price": "~70฿",
-    "distance": "3.1 km",
+    "priceAvg": 70,
     "tags": [
       "Specialty",
       "Budget-friendly",
@@ -1817,8 +1744,7 @@
     "specialty": "Tiramisu latte",
     "flavor": "Delicious, high quality for low price",
     "atmosphere": "Cute, cozy, backyard seating",
-    "price": "~90฿",
-    "distance": "0.7 km",
+    "priceAvg": 90,
     "tags": [
       "Hidden gem",
       "Cozy"
@@ -1841,8 +1767,7 @@
     "specialty": "Early-opening coffee & smoothies",
     "flavor": "Good, fresh smoothie",
     "atmosphere": "Small, friendly, convenient",
-    "price": "~70฿",
-    "distance": "2.9 km",
+    "priceAvg": 70,
     "tags": [
       "Early opening",
       "Budget-friendly"
@@ -1865,8 +1790,7 @@
     "specialty": "Ceremonial-grade matcha & pandan drinks",
     "flavor": "Well-balanced, crafted",
     "atmosphere": "Hidden, quiet residential",
-    "price": "~130฿",
-    "distance": "4.4 km",
+    "priceAvg": 130,
     "tags": [
       "Matcha",
       "Hidden gem",
@@ -1890,8 +1814,7 @@
     "specialty": "Thai home-style food & matcha",
     "flavor": "Tasty, affordable",
     "atmosphere": "Homie, beautiful",
-    "price": "~90฿",
-    "distance": "4.2 km",
+    "priceAvg": 90,
     "tags": [
       "Budget-friendly",
       "Homey"
@@ -1914,8 +1837,7 @@
     "specialty": "Turkish-style coffee",
     "flavor": "Rich, bold",
     "atmosphere": "Turkish theme, warm, clean",
-    "price": "~90฿",
-    "distance": "0.8 km",
+    "priceAvg": 90,
     "tags": [
       "Themed",
       "Specialty"
@@ -1938,8 +1860,7 @@
     "specialty": "Homemade bakes & coffee",
     "flavor": "Great coffee, cute bakery",
     "atmosphere": "Clean, relaxing, coworking",
-    "price": "~100฿",
-    "distance": "2.0 km",
+    "priceAvg": 100,
     "tags": [
       "Bakery",
       "Work-friendly",
@@ -1963,8 +1884,7 @@
     "specialty": "House-blend orange espresso",
     "flavor": "Complex, best-in-area",
     "atmosphere": "Bright, spacious, modern",
-    "price": "~130฿",
-    "distance": "4.6 km",
+    "priceAvg": 130,
     "tags": [
       "Roastery",
       "Specialty"
@@ -1987,8 +1907,7 @@
     "specialty": "Signature matcha & cheesecake",
     "flavor": "Rich, flavorful matcha",
     "atmosphere": "Minimalist, photogenic, pet-friendly",
-    "price": "~150฿",
-    "distance": "5.6 km",
+    "priceAvg": 150,
     "tags": [
       "Matcha",
       "Pet-friendly",
@@ -2012,8 +1931,7 @@
     "specialty": "Unassuming best-in-town coffee",
     "flavor": "Good, local",
     "atmosphere": "Chill, patio, cozy",
-    "price": "~90฿",
-    "distance": "0.8 km",
+    "priceAvg": 90,
     "tags": [
       "Hidden gem",
       "Quiet"
@@ -2036,8 +1954,7 @@
     "specialty": "Latte art with complimentary snacks",
     "flavor": "Great coffee and tea",
     "atmosphere": "Quiet, hidden, strong AC",
-    "price": "~120฿",
-    "distance": "1.0 km",
+    "priceAvg": 120,
     "tags": [
       "Latte art",
       "Quiet",
@@ -2061,8 +1978,7 @@
     "specialty": "Creative menu & vegan-friendly matcha",
     "flavor": "Good, varied",
     "atmosphere": "Artistic teak, spacious, work-friendly",
-    "price": "~110฿",
-    "distance": "0.9 km",
+    "priceAvg": 110,
     "tags": [
       "Work-friendly",
       "Matcha"
@@ -2085,8 +2001,7 @@
     "specialty": "Signature pour-over & espresso",
     "flavor": "Great, consistent, unsweetened by default",
     "atmosphere": "Modern, stylish, higher price",
-    "price": "~150฿",
-    "distance": "3.0 km",
+    "priceAvg": 150,
     "tags": [
       "Specialty",
       "Famous chain",
@@ -2110,8 +2025,7 @@
     "specialty": "Cat cafe (2-hour session + free drink)",
     "flavor": "Simple snack/drink menu",
     "atmosphere": "Cozy, cat-filled, rule-based",
-    "price": "~150฿",
-    "distance": "5.1 km",
+    "priceAvg": 150,
     "tags": [
       "Cat cafe",
       "Pet-friendly"
@@ -2134,8 +2048,7 @@
     "specialty": "Hilltop family-grown coffee with view",
     "flavor": "Specialty, crafted; mocha can run weak",
     "atmosphere": "Scenic, hilltop, rustic",
-    "price": "~90฿",
-    "distance": "11.8 km",
+    "priceAvg": 90,
     "tags": [
       "Scenic view",
       "Roastery",
@@ -2159,8 +2072,7 @@
     "specialty": "Coworking cafe, Honey Lemon Soda",
     "flavor": "Good drinks, a bit pricey",
     "atmosphere": "Warm, quiet, professional coworking",
-    "price": "~130฿",
-    "distance": "1.1 km",
+    "priceAvg": 130,
     "tags": [
       "Work-friendly",
       "Quiet"
@@ -2183,8 +2095,7 @@
     "specialty": "Craft Thai milk tea, no oat-milk upcharge",
     "flavor": "Rich Thai tea, matcha",
     "atmosphere": "Chill, good vibes",
-    "price": "~75฿",
-    "distance": "2.9 km",
+    "priceAvg": 75,
     "tags": [
       "Thai tea",
       "Budget-friendly"
@@ -2207,8 +2118,7 @@
     "specialty": "Coconut coffee ('White Island')",
     "flavor": "Delicious, popular",
     "atmosphere": "Charming 2-floor, busy mornings",
-    "price": "~110฿",
-    "distance": "2.3 km",
+    "priceAvg": 110,
     "tags": [
       "Specialty",
       "Cozy"
@@ -2231,8 +2141,7 @@
     "specialty": "Home-style desserts & photo booth",
     "flavor": "Not too sweet",
     "atmosphere": "Chill, home-style, photogenic",
-    "price": "~110฿",
-    "distance": "3.3 km",
+    "priceAvg": 110,
     "tags": [
       "Photogenic",
       "Dessert"
@@ -2255,8 +2164,7 @@
     "specialty": "Shaded outdoor study cafe (CMU campus)",
     "flavor": "Consistent (Nespresso-based)",
     "atmosphere": "Shaded, natural, campus",
-    "price": "~80฿",
-    "distance": "4.7 km",
+    "priceAvg": 80,
     "tags": [
       "Study-friendly",
       "Campus",
@@ -2280,8 +2188,7 @@
     "specialty": "Coworking cafe near MAYA Mall",
     "flavor": "Good, cheap",
     "atmosphere": "Professional coworking, comfortable",
-    "price": "~80฿",
-    "distance": "3.2 km",
+    "priceAvg": 80,
     "tags": [
       "Work-friendly",
       "Budget-friendly"
@@ -2304,8 +2211,7 @@
     "specialty": "Moka pot & drip coffee, mountain view",
     "flavor": "Smooth, rich medium roast",
     "atmosphere": "Cozy, mountain view upstairs",
-    "price": "~55฿",
-    "distance": "5.5 km",
+    "priceAvg": 55,
     "tags": [
       "Budget-friendly",
       "Scenic view"
@@ -2328,8 +2234,7 @@
     "specialty": "Study-friendly cafe with air purifiers",
     "flavor": "Great coffee & cakes",
     "atmosphere": "Chill, clean air, study-friendly",
-    "price": "~90฿",
-    "distance": "3.9 km",
+    "priceAvg": 90,
     "tags": [
       "Study-friendly",
       "Quiet"
@@ -2352,8 +2257,7 @@
     "specialty": "Wide bean selection & matcha",
     "flavor": "High quality, no complaints",
     "atmosphere": "Spacious, laptop-friendly",
-    "price": "~100฿",
-    "distance": "3.3 km",
+    "priceAvg": 100,
     "tags": [
       "Work-friendly",
       "Roastery"
@@ -2376,8 +2280,7 @@
     "specialty": "Vietnamese coffee & scones",
     "flavor": "Fantastic, well-priced",
     "atmosphere": "Thai Lanna house, shady, quiet",
-    "price": "~100฿",
-    "distance": "5.2 km",
+    "priceAvg": 100,
     "tags": [
       "Quiet",
       "Work-friendly"
@@ -2400,8 +2303,7 @@
     "specialty": "Bossa-nova cafe, no-upcharge oat milk",
     "flavor": "Great coffee, fair prices",
     "atmosphere": "Small, cozy, quiet jazz",
-    "price": "~80฿",
-    "distance": "0.8 km",
+    "priceAvg": 80,
     "tags": [
       "Quiet",
       "Budget-friendly"
@@ -2424,8 +2326,7 @@
     "specialty": "Local single-origin roasts",
     "flavor": "Clean, complex, not too hot",
     "atmosphere": "Cozy neighborhood",
-    "price": "~80฿",
-    "distance": "2.0 km",
+    "priceAvg": 80,
     "tags": [
       "Roastery",
       "Budget-friendly"
@@ -2448,8 +2349,7 @@
     "specialty": "Roselle coffee & antique Lanna decor",
     "flavor": "Unique, tasty",
     "atmosphere": "Antique, cozy, cat-friendly",
-    "price": "~110฿",
-    "distance": "2.7 km",
+    "priceAvg": 110,
     "tags": [
       "Pet-friendly",
       "Hidden gem"
@@ -2472,8 +2372,7 @@
     "specialty": "Biscoff caramel matcha",
     "flavor": "Dessert-like, sometimes inconsistent",
     "atmosphere": "Fancy, aesthetic, group-friendly",
-    "price": "~130฿",
-    "distance": "1.5 km",
+    "priceAvg": 130,
     "tags": [
       "Matcha",
       "Photogenic"
@@ -2496,8 +2395,7 @@
     "specialty": "Japanese-style riverside cafe",
     "flavor": "Good coffee",
     "atmosphere": "Minimalist, lake view, photogenic",
-    "price": "~100฿",
-    "distance": "1.7 km",
+    "priceAvg": 100,
     "tags": [
       "River view",
       "Photogenic"
@@ -2520,8 +2418,7 @@
     "specialty": "Black strawberry latte",
     "flavor": "Very good, amazing",
     "atmosphere": "Sophisticated, work-friendly, fast wifi",
-    "price": "~110฿",
-    "distance": "2.2 km",
+    "priceAvg": 110,
     "tags": [
       "Work-friendly",
       "Specialty"
@@ -2544,8 +2441,7 @@
     "specialty": "Budget specialty cappuccino",
     "flavor": "Light roast praised, good profiles",
     "atmosphere": "Tiny, takeaway, no-nonsense",
-    "price": "~55฿",
-    "distance": "3.0 km",
+    "priceAvg": 55,
     "tags": [
       "Budget-friendly",
       "Hidden gem"
@@ -2568,8 +2464,7 @@
     "specialty": "Eggcelent Melt toast & mango sticky rice",
     "flavor": "Delicious, cozy",
     "atmosphere": "Cozy, friendly service",
-    "price": "~130฿",
-    "distance": "1.1 km",
+    "priceAvg": 130,
     "tags": [
       "Breakfast",
       "Dessert"
@@ -2592,8 +2487,7 @@
     "specialty": "Cat cafe with matcha & bakery",
     "flavor": "Tasty coffee, oat milk option",
     "atmosphere": "Calm, cozy, cat-filled",
-    "price": "~110฿",
-    "distance": "3.8 km",
+    "priceAvg": 110,
     "tags": [
       "Cat cafe",
       "Pet-friendly"
@@ -2616,8 +2510,7 @@
     "specialty": "Cat cafe & Nutella burnt cheesecake",
     "flavor": "Good coffee, pricier food/drinks",
     "atmosphere": "Cozy, welcoming, cat-filled",
-    "price": "~120฿",
-    "distance": "2.9 km",
+    "priceAvg": 120,
     "tags": [
       "Cat cafe",
       "Pet-friendly",
@@ -2641,8 +2534,7 @@
     "specialty": "Ceremonial-grade Uji matcha",
     "flavor": "Smooth, rich, high quality",
     "atmosphere": "Tiny, cozy, Old City",
-    "price": "~130฿",
-    "distance": "1.0 km",
+    "priceAvg": 130,
     "tags": [
       "Matcha",
       "Specialty"
@@ -2665,8 +2557,7 @@
     "specialty": "Expertly prepared budget cappuccino",
     "flavor": "Excellent, smooth",
     "atmosphere": "Friendly, loyal regulars",
-    "price": "~40฿",
-    "distance": "0.5 km",
+    "priceAvg": 40,
     "tags": [
       "Budget-friendly"
     ],
@@ -2688,8 +2579,7 @@
     "specialty": "Dog cafe (entry incl. drink & cake)",
     "flavor": "Decent cake/drink",
     "atmosphere": "Spacious, bright, dog-filled, remote",
-    "price": "~250฿",
-    "distance": "11.2 km",
+    "priceAvg": 250,
     "tags": [
       "Dog cafe",
       "Pet-friendly"
@@ -2712,8 +2602,7 @@
     "specialty": "Soft-serve & matcha pancakes",
     "flavor": "Light, innovative",
     "atmosphere": "Mall, casual, friendly",
-    "price": "~90฿",
-    "distance": "3.3 km",
+    "priceAvg": 90,
     "tags": [
       "Dessert"
     ],
@@ -2735,8 +2624,7 @@
     "specialty": "Coffee x matcha specialty blends",
     "flavor": "Exceptional, though some roasts sour",
     "atmosphere": "Minimalist, calm, work-friendly",
-    "price": "~120฿",
-    "distance": "1.9 km",
+    "priceAvg": 120,
     "tags": [
       "Specialty",
       "Matcha",
@@ -2760,8 +2648,7 @@
     "specialty": "Heritage house cafe",
     "flavor": "Inconsistent",
     "atmosphere": "Photogenic, heritage",
-    "price": "~150฿",
-    "distance": "2.7 km",
+    "priceAvg": 150,
     "tags": [
       "Photogenic",
       "Heritage"
@@ -2784,8 +2671,7 @@
     "specialty": "Oat milk latte & American breakfast",
     "flavor": "Great, attention to detail",
     "atmosphere": "Clean, modern, relaxing",
-    "price": "~130฿",
-    "distance": "1.2 km",
+    "priceAvg": 130,
     "tags": [
       "Work-friendly",
       "Breakfast"
@@ -2808,8 +2694,7 @@
     "specialty": "Matcha coconut in a heritage building",
     "flavor": "Very good",
     "atmosphere": "Antique, quirky, heritage",
-    "price": "~110฿",
-    "distance": "1.5 km",
+    "priceAvg": 110,
     "tags": [
       "Heritage",
       "Unique"
@@ -2832,8 +2717,7 @@
     "specialty": "Matcha with Japanese photo-garden",
     "flavor": "Moderate sweetness, quality",
     "atmosphere": "Japanese-style, photogenic, cozy",
-    "price": "~120฿",
-    "distance": "3.5 km",
+    "priceAvg": 120,
     "tags": [
       "Matcha",
       "Photogenic"
@@ -2856,8 +2740,7 @@
     "specialty": "Garden cafe under a big tree",
     "flavor": "Good",
     "atmosphere": "Shaded garden, relaxed, work-friendly",
-    "price": "~100฿",
-    "distance": "2.3 km",
+    "priceAvg": 100,
     "tags": [
       "Garden",
       "Work-friendly"
@@ -2880,8 +2763,7 @@
     "specialty": "Oreo Chocolate Frappe & gelato",
     "flavor": "Delicious, not too sweet",
     "atmosphere": "Garden hideaway, calm",
-    "price": "~130฿",
-    "distance": "2.8 km",
+    "priceAvg": 130,
     "tags": [
       "Garden",
       "Dessert"
@@ -2904,8 +2786,7 @@
     "specialty": "Bite-sized pastries, not-too-sweet",
     "flavor": "Good, mixed quality",
     "atmosphere": "Cozy, small",
-    "price": "~100฿",
-    "distance": "3.4 km",
+    "priceAvg": 100,
     "tags": [
       "Dessert",
       "Parking"
@@ -2928,8 +2809,7 @@
     "specialty": "Strawberry cheesecake & mango sticky rice dessert",
     "flavor": "Delicious but pricey",
     "atmosphere": "Casual, chain dessert bar",
-    "price": "~180฿",
-    "distance": "2.7 km",
+    "priceAvg": 180,
     "tags": [
       "Dessert",
       "Famous chain"
@@ -2952,8 +2832,7 @@
     "specialty": "Riverside Euro-Thai dinner",
     "flavor": "Good, mixed cuisine",
     "atmosphere": "Riverside, lantern-lit, romantic",
-    "price": "~200฿",
-    "distance": "1.0 km",
+    "priceAvg": 200,
     "tags": [
       "River view",
       "Romantic"
@@ -2976,8 +2855,7 @@
     "specialty": "Northern Thai fusion & bakery",
     "flavor": "Delicious, unique combos",
     "atmosphere": "Warm, cozy, parking available",
-    "price": "~140฿",
-    "distance": "3.2 km",
+    "priceAvg": 140,
     "tags": [
       "Parking",
       "Thai fusion"
@@ -3000,8 +2878,7 @@
     "specialty": "Mountain-view coffee stop",
     "flavor": "Good",
     "atmosphere": "Scenic, relaxing, roadside",
-    "price": "~90฿",
-    "distance": "11.8 km",
+    "priceAvg": 90,
     "tags": [
       "Scenic view",
       "Parking"
@@ -3024,8 +2901,7 @@
     "specialty": "Dirty Noland Blend (house roast)",
     "flavor": "Rich, caramel, nutty",
     "atmosphere": "Quaint, pet-friendly outdoor, parking",
-    "price": "~100฿",
-    "distance": "3.7 km",
+    "priceAvg": 100,
     "tags": [
       "Roastery",
       "Pet-friendly",
@@ -3049,8 +2925,7 @@
     "specialty": "Honey lemon matcha",
     "flavor": "Decent, delicious",
     "atmosphere": "Charming, tiny, takeaway-focused",
-    "price": "~80฿",
-    "distance": "1.1 km",
+    "priceAvg": 80,
     "tags": [
       "Matcha",
       "Budget-friendly"
@@ -3073,8 +2948,7 @@
     "specialty": "3-bean signature roast selection",
     "flavor": "Tasty, friendly service",
     "atmosphere": "Minimalist, cozy",
-    "price": "~80฿",
-    "distance": "4.3 km",
+    "priceAvg": 80,
     "tags": [
       "Roastery",
       "Budget-friendly"
@@ -3097,8 +2971,7 @@
     "specialty": "3-floor coworking cafe, carrot cake",
     "flavor": "Amazing coffee & tea",
     "atmosphere": "Quiet, clean, family-run",
-    "price": "~110฿",
-    "distance": "2.8 km",
+    "priceAvg": 110,
     "tags": [
       "Work-friendly",
       "Quiet"
@@ -3121,8 +2994,7 @@
     "specialty": "House blend & single-origin, Aussie-style",
     "flavor": "Rich, balanced, full",
     "atmosphere": "Peaceful, calm, passionate owner",
-    "price": "~110฿",
-    "distance": "3.3 km",
+    "priceAvg": 110,
     "tags": [
       "Roastery",
       "Specialty"
@@ -3145,8 +3017,7 @@
     "specialty": "Pour-over, long opening hours",
     "flavor": "Excellent light roast",
     "atmosphere": "Clean, bright, work-friendly",
-    "price": "~90฿",
-    "distance": "2.5 km",
+    "priceAvg": 90,
     "tags": [
       "Work-friendly",
       "Pour-over",
@@ -3170,8 +3041,7 @@
     "specialty": "Rooftop cafe-eatery",
     "flavor": "Mixed - americano could improve",
     "atmosphere": "Minimalist, cozy, rooftop",
-    "price": "~100฿",
-    "distance": "2.4 km",
+    "priceAvg": 100,
     "tags": [
       "Work-friendly"
     ],
@@ -3193,8 +3063,7 @@
     "specialty": "In-house roasted coffee, grab-and-go",
     "flavor": "Good quality beans",
     "atmosphere": "Small corner, ambient, friendly",
-    "price": "~90฿",
-    "distance": "2.6 km",
+    "priceAvg": 90,
     "tags": [
       "Roastery",
       "Grab-and-go"
@@ -3217,8 +3086,7 @@
     "specialty": "Global single-origin beans, riverside roastery",
     "flavor": "Flavorful, aromatic, exceptional",
     "atmosphere": "Riverside, serious, welcoming",
-    "price": "~120฿",
-    "distance": "5.6 km",
+    "priceAvg": 120,
     "tags": [
       "Roastery",
       "River view",
@@ -3242,8 +3110,7 @@
     "specialty": "Ethiopian single-origin latte",
     "flavor": "Nutty, mysterious aroma",
     "atmosphere": "Peaceful, pet-friendly (resident cat)",
-    "price": "~110฿",
-    "distance": "2.6 km",
+    "priceAvg": 110,
     "tags": [
       "Roastery",
       "Pet-friendly"
@@ -3266,8 +3133,7 @@
     "specialty": "Signature matcha latte",
     "flavor": "Not bitter, delicious",
     "atmosphere": "Small, busy at noon, takeaway-friendly",
-    "price": "~90฿",
-    "distance": "2.6 km",
+    "priceAvg": 90,
     "tags": [
       "Matcha",
       "Budget-friendly"
@@ -3290,8 +3156,7 @@
     "specialty": "Mountain-view dark roast coffee",
     "flavor": "Good, dark roast",
     "atmosphere": "Scenic, rustic, hilltop",
-    "price": "~80฿",
-    "distance": "12.0 km",
+    "priceAvg": 80,
     "tags": [
       "Scenic view"
     ],
@@ -3313,8 +3178,7 @@
     "specialty": "Organic own-farm coffee",
     "flavor": "Precise, excellent, locally grown",
     "atmosphere": "Quiet, balcony, no AC",
-    "price": "~100฿",
-    "distance": "0.9 km",
+    "priceAvg": 100,
     "tags": [
       "Roastery",
       "Quiet"
@@ -3337,8 +3201,7 @@
     "specialty": "Choose-your-roast coffee stall",
     "flavor": "Good quality, affordable",
     "atmosphere": "Casual market stall, AC",
-    "price": "~40฿",
-    "distance": "3.0 km",
+    "priceAvg": 40,
     "tags": [
       "Budget-friendly"
     ],
@@ -3360,8 +3223,7 @@
     "specialty": "Signature drinks near train station",
     "flavor": "Really good, reasonably priced",
     "atmosphere": "Convenient, clean, functional",
-    "price": "~70฿",
-    "distance": "2.4 km",
+    "priceAvg": 70,
     "tags": [
       "Budget-friendly"
     ],
@@ -3383,8 +3245,7 @@
     "specialty": "Homemade bakery, pet-friendly cafe",
     "flavor": "Wonderful coffee",
     "atmosphere": "Dog-filled, unique design, parking",
-    "price": "~110฿",
-    "distance": "3.3 km",
+    "priceAvg": 110,
     "tags": [
       "Pet-friendly",
       "Parking",
@@ -3408,8 +3269,7 @@
     "specialty": "Affordable iced americano & latte",
     "flavor": "Tasty, affordable",
     "atmosphere": "Small, friendly, quick service",
-    "price": "~40฿",
-    "distance": "1.2 km",
+    "priceAvg": 40,
     "tags": [
       "Budget-friendly"
     ],
@@ -3431,8 +3291,7 @@
     "specialty": "Zootopia-themed cafe & games",
     "flavor": "Good coffee, coconut matcha",
     "atmosphere": "Playful, themed, 24-hour",
-    "price": "~80฿",
-    "distance": "3.5 km",
+    "priceAvg": 80,
     "tags": [
       "Themed",
       "Late-night",
@@ -3456,8 +3315,7 @@
     "specialty": "Owner-baked goods & specialty coffee",
     "flavor": "Exceptional",
     "atmosphere": "Intimate, Japanese-style, quiet",
-    "price": "~110฿",
-    "distance": "2.4 km",
+    "priceAvg": 110,
     "tags": [
       "Quiet",
       "Hidden gem"
@@ -3480,8 +3338,7 @@
     "specialty": "True-coffee-forward brews",
     "flavor": "Smooth, rich, actually tastes of coffee",
     "atmosphere": "Tiny, hotel lobby, no AC",
-    "price": "~90฿",
-    "distance": "1.4 km",
+    "priceAvg": 90,
     "tags": [
       "Specialty",
       "Hidden gem"
@@ -3504,8 +3361,7 @@
     "specialty": "Pear latte & designer cafe",
     "flavor": "Strong, smooth, balanced",
     "atmosphere": "Minimalist, stunning design",
-    "price": "~100฿",
-    "distance": "1.8 km",
+    "priceAvg": 100,
     "tags": [
       "Design-forward",
       "Work-friendly"
@@ -3528,8 +3384,7 @@
     "specialty": "Chocolate cake & coffee",
     "flavor": "Inconsistent quality",
     "atmosphere": "Comfortable but inconsistent",
-    "price": "~90฿",
-    "distance": "1.7 km",
+    "priceAvg": 90,
     "tags": [
       "Dessert"
     ],
@@ -3551,8 +3406,7 @@
     "specialty": "Choose-your-roast coffee",
     "flavor": "Good, low acidity",
     "atmosphere": "Modest, friendly, cat on-site",
-    "price": "~80฿",
-    "distance": "1.4 km",
+    "priceAvg": 80,
     "tags": [
       "Pet-friendly",
       "Budget-friendly"
@@ -3575,8 +3429,7 @@
     "specialty": "Banana bread matcha",
     "flavor": "Excellent, high quality",
     "atmosphere": "Cozy, lovely, caring",
-    "price": "~120฿",
-    "distance": "2.8 km",
+    "priceAvg": 120,
     "tags": [
       "Matcha",
       "Specialty"
@@ -3599,8 +3452,7 @@
     "specialty": "Canada-imported full-flavor coffee",
     "flavor": "Full flavor, good value",
     "atmosphere": "Hidden, cozy",
-    "price": "~90฿",
-    "distance": "1.3 km",
+    "priceAvg": 90,
     "tags": [
       "Hidden gem"
     ],
@@ -3622,8 +3474,7 @@
     "specialty": "Smooth iced mocha, dairy alternatives",
     "flavor": "Rich, smooth finish",
     "atmosphere": "Cozy, small, friendly",
-    "price": "~90฿",
-    "distance": "2.8 km",
+    "priceAvg": 90,
     "tags": [
       "Budget-friendly"
     ],
@@ -3645,8 +3496,7 @@
     "specialty": "Multi-grade matcha selection",
     "flavor": "Delicious, authentic",
     "atmosphere": "Small, cozy, repeat-worthy",
-    "price": "~100฿",
-    "distance": "2.0 km",
+    "priceAvg": 100,
     "tags": [
       "Matcha",
       "Hidden gem"
@@ -3669,8 +3519,7 @@
     "specialty": "Historic Lanna riverside bistro",
     "flavor": "Thai-Western fusion, well prepared",
     "atmosphere": "Historic, riverside, elegant",
-    "price": "~250฿",
-    "distance": "2.6 km",
+    "priceAvg": 250,
     "tags": [
       "River view",
       "Heritage",
@@ -3694,8 +3543,7 @@
     "specialty": "Roast-choice espresso, work desks",
     "flavor": "Good quality coffee",
     "atmosphere": "Organized, quiet, work-friendly",
-    "price": "~90฿",
-    "distance": "1.9 km",
+    "priceAvg": 90,
     "tags": [
       "Work-friendly",
       "Quiet"
@@ -3718,8 +3566,7 @@
     "specialty": "Puzzle cafe with balcony sunset view",
     "flavor": "Nice coffee, tasty croissant",
     "atmosphere": "Calm, quiet, puzzle-themed",
-    "price": "~100฿",
-    "distance": "3.0 km",
+    "priceAvg": 100,
     "tags": [
       "Unique concept",
       "Quiet",
@@ -3743,8 +3590,7 @@
     "specialty": "Matcha Cloud Coconut",
     "flavor": "Nutty, tasty",
     "atmosphere": "Small specialty matcha shop",
-    "price": "~110฿",
-    "distance": "2.9 km",
+    "priceAvg": 110,
     "tags": [
       "Matcha"
     ],
@@ -3766,8 +3612,7 @@
     "specialty": "Hojicha & matcha latte",
     "flavor": "Not bitter, smooth, easy-drinking",
     "atmosphere": "Cute, grab-and-go",
-    "price": "~90฿",
-    "distance": "3.6 km",
+    "priceAvg": 90,
     "tags": [
       "Matcha",
       "Grab-and-go"
@@ -3790,8 +3635,7 @@
     "specialty": "Jungle waterfall cafe",
     "flavor": "Good coffee/cappuccino",
     "atmosphere": "Jungle, waterfall, multi-tier nature",
-    "price": "~100฿",
-    "distance": "12.1 km",
+    "priceAvg": 100,
     "tags": [
       "Scenic view",
       "Nature",
@@ -3815,8 +3659,7 @@
     "specialty": "Budget specialty coffee",
     "flavor": "Pretty good",
     "atmosphere": "Standard chain cafe",
-    "price": "~45฿",
-    "distance": "1.9 km",
+    "priceAvg": 45,
     "tags": [
       "Budget-friendly"
     ],
@@ -3838,8 +3681,7 @@
     "specialty": "Thai home-style food & drinks",
     "flavor": "Authentic, affordable",
     "atmosphere": "Mixed - inconsistent service",
-    "price": "~100฿",
-    "distance": "0.9 km",
+    "priceAvg": 100,
     "tags": [
       "Budget-friendly"
     ],
@@ -3861,8 +3703,7 @@
     "specialty": "Phenomenal specialty coffee (new shop)",
     "flavor": "Excellent taste",
     "atmosphere": "Cozy, beautiful, friendly",
-    "price": "~100฿",
-    "distance": "2.2 km",
+    "priceAvg": 100,
     "tags": [
       "Specialty",
       "Hidden gem"
@@ -3885,8 +3726,7 @@
     "specialty": "Orange Americano & Japanese-style cafe",
     "flavor": "Delicious, well-balanced",
     "atmosphere": "Cozy, Japanese aesthetic, playful",
-    "price": "~90฿",
-    "distance": "1.8 km",
+    "priceAvg": 90,
     "tags": [
       "Themed",
       "Quiet"
@@ -3909,8 +3749,7 @@
     "specialty": "Modern specialty tea",
     "flavor": "Good, variable flavor availability",
     "atmosphere": "Small, modern",
-    "price": "~90฿",
-    "distance": "3.1 km",
+    "priceAvg": 90,
     "tags": [
       "Tea"
     ],
@@ -3932,8 +3771,7 @@
     "specialty": "Matcha & cake",
     "flavor": "Best quality matcha, good cake",
     "atmosphere": "New, parking-friendly",
-    "price": "~100฿",
-    "distance": "2.3 km",
+    "priceAvg": 100,
     "tags": [
       "Matcha",
       "Parking"
@@ -3956,8 +3794,7 @@
     "specialty": "On-site roasted specialty coffee & antiques",
     "flavor": "Excellent, local beans",
     "atmosphere": "Quirky, antique-filled, home cafe",
-    "price": "~100฿",
-    "distance": "5.2 km",
+    "priceAvg": 100,
     "tags": [
       "Roastery",
       "Unique concept"
@@ -3980,8 +3817,7 @@
     "specialty": "Yogurt blended drinks & Thai iced tea",
     "flavor": "Fruity, floral, strong coffee",
     "atmosphere": "Clean, airy, mellow",
-    "price": "~70฿",
-    "distance": "2.8 km",
+    "priceAvg": 70,
     "tags": [
       "Budget-friendly",
       "Grab-and-go"
@@ -4004,8 +3840,7 @@
     "specialty": "Canada-imported coffee (second location)",
     "flavor": "Excellent, quality beans",
     "atmosphere": "Cozy, hidden between fast-food chains",
-    "price": "~90฿",
-    "distance": "1.6 km",
+    "priceAvg": 90,
     "tags": [
       "Hidden gem"
     ],
@@ -4027,8 +3862,7 @@
     "specialty": "Signature Dirty coffee",
     "flavor": "Rich, smooth, balanced",
     "atmosphere": "Cozy, post-run friendly",
-    "price": "~90฿",
-    "distance": "2.0 km",
+    "priceAvg": 90,
     "tags": [
       "Dirty coffee",
       "Specialty"
@@ -4051,8 +3885,7 @@
     "specialty": "Strong house-brewed coffee (new shop)",
     "flavor": "Strong, amazing",
     "atmosphere": "Friendly, new, welcoming",
-    "price": "~90฿",
-    "distance": "0.7 km",
+    "priceAvg": 90,
     "tags": [
       "Hidden gem"
     ],
@@ -4074,8 +3907,7 @@
     "specialty": "House-roasted coffee & snacks",
     "flavor": "Great, delicious",
     "atmosphere": "Small, cozy, homey",
-    "price": "~90฿",
-    "distance": "1.7 km",
+    "priceAvg": 90,
     "tags": [
       "Roastery",
       "Cozy"
@@ -4098,8 +3930,7 @@
     "specialty": "Matcha coconut (new shop)",
     "flavor": "Umami, rich",
     "atmosphere": "New, supportive-local vibe",
-    "price": "~90฿",
-    "distance": "6.8 km",
+    "priceAvg": 90,
     "tags": [
       "Matcha",
       "Hidden gem"
@@ -4122,8 +3953,7 @@
     "specialty": "Roadside strong coffee with view",
     "flavor": "Strong, affordable",
     "atmosphere": "Simple stall, scenic",
-    "price": "~50฿",
-    "distance": "11.0 km",
+    "priceAvg": 50,
     "tags": [
       "Scenic view",
       "Budget-friendly"
@@ -4146,8 +3976,7 @@
     "specialty": "Chill bar cafe, home-cooked snacks",
     "flavor": "Tasty, local wine",
     "atmosphere": "Chill, good music, relaxed",
-    "price": "~120฿",
-    "distance": "2.2 km",
+    "priceAvg": 120,
     "tags": [
       "Bar",
       "Chill"
@@ -4170,8 +3999,7 @@
     "specialty": "Matcha coconut & cookies",
     "flavor": "Rich nutty & floral notes",
     "atmosphere": "Small, new, specialty",
-    "price": "~90฿",
-    "distance": "5.6 km",
+    "priceAvg": 90,
     "tags": [
       "Matcha"
     ],
@@ -4193,8 +4021,7 @@
     "specialty": "Flat white & coconut-foam Thai tea",
     "flavor": "Superb, caramel-like dark roast",
     "atmosphere": "Chill riverside, budget-friendly",
-    "price": "~55฿",
-    "distance": "6.4 km",
+    "priceAvg": 55,
     "tags": [
       "River view",
       "Budget-friendly",

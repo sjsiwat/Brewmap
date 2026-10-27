@@ -23,8 +23,6 @@ NAME_OVERRIDE = {**NAME_OVERRIDE1, **NAME_OVERRIDE2}
 ADDRESS_OVERRIDE = {**ADDRESS_OVERRIDE1, **ADDRESS_OVERRIDE2}
 assert len(ENRICH) == 173, len(ENRICH)
 
-REF_LAT, REF_LNG = 18.7876, 98.9933
-
 THAI_RUN = re.compile(r"[฀-๿]+")
 
 def clean_address(addr):
@@ -122,7 +120,6 @@ for i, r in enumerate(full, 1):
     if not THAI_RUN.sub('', city).strip():
         city = 'Mueang Chiang Mai District'
     address = ADDRESS_OVERRIDE.get(i) or clean_address(', '.join(filter(None, [street, raw_area, city])))
-    dist_km = haversine_km(REF_LAT, REF_LNG, r['latitude'], r['longitude'])
     e = ENRICH[i]
     raw_title = NAME_OVERRIDE.get(i, r['title'])
     name = unicodedata.normalize('NFKD', raw_title)
@@ -138,8 +135,7 @@ for i, r in enumerate(full, 1):
         'specialty': e['specialty'],
         'flavor': e['flavor'],
         'atmosphere': e['atmosphere'],
-        'price': f"~{e['price']}฿",
-        'distance': f"{dist_km:.1f} km",
+        'priceAvg': e['price'],
         'tags': e['tags'],
         'hours': fmt_hours_24(r.get('open_hours') or {}),
         'rating': r['review_rating'],
@@ -151,7 +147,9 @@ for i, r in enumerate(full, 1):
         'lng': r['longitude'],
     })
 
-json.dump(cafes, open(os.path.join(HERE, 'enriched-output-full173.json'), 'w'), ensure_ascii=False, indent=2)
+OUT = os.path.join(HERE, '..', '..', 'data', 'cafes.json')
+os.makedirs(os.path.dirname(OUT), exist_ok=True)
+json.dump(cafes, open(OUT, 'w'), ensure_ascii=False, indent=2)
 print('built', len(cafes), 'cafes')
 
 # sanity checks
