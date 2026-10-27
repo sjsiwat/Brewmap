@@ -27,6 +27,8 @@ export interface Cafe {
   /** Average of BrewMap reviews (1 decimal), null until the first. Separate from Google's `rating`. */
   communityRating: number | null;
   communityReviewCount: number;
+  /** Pros/cons distilled from Google reviews by AI (generated offline), null until then. */
+  aiSummary: { pros: string[]; cons: string[] } | null;
 }
 
 export function formatPrice(priceAvg: number): string {

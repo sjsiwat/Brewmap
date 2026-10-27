@@ -236,3 +236,29 @@ export function updateReview(id: string, input: ReviewInput): Promise<Review> {
 export function deleteReview(id: string): Promise<void> {
   return apiFetch<void>(`/reviews/${encodeURIComponent(id)}`, { method: "DELETE" });
 }
+
+/** Mirrors AppliedFilters in server/src/ai/dto/ai.dto.ts. */
+export type AiFilters = Partial<
+  Pick<
+    CafeQuery,
+    "minPrice" | "maxPrice" | "drinkType" | "parking" | "petFriendly" | "tag" | "area" | "radiusKm" | "sort"
+  >
+>;
+
+export interface AiMatch {
+  cafe: CafeResult;
+  /** Why it fits, from the café data only; null if the AI couldn't explain. */
+  reason: string | null;
+}
+
+export interface AiFindResult {
+  filters: AiFilters;
+  items: AiMatch[];
+}
+
+export function aiFind(
+  body: { query: string; lat?: number; lng?: number },
+  init?: RequestInit,
+): Promise<AiFindResult> {
+  return apiFetch<AiFindResult>("/ai/find", { ...sendJson("POST", body), ...init });
+}
