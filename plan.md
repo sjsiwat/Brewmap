@@ -137,7 +137,7 @@ agy -p "ตรวจงานตาม REVIEW.md สำหรับ Phase N ..."
 ---
 
 ### Phase 3 — Auth + Favorites
-**Status:** `awaiting-review` · D3 = (a) Next.js rewrite → first-party cookie
+**Status:** `approved` — [reviews/phase-3.md](reviews/phase-3.md) · D3 = (a) Next.js rewrite → first-party cookie
 **Branch:** `phase-3-auth-favorites`
 **Review range:** `1fc0898..phase-3-auth-favorites` (ใช้ `git diff 1fc0898..phase-3-auth-favorites`)
 **Acceptance (ทดสอบใน Chrome 2026-10-27):** refresh แล้วยัง login ✓ · JS มองไม่เห็น `access_token` ✓ · 375 / 768 / 1440px ไม่มี horizontal scroll และไม่มี console error ✓ · ปิด API แล้วขึ้น error state ไม่ crash ✓ (เจอบั๊กข้อความ "Internal Server Error" ผ่าน proxy → แก้ใน `e0ef1ba`)
