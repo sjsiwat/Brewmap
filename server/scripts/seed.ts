@@ -8,11 +8,19 @@ import { join } from 'node:path';
 import mongoose from 'mongoose';
 import { Cafe, CafeSchema } from '../src/cafes/schemas/cafe.schema';
 
-type SourceCafe = Omit<Cafe, 'location'> & { lat: number; lng: number };
+// Community fields are computed from reviews, never part of the source data.
+type SourceCafe = Omit<
+  Cafe,
+  'location' | 'communityRating' | 'communityReviewCount'
+> & { lat: number; lng: number };
 
 const DATA_PATH = join(__dirname, '..', '..', 'web', 'data', 'cafes.json');
 
-export function toCafeDocument({ lat, lng, ...rest }: SourceCafe): Cafe {
+export function toCafeDocument({
+  lat,
+  lng,
+  ...rest
+}: SourceCafe): Omit<Cafe, 'communityRating' | 'communityReviewCount'> {
   return { ...rest, location: { type: 'Point', coordinates: [lng, lat] } };
 }
 
