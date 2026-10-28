@@ -436,8 +436,29 @@ owner อนุญาตแล้ว: เพิ่ม field เวลาเป�
 
 ---
 
+### Phase 13 — ภาษาไทย / อังกฤษ (i18n) (owner สั่ง 2026-10-28)
+**Status:** `awaiting-review`
+**Branch:** `phase-13-i18n`
+**Review range:** `main..phase-13-i18n` (ใช้ `git diff main...HEAD`)
+
+owner เลือก: URL แยกภาษา `/th` `/en` · ข้ามเฟสแผนที่ (Leaflet) ไปก่อน
+
+- [x] 13.1 **Routing:** ทุกหน้าอยู่ใต้ `app/[lang]` (`generateStaticParams` en/th, `dynamicParams = false` → ภาษาอื่น 404) · `proxy.ts`: path ไม่มีภาษา (`/`, `/cafes/x`) → redirect 307 ตาม cookie `NEXT_LOCALE` → `Accept-Language` → en · เปิด `/th/…` ตั้ง cookie · `/api` เหมือนเดิม · ลิงก์เก่าไม่เสีย
+- [x] 13.2 **ข้อความ:** `web/lib/i18n/en.ts` (ต้นแบบ, `Dictionary`) + `th.ts` (type บังคับ key ครบ) · `format("{n} …")`, `plural({one, other})` · server component รับ `lang` · client ใช้ `useI18n()` (`t`, `href`) · `lib/content.ts` เหลือแค่ลิงก์/ตัวเลข · validation คืน key แทนข้อความ · ข้อมูลร้านจาก API (ชื่อ จุดเด่น แท็ก ย่าน) ยังเป็นอังกฤษ · ข้อความ error จาก server (เช่นกฎรหัสผ่านตอนสมัคร) ยังเป็นอังกฤษ
+- [x] 13.3 **ภาษา/รูปแบบ:** `<html lang>` ตามหน้า · `Intl` en-GB / th-TH (วันที่รีวิวเป็น พ.ศ.) · "กม." · ชื่อวันไทย · Noto Sans/Serif Thai เป็น fallback (ไม่ preload, โหลดเฉพาะหน้าที่มีอักษรไทย) · ปิด letter-spacing ของ label บนหน้าไทย
+- [x] 13.4 **สลับภาษา:** ปุ่ม "ภาษาไทย" / "English" ใน header → หน้าเดียวกันอีกภาษา · `hreflang` + canonical (`metadataBase`) · title/description ต่อภาษา
+- [x] 13.5 **ลิงก์ภายในทั้งเว็บ** ผ่าน `href()` / `localePath()` รวม `?next=` ตอนเข้าสู่ระบบ, header search → `/th/cafes?search=…`
+- [x] ปรับ copy ให้ตรงของจริง: feature "AI Finder" (ช่องค้นหาเดียว, sort ใหม่, open now), capabilities เพิ่ม "Open now", process ขั้น 3
+
+เบราว์เซอร์: `/` (th browser) → `/th`, (en) → `/en` · cookie en + browser th → `/en/cafes` · `/th/cafes`: `<html lang="th">`, title "หาคาเฟ่ — BrewMap", hreflang en/th · ค้น "twenty mar" จาก header `/th/about` → `/th/cafes` "1 ร้าน ชื่อ “twenty mar”" · ปุ่ม English บน `/th/cafes/twenty-mar` → `/en/cafes/twenty-mar` · สมัครแบบว่าง → error ภาษาไทย · กด ♡ ตอนไม่ได้ login → `/th/login?next=%2Fth%2Fcafes%2Ftwenty-mar` · QA 7 หน้า × 3 ขนาด × 2 ภาษา = 0 ปัญหา (ยกเว้น noRing false positive ของการ์ด)
+
+**Gate:** `npm run gate:web` (ไม่แตะ server)
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
-- Interactive map แสดงทุกร้าน (Leaflet + OSM)
+- Interactive map แสดงทุกร้าน (Leaflet + OSM) — เฟส 4 ของงาน UX หน้าค้นหา, owner ให้ข้ามไปก่อน (2026-10-28)
+- แปลข้อมูลร้าน (จุดเด่น, แท็ก, ย่าน) และข้อความ error จาก server เป็นภาษาไทย
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา

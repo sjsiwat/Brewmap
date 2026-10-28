@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { languageAlternates, pageLanguage, type LangParams } from "@/lib/i18n/server";
 import { AuthForm } from "@/components/auth-form";
 
-export const metadata: Metadata = {
-  title: "Log in",
-  description: "Log in to BrewMap to see the cafés you saved.",
-};
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const { lang, t } = await pageLanguage(params);
+  return {
+    title: t.meta.loginTitle,
+    description: t.meta.loginDescription,
+    alternates: languageAlternates(lang, "/login"),
+  };
+}
 
-export default function LoginPage() {
+export default async function LoginPage({ params }: LangParams) {
+  const { lang } = await pageLanguage(params);
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
@@ -19,7 +25,7 @@ export default function LoginPage() {
           <AuthForm mode="login" />
         </Suspense>
       </main>
-      <SiteFooter />
+      <SiteFooter lang={lang} />
     </div>
   );
 }

@@ -3,11 +3,14 @@
 import type { ReactNode } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { DrinkType } from "@/lib/cafes";
+import { format } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/client";
 import {
   activeFilterCount,
   distanceLabel,
   distancePresets,
   drinkTypes,
+  isPricePreset,
   parsePriceKey,
   priceKey,
   priceLabel,
@@ -21,11 +24,12 @@ const chipOff = "border-line bg-paper-raised text-ink hover:border-ink";
 const chipOn = "border-ink bg-ink text-paper";
 
 function RemoveButton({ label, onClick }: { label: string; onClick: () => void }) {
+  const { t } = useI18n();
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={`Remove ${label}`}
+      aria-label={format(t.filters.remove, { label })}
       className="flex items-center self-stretch pr-3 pl-1.5 opacity-80 hover:opacity-100 focus-visible:outline-none"
     >
       <X size={14} aria-hidden />
@@ -50,6 +54,7 @@ function SelectChip({
   onChange: (value: string) => void;
   onClear: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <span className={`${chipBase} ${current ? chipOn : chipOff}`}>
       <span className={`relative flex items-center gap-1.5 py-2 pl-3.5 ${current ? "pr-0.5" : "pr-3"}`}>
@@ -61,7 +66,7 @@ function SelectChip({
           aria-label={current ? `${name}: ${current}` : name}
           className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
         >
-          <option value="">Any {name.toLowerCase()}</option>
+          <option value="">{format(t.filters.any, { name: name.toLowerCase() })}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -107,12 +112,14 @@ export function FilterChips({
   /** Changes to apply (undefined removes a filter), or null to clear them all. */
   onChange: (patch: Partial<FinderFilters> | null) => void;
 }) {
+  const { t: dict } = useI18n();
+  const t = dict.filters;
   const set = onChange;
   const price = { minPrice: filters.minPrice, maxPrice: filters.maxPrice };
-  const currentPrice = priceLabel(price);
-  const priceOptions = pricePresets.map((p) => ({ value: priceKey(p), label: p.label }));
+  const currentPrice = priceLabel(price, t);
+  const priceOptions = pricePresets.map((p) => ({ value: priceKey(p), label: t[p.label] }));
   // A range the AI chose that isn't a preset stays selectable, so the picker shows it.
-  if (currentPrice && !pricePresets.some((p) => p.label === currentPrice)) {
+  if (currentPrice && !isPricePreset(price)) {
     priceOptions.unshift({ value: priceKey(price), label: currentPrice });
   }
   const distances = [...new Set([...distancePresets, ...(filters.radiusKm ? [filters.radiusKm] : [])])].sort(
@@ -123,11 +130,11 @@ export function FilterChips({
   return (
     <div
       role="group"
-      aria-label="Filters"
+      aria-label={t.group}
       className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 py-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
     >
       <SelectChip
-        name="Price"
+        name={t.price}
         value={currentPrice ? priceKey(price) : ""}
         current={currentPrice}
         options={priceOptions}
@@ -135,33 +142,33 @@ export function FilterChips({
         onClear={() => set({ minPrice: undefined, maxPrice: undefined })}
       />
       <SelectChip
-        name="Distance"
+        name={t.distance}
         value={filters.radiusKm ? String(filters.radiusKm) : ""}
-        current={filters.radiusKm ? distanceLabel(filters.radiusKm) : null}
-        options={distances.map((km) => ({ value: String(km), label: distanceLabel(km) }))}
+        current={filters.radiusKm ? distanceLabel(filters.radiusKm, t) : null}
+        options={distances.map((km) => ({ value: String(km), label: distanceLabel(km, t) }))}
         onChange={(value) => set({ radiusKm: value ? Number(value) : undefined })}
         onClear={() => set({ radiusKm: undefined })}
       />
       <ToggleChip
-        label="Open now"
+        label={t.openNow}
         on={!!filters.openNow}
         onToggle={() => set({ openNow: filters.openNow ? undefined : true })}
       />
       <ToggleChip
-        label="Parking"
+        label={t.parking}
         on={!!filters.parking}
         onToggle={() => set({ parking: filters.parking ? undefined : true })}
       />
       <ToggleChip
-        label="Pet friendly"
+        label={t.petFriendly}
         on={!!filters.petFriendly}
         onToggle={() => set({ petFriendly: filters.petFriendly ? undefined : true })}
       />
       <SelectChip
-        name="Drink"
+        name={t.drink}
         value={filters.drinkType ?? ""}
-        current={filters.drinkType ?? null}
-        options={drinkTypes.map((type) => ({ value: type, label: type }))}
+        current={filters.drinkType ? t.drinkTypes[filters.drinkType] : null}
+        options={drinkTypes.map((type) => ({ value: type, label: t.drinkTypes[type] }))}
         onChange={(value) => set({ drinkType: (value || undefined) as DrinkType | undefined })}
         onClear={() => set({ drinkType: undefined })}
       />
@@ -171,13 +178,13 @@ export function FilterChips({
         </ValueChip>
       )}
       {filters.area && (
-        <ValueChip label={`area ${filters.area}`} onRemove={() => set({ area: undefined })}>
+        <ValueChip label={format(t.areaLabel, { area: filters.area })} onRemove={() => set({ area: undefined })}>
           {filters.area}
         </ValueChip>
       )}
       {filters.q && (
-        <ValueChip label={`name ${filters.q}`} onRemove={() => set({ q: undefined })}>
-          Name: “{filters.q}”
+        <ValueChip label={format(t.nameLabel, { q: filters.q })} onRemove={() => set({ q: undefined })}>
+          {format(t.nameChip, { q: filters.q })}
         </ValueChip>
       )}
       {count > 0 && (
@@ -186,7 +193,7 @@ export function FilterChips({
           onClick={() => onChange(null)}
           className="shrink-0 px-2 py-2 text-sm text-rust underline-offset-4 hover:underline focus-ring"
         >
-          Clear all
+          {t.clearAll}
         </button>
       )}
     </div>

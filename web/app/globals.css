@@ -27,9 +27,9 @@
   --color-rust-bright: var(--color-rust-bright);
   --color-moss: var(--color-moss);
 
-  --font-display: var(--font-fraunces);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces), var(--font-noto-serif-thai);
+  --font-sans: var(--font-inter), var(--font-noto-sans-thai);
+  --font-mono: var(--font-geist-mono), var(--font-noto-sans-thai);
 }
 
 /*
@@ -106,4 +106,18 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*
+ * Thai has no capitals, and letter-spacing pulls its vowel and tone marks
+ * away from their consonants, so the small spaced-out labels go back to normal
+ * spacing on Thai pages. English names and numbers inside them are unaffected
+ * enough not to matter.
+ */
+:lang(th) [class*="tracking-"],
+:lang(th) .eyebrow,
+:lang(th) .label-mono,
+:lang(th) .nav-link,
+:lang(th) .btn-outline {
+  letter-spacing: 0;
 }

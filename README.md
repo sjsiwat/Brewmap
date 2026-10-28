@@ -343,7 +343,7 @@ npm run seed
 npm run dev
 ```
 
-- Web: http://localhost:3000
+- Web: http://localhost:3000 (redirects to `/en` or `/th`)
 - API: http://localhost:4000/api · Swagger: http://localhost:4000/api/docs
 
 `npm run build` in `web/` prerenders every café page from the API, so keep the server running while building (if it is down, the build still succeeds and pages render on first request).
@@ -368,6 +368,7 @@ flowchart LR
 - The browser only ever talks to the web app's origin. `/api/*` is rewritten to the API, so the login cookie (`httpOnly`, `Secure`, `SameSite=Lax`) is first-party.
 - The web proxy forwards the visitor's IP with a shared `PROXY_SECRET`, so rate limits apply per visitor, not per Vercel server.
 - Café pages are static and revalidate hourly. The Gemini key and the database credentials live only on the API.
+- English and Thai: every page lives under `/en/…` or `/th/…` (`web/app/[lang]`). A path without one (`/cafes`) redirects using the visitor's last choice (`NEXT_LOCALE` cookie), else their browser language, else English. UI text is in `web/lib/i18n/en.ts` and `th.ts`; café data from the API (names, specialties, tags) stays in English.
 
 # Production
 

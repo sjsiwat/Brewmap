@@ -1,6 +1,10 @@
 import type { AiFilters } from "@/lib/api";
 import type { DrinkType } from "@/lib/cafes";
 import { DEFAULT_ORIGIN, type LatLng } from "@/lib/geo";
+import { format } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/en";
+
+type FilterText = Dictionary["filters"];
 
 /**
  * Everything that narrows the café list. The filter chips and the AI finder
@@ -29,10 +33,10 @@ export interface PriceRange {
 }
 
 // priceAvg is a whole number of baht, so "under 100" is maxPrice 99.
-export const pricePresets: Array<PriceRange & { label: string }> = [
-  { label: "Under 100฿", maxPrice: 99 },
-  { label: "100–140฿", minPrice: 100, maxPrice: 140 },
-  { label: "Over 140฿", minPrice: 141 },
+export const pricePresets: Array<PriceRange & { label: "priceUnder100" | "price100to140" | "priceOver140" }> = [
+  { label: "priceUnder100", maxPrice: 99 },
+  { label: "price100to140", minPrice: 100, maxPrice: 140 },
+  { label: "priceOver140", minPrice: 141 },
 ];
 
 export const distancePresets = [1, 3, 8];
@@ -52,18 +56,22 @@ export function parsePriceKey(key: string): PriceRange {
 }
 
 /** Preset name when it is one, otherwise the range the AI chose, e.g. "Up to 150฿". */
-export function priceLabel(range: PriceRange): string | null {
+export function priceLabel(range: PriceRange, t: FilterText): string | null {
   const { minPrice, maxPrice } = range;
   if (minPrice === undefined && maxPrice === undefined) return null;
   const preset = pricePresets.find((p) => priceKey(p) === priceKey(range));
-  if (preset) return preset.label;
-  if (minPrice !== undefined && maxPrice !== undefined) return `${minPrice}–${maxPrice}฿`;
-  if (maxPrice !== undefined) return `Up to ${maxPrice}฿`;
-  return `${minPrice}฿ and up`;
+  if (preset) return t[preset.label];
+  if (minPrice !== undefined && maxPrice !== undefined) return format(t.priceRange, { min: minPrice, max: maxPrice });
+  if (maxPrice !== undefined) return format(t.priceUpTo, { max: maxPrice });
+  return format(t.priceFrom, { min: minPrice ?? 0 });
 }
 
-export function distanceLabel(km: number): string {
-  return `Within ${km} km`;
+export function isPricePreset(range: PriceRange): boolean {
+  return pricePresets.some((p) => priceKey(p) === priceKey(range));
+}
+
+export function distanceLabel(km: number, t: FilterText): string {
+  return format(t.within, { km });
 }
 
 export function activeFilterCount(filters: FinderFilters): number {
@@ -87,10 +95,10 @@ export function fromAiFilters(ai: AiFilters): FinderFilters {
 /** Where distances are measured from. */
 export type ReferencePlace = "device" | "nimman" | "oldCity";
 
-export const referencePlaces: Record<Exclude<ReferencePlace, "device">, { label: string; at: LatLng }> = {
+export const referencePlaces: Record<Exclude<ReferencePlace, "device">, LatLng> = {
   // Nimmanhaemin Rd around Soi 9, between One Nimman and Maya.
-  nimman: { label: "Nimman", at: { lat: 18.7983, lng: 98.9676 } },
-  oldCity: { label: "Old City", at: DEFAULT_ORIGIN },
+  nimman: { lat: 18.7983, lng: 98.9676 },
+  oldCity: DEFAULT_ORIGIN,
 };
 
 /** `filters` with `patch` applied; an undefined value removes that filter. */
@@ -101,16 +109,16 @@ export function patchFilters(filters: FinderFilters, patch: Partial<FinderFilter
 }
 
 /** Short labels for a set of filters, e.g. for "the AI skipped: …". */
-export function filterLabels(filters: FinderFilters): string[] {
+export function filterLabels(filters: FinderFilters, t: FilterText): string[] {
   const labels: string[] = [];
   if (filters.q) labels.push(`“${filters.q}”`);
-  const price = priceLabel(filters);
+  const price = priceLabel(filters, t);
   if (price) labels.push(price);
-  if (filters.radiusKm) labels.push(distanceLabel(filters.radiusKm));
-  if (filters.openNow) labels.push("Open now");
-  if (filters.parking) labels.push("Parking");
-  if (filters.petFriendly) labels.push("Pet friendly");
-  if (filters.drinkType) labels.push(filters.drinkType);
+  if (filters.radiusKm) labels.push(distanceLabel(filters.radiusKm, t));
+  if (filters.openNow) labels.push(t.openNow);
+  if (filters.parking) labels.push(t.parking);
+  if (filters.petFriendly) labels.push(t.petFriendly);
+  if (filters.drinkType) labels.push(t.drinkTypes[filters.drinkType]);
   if (filters.tag) labels.push(filters.tag);
   if (filters.area) labels.push(filters.area);
   return labels;

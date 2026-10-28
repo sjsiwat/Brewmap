@@ -1,7 +1,12 @@
 import { useSyncExternalStore } from "react";
 import type { OpeningPeriod } from "@/lib/cafes";
+import { format } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/en";
 
-export const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+type HoursText = Dictionary["hours"];
+
+/** Intl's English weekday names, to find the day number; display names come from the dictionary. */
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MINUTES_PER_DAY = 24 * 60;
 
 /** Day of week and minutes after midnight in Chiang Mai, whatever the visitor's time zone. */
@@ -15,7 +20,7 @@ export function chiangMaiClock(date: Date): { day: number; minute: number } {
   }).formatToParts(date);
   const part = (type: string) => parts.find((p) => p.type === type)?.value;
   return {
-    day: DAY_NAMES.indexOf(part("weekday") ?? ""),
+    day: WEEKDAYS.indexOf(part("weekday") ?? ""),
     minute: Number(part("hour")) * 60 + Number(part("minute")),
   };
 }
@@ -27,21 +32,21 @@ export function formatMinutes(minutes: number): string {
 }
 
 /** One day's hours, e.g. "08:00–18:00", "07:00–12:00, 13:00–17:00", "Closed", "Open 24 hours". */
-export function dayHoursText(periods: OpeningPeriod[], day: number): string {
+export function dayHoursText(periods: OpeningPeriod[], day: number, t: HoursText): string {
   const today = periods.filter((p) => p.day === day).sort((a, b) => a.open - b.open);
-  if (today.length === 0) return "Closed";
-  if (today.length === 1 && today[0].open === 0 && today[0].close >= MINUTES_PER_DAY) return "Open 24 hours";
+  if (today.length === 0) return t.closed;
+  if (today.length === 1 && today[0].open === 0 && today[0].close >= MINUTES_PER_DAY) return t.open24;
   return today.map((p) => `${formatMinutes(p.open)}–${formatMinutes(p.close)}`).join(", ");
 }
 
 export interface OpenStatus {
   open: boolean;
-  /** "Closes 18:00", "Opens 08:00", "Opens Mon 08:00", "Open 24 hours". */
+  /** "Closes 18:00", "Opens 08:00", "Opens Mon 08:00", "Open 24 hours"; null when it never opens. */
   detail: string | null;
 }
 
 /** Open or closed at `date`, and when that changes next. Same rule as the API's openNow. */
-export function openStatus(periods: OpeningPeriod[], date: Date): OpenStatus {
+export function openStatus(periods: OpeningPeriod[], date: Date, t: HoursText): OpenStatus {
   const { day, minute } = chiangMaiClock(date);
   // Each period as minutes from the start of today, over the next 7 days. The
   // same period a week earlier covers "still open from last night".
@@ -52,16 +57,17 @@ export function openStatus(periods: OpeningPeriod[], date: Date): OpenStatus {
   const current = week.find((s) => s.start <= minute && minute < s.end);
   if (current) {
     if (current.end - current.start >= MINUTES_PER_DAY && periods.length === 7) {
-      return { open: true, detail: "Open 24 hours" };
+      return { open: true, detail: t.open24 };
     }
-    return { open: true, detail: `Closes ${formatMinutes(current.end)}` };
+    return { open: true, detail: format(t.closes, { time: formatMinutes(current.end) }) };
   }
   const next = week.filter((s) => s.start > minute).sort((a, b) => a.start - b.start)[0];
   if (!next) return { open: false, detail: null };
   const sameDay = next.start < MINUTES_PER_DAY;
+  const time = formatMinutes(next.start);
   return {
     open: false,
-    detail: `Opens ${sameDay ? "" : `${DAY_NAMES[next.day].slice(0, 3)} `}${formatMinutes(next.start)}`,
+    detail: sameDay ? format(t.opens, { time }) : format(t.opensOn, { day: t.daysShort[next.day], time }),
   };
 }
 

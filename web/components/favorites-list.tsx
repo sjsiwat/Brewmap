@@ -8,6 +8,8 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { useAuth } from "@/lib/auth";
 import { formatPrice } from "@/lib/cafes";
 import { useFavorites } from "@/lib/favorites";
+import { format, plural } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/client";
 
 const statusText = "font-mono text-xs uppercase tracking-[0.1em] text-muted";
 
@@ -15,15 +17,17 @@ export function FavoritesList() {
   const { status, user } = useAuth();
   const favorites = useFavorites();
   const router = useRouter();
+  const { t: dict, href } = useI18n();
+  const t = dict.favorites;
 
   useEffect(() => {
-    if (status === "anonymous") router.replace("/login?next=%2Fme%2Ffavorites");
-  }, [status, router]);
+    if (status === "anonymous") router.replace(href(`/login?next=${encodeURIComponent(href("/me/favorites"))}`));
+  }, [status, router, href]);
 
   if (status !== "authenticated" || favorites.status === "loading" || favorites.status === "idle") {
     return (
       <p className={statusText} aria-live="polite">
-        Loading your cafés…
+        {t.loading}
       </p>
     );
   }
@@ -31,14 +35,14 @@ export function FavoritesList() {
   if (favorites.status === "error") {
     return (
       <div role="alert">
-        <p className="text-base text-ink-soft">We couldn&apos;t load your saved cafés.</p>
+        <p className="text-base text-ink-soft">{t.loadFailed}</p>
         <button
           type="button"
           onClick={favorites.reload}
           className="mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring"
         >
           <RotateCw size={14} aria-hidden />
-          Try again
+          {t.tryAgain}
         </button>
       </div>
     );
@@ -48,13 +52,13 @@ export function FavoritesList() {
     return (
       <div>
         <p className="max-w-md text-base leading-relaxed text-ink-soft">
-          Nothing saved yet, {user?.displayName}. Tap the heart on any café and it lands here.
+          {format(t.empty, { name: user?.displayName ?? "" })}
         </p>
         <Link
-          href="/cafes"
+          href={href("/cafes")}
           className="mt-6 inline-flex items-center gap-2 btn-outline"
         >
-          Find your café
+          {t.findCafe}
           <ArrowUpRight size={14} aria-hidden />
         </Link>
       </div>
@@ -64,13 +68,13 @@ export function FavoritesList() {
   return (
     <div>
       <p className={statusText} aria-live="polite">
-        {favorites.cafes.length} saved café{favorites.cafes.length === 1 ? "" : "s"} · newest first
+        {plural(t.count, favorites.cafes.length)}
       </p>
       <ul className="mt-6 border-t border-ink">
         {favorites.cafes.map((cafe) => (
           <li key={cafe.slug} className="relative">
             <Link
-              href={`/cafes/${cafe.slug}`}
+              href={href(`/cafes/${cafe.slug}`)}
               className="group grid grid-cols-1 gap-2 border-b border-line py-6 pr-10 md:grid-cols-12 md:items-baseline md:gap-6"
             >
               <div className="md:col-span-5">
@@ -88,7 +92,7 @@ export function FavoritesList() {
                   <Star size={12} className="fill-current text-rust" aria-hidden />
                   {cafe.rating.toFixed(1)}
                 </span>
-                <span className="font-display text-lg text-rust">{formatPrice(cafe.priceAvg)}</span>
+                <span className="font-display text-lg text-ink">{formatPrice(cafe.priceAvg)}</span>
               </div>
             </Link>
             <FavoriteButton cafe={cafe} className="absolute top-5 right-0 p-1" />

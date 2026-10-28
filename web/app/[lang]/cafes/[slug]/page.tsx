@@ -6,10 +6,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { CafeDetail } from "@/components/cafe-detail";
 import { CafeReviews } from "@/components/cafe-reviews";
 import { GoogleReviews } from "@/components/google-reviews";
+import { languageAlternates, pageLanguage, type LangParams } from "@/lib/i18n/server";
 
-interface CafePageProps {
-  params: Promise<{ slug: string }>;
-}
+type CafePageProps = LangParams<{ slug: string }>;
 
 // Static + ISR: café data changes rarely, so pages are cached and refreshed hourly.
 export const revalidate = 3600;
@@ -34,16 +33,19 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: CafePageProps): Promise<Metadata> {
+  const { lang, t } = await pageLanguage(params);
   const { slug } = await params;
   const cafe = await getCafe(slug, cached);
 
   return {
-    title: cafe ? cafe.name : "Café not found",
+    title: cafe ? cafe.name : t.meta.cafeNotFound,
     description: cafe ? cafe.specialty : undefined,
+    alternates: languageAlternates(lang, `/cafes/${slug}`),
   };
 }
 
 export default async function CafePage({ params }: CafePageProps) {
+  const { lang } = await pageLanguage(params);
   const { slug } = await params;
   const cafe = await getCafe(slug, cached);
 
@@ -57,12 +59,12 @@ export default async function CafePage({ params }: CafePageProps) {
     <div className="flex flex-1 flex-col">
       <SiteHeader />
       <main className="flex flex-1 flex-col">
-        <CafeDetail cafe={cafe} />
-        <GoogleReviews cafe={cafe} reviews={googleReviews} />
+        <CafeDetail cafe={cafe} lang={lang} />
+        <GoogleReviews cafe={cafe} reviews={googleReviews} lang={lang} />
         {/* Client-side, so reviews stay fresh while the page itself is cached (ISR). */}
         <CafeReviews slug={cafe.slug} cafeName={cafe.name} />
       </main>
-      <SiteFooter />
+      <SiteFooter lang={lang} />
     </div>
   );
 }
