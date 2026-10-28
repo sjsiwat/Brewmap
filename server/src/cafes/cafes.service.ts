@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, QueryFilter, Types } from 'mongoose';
+import { Model, PipelineStage, QueryFilter, Types } from 'mongoose';
 import {
   CafeFiltersDto,
   CafeResponseDto,
@@ -15,10 +15,17 @@ import { CafeSort, QueryCafesDto, searchWords } from './dto/query-cafes.dto';
 import { TopCafesDto } from './dto/top-cafes.dto';
 import { Cafe, DRINK_TYPES } from './schemas/cafe.schema';
 
-type GeoCafe = Cafe & { distanceMeters: number };
+type ListedCafe = Cafe & { distanceMeters?: number };
+
+/**
+ * How many reviews a café needs before its own rating counts as much as the
+ * average of all cafés: roughly the median review count (246) in our data.
+ */
+export const RECOMMENDED_PRIOR_REVIEWS = 250;
 
 // `slug` is the final tie-breaker so pagination is stable.
 const SORT_ORDERS: Record<CafeSort, Record<string, 1 | -1>> = {
+  recommended: { score: -1, reviewCount: -1, slug: 1 },
   rating: { rating: -1, reviewCount: -1, slug: 1 },
   reviews: { reviewCount: -1, rating: -1, slug: 1 },
   price: { priceAvg: 1, rating: -1, slug: 1 },
@@ -52,41 +59,31 @@ export class CafesService {
     const filter = this.buildFilter(query);
     const skip = (query.page - 1) * query.limit;
 
-    if (lat === undefined || lng === undefined) {
-      const [items, total] = await Promise.all([
-        this.cafeModel
-          .find(filter)
-          .sort(SORT_ORDERS[sort])
-          .skip(skip)
-          .limit(query.limit)
-          .lean<Cafe[]>(),
-        this.cafeModel.countDocuments(filter),
-      ]);
-      return {
-        items: items.map(toCafeResponse),
-        total,
-        page: query.page,
-        limit: query.limit,
-      };
+    // $geoNear must be the first stage; it computes distance for every match.
+    const pipeline: PipelineStage[] = [
+      hasOrigin
+        ? {
+            $geoNear: {
+              near: { type: 'Point', coordinates: [lng, lat] },
+              distanceField: 'distanceMeters',
+              spherical: true,
+              query: filter,
+              ...(query.radiusKm !== undefined && {
+                maxDistance: query.radiusKm * 1000,
+              }),
+            },
+          }
+        : { $match: filter },
+    ];
+    if (sort === 'recommended') {
+      pipeline.push({ $addFields: { score: await this.recommendedScore() } });
     }
-
-    // $geoNear must be the first stage; it computes distance for every match,
-    // then $facet returns one page plus the total in a single round trip.
+    // $facet returns one page plus the total in a single round trip.
     const [result] = await this.cafeModel.aggregate<{
-      items: GeoCafe[];
+      items: ListedCafe[];
       total: { count: number }[];
     }>([
-      {
-        $geoNear: {
-          near: { type: 'Point', coordinates: [lng, lat] },
-          distanceField: 'distanceMeters',
-          spherical: true,
-          query: filter,
-          ...(query.radiusKm !== undefined && {
-            maxDistance: query.radiusKm * 1000,
-          }),
-        },
-      },
+      ...pipeline,
       { $sort: SORT_ORDERS[sort] },
       {
         $facet: {
@@ -101,6 +98,29 @@ export class CafesService {
       total: result.total[0]?.count ?? 0,
       page: query.page,
       limit: query.limit,
+    };
+  }
+
+  /**
+   * Bayesian average: (n * rating + m * mean) / (n + m), where n is the café's
+   * review count, m is RECOMMENDED_PRIOR_REVIEWS and mean is the average rating
+   * of every café. Few reviews pull a café towards the mean; many keep its own.
+   */
+  private async recommendedScore() {
+    const [stats] = await this.cafeModel.aggregate<{ mean: number }>([
+      { $group: { _id: null, mean: { $avg: '$rating' } } },
+    ]);
+    const m = RECOMMENDED_PRIOR_REVIEWS;
+    return {
+      $divide: [
+        {
+          $add: [
+            { $multiply: ['$reviewCount', '$rating'] },
+            m * (stats?.mean ?? 0),
+          ],
+        },
+        { $add: ['$reviewCount', m] },
+      ],
     };
   }
 

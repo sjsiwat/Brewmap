@@ -18,7 +18,7 @@ export class ApiError extends Error {
   }
 }
 
-export type CafeSort = "rating" | "distance" | "reviews" | "price";
+export type CafeSort = "recommended" | "rating" | "distance" | "reviews" | "price";
 
 /** Mirrors QueryCafesDto in server/src/cafes/dto/query-cafes.dto.ts. */
 export interface CafeQuery {

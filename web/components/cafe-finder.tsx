@@ -12,8 +12,9 @@ import {
   RotateCw,
   Search,
   Star,
+  X,
 } from "lucide-react";
-import type { CafeQuery } from "@/lib/api";
+import type { CafeQuery, CafeSort } from "@/lib/api";
 import {
   distanceOptions,
   drinkTypeOptions,
@@ -54,6 +55,13 @@ const fields: Array<{
   { key: "drinkType", label: "Drink type", options: drinkTypeOptions },
 ];
 
+const sortOptions: Array<{ value: CafeSort; label: string }> = [
+  { value: "recommended", label: "Recommended" },
+  { value: "distance", label: "Nearest" },
+  { value: "price", label: "Cheapest" },
+  { value: "rating", label: "Top rated" },
+];
+
 const PAGE_SIZE = 24;
 /** Mirrors SEARCH_MAX in server/src/cafes/dto/query-cafes.dto.ts. */
 const NAME_MAX = 60;
@@ -61,8 +69,7 @@ const NAME_MAX = 60;
 const NAME_DEBOUNCE_MS = 300;
 
 /** Strict filtering: every chosen option is sent to the API and must match. */
-function toQuery(criteria: Criteria | null): CafeQuery {
-  if (!criteria) return {};
+function toQuery(criteria: Criteria): CafeQuery {
   return fields.reduce<CafeQuery>((query, field) => {
     const option = field.options.find((o) => o.label === criteria[field.key]);
     return { ...query, ...option?.query };
@@ -70,14 +77,14 @@ function toQuery(criteria: Criteria | null): CafeQuery {
 }
 
 export function CafeFinder() {
-  const [draft, setDraft] = useState<Criteria>(defaultCriteria);
-  const [applied, setApplied] = useState<Criteria | null>(null);
+  const [criteria, setCriteria] = useState<Criteria>(defaultCriteria);
+  const [sort, setSort] = useState<CafeSort>("recommended");
   const [nameInput, setNameInput] = useState("");
   const [name, setName] = useState("");
   const { origin } = useUserLocation();
 
-  // The name search applies as you type (after a short pause); the filters
-  // below still wait for Confirm.
+  // The name search applies as you type (after a short pause); filters and
+  // sort apply as soon as they change.
   useEffect(() => {
     const timer = setTimeout(() => setName(nameInput.trim().replace(/\s+/g, " ")), NAME_DEBOUNCE_MS);
     return () => clearTimeout(timer);
@@ -86,17 +93,16 @@ export function CafeFinder() {
   // Always send an origin (the user's location, or the Tha Phae Gate fallback)
   // so every result carries distanceKm and "Within N km" has a centre.
   const search = useCafeSearch({
-    ...toQuery(applied),
+    ...toQuery(criteria),
     q: name || undefined,
     lat: origin.lat,
     lng: origin.lng,
-    sort: "rating",
+    sort,
     limit: PAGE_SIZE,
   });
 
-  const activeCount = applied
-    ? fields.filter((field) => applied[field.key] !== "Any").length
-    : 0;
+  const activeCount = fields.filter((field) => criteria[field.key] !== "Any").length;
+  const sortLabel = sortOptions.find((option) => option.value === sort)?.label ?? "";
 
   return (
     <div>
@@ -124,21 +130,23 @@ export function CafeFinder() {
       </Reveal>
 
       <Reveal>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setApplied(draft);
-          }}
-          className="border border-line bg-paper-raised"
-        >
-          <div className="flex items-center justify-between border-b border-line px-5 py-3">
-            <span className="label-mono">
-              Match engine
-            </span>
-            <span className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
-              <span className="h-1.5 w-1.5 bg-rust" aria-hidden />
-              {applied ? `${activeCount} filter${activeCount === 1 ? "" : "s"} applied` : "Set your preferences"}
-            </span>
+        <div className="border border-line bg-paper-raised">
+          <div className="flex min-h-12 items-center justify-between border-b border-line px-5 py-2">
+            <span className="label-mono">Filters</span>
+            {activeCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => setCriteria(defaultCriteria)}
+                className="inline-flex items-center gap-1 px-1 py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust transition-colors hover:underline focus-ring"
+              >
+                <X size={12} aria-hidden />
+                Clear {activeCount} filter{activeCount === 1 ? "" : "s"}
+              </button>
+            ) : (
+              <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">
+                Applies as you choose
+              </span>
+            )}
           </div>
 
           {fields.map((field, i) => (
@@ -155,14 +163,14 @@ export function CafeFinder() {
                 {field.label}
               </label>
               <span className="pointer-events-none flex items-center gap-1.5 font-sans text-sm text-ink-soft">
-                {draft[field.key]}
+                {criteria[field.key]}
                 <ChevronDown size={13} className="text-muted" aria-hidden />
               </span>
               <select
                 id={field.key}
-                value={draft[field.key]}
+                value={criteria[field.key]}
                 onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, [field.key]: event.target.value }))
+                  setCriteria((prev) => ({ ...prev, [field.key]: event.target.value }))
                 }
                 aria-label={field.label}
                 className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
@@ -175,40 +183,51 @@ export function CafeFinder() {
               </select>
             </div>
           ))}
-
-          <button
-            type="submit"
-            className="flex w-full items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 text-left transition-colors hover:bg-ink/90 focus-ring"
-          >
-            <div>
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust-bright">
-                Confirm
-              </p>
-              <p className="mt-1 font-display text-lg text-paper">
-                Find matching cafés
-              </p>
-            </div>
-            <ArrowUpRight className="shrink-0 text-paper/60" size={20} aria-hidden />
-          </button>
-        </form>
+        </div>
       </Reveal>
 
       <div className="mt-6">
         <LocationOrigin />
       </div>
 
-      <p
-        className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted"
-        aria-live="polite"
-      >
-        {search.total === null
-          ? search.status === "error"
-            ? "Couldn't load cafés"
-            : "Loading cafés…"
-          : `${search.total} café${search.total === 1 ? "" : "s"}${name ? ` named “${name}”` : ""}${
-              activeCount > 0 ? " matching every filter" : ""
-            } · sorted by rating`}
-      </p>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <p className="text-sm text-ink" aria-live="polite">
+          {search.total === null ? (
+            search.status === "error" ? (
+              "Couldn't load cafés"
+            ) : (
+              "Loading cafés…"
+            )
+          ) : (
+            <>
+              <span className="font-display text-2xl">{search.total}</span>{" "}
+              café{search.total === 1 ? "" : "s"}
+              {name ? ` named “${name}”` : ""}
+              {activeCount > 0 ? " matching every filter" : ""}
+              <span className="sr-only"> · sorted by {sortLabel}</span>
+            </>
+          )}
+        </p>
+        <label className="relative flex items-center gap-2 border border-line bg-paper-raised py-2 pr-3 pl-4 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-rust">
+          <span className="label-mono">Sort</span>
+          <span className="pointer-events-none flex items-center gap-1.5 text-sm text-ink" aria-hidden>
+            {sortLabel}
+            <ChevronDown size={13} className="text-muted" />
+          </span>
+          <select
+            value={sort}
+            onChange={(event) => setSort(event.target.value as CafeSort)}
+            aria-label="Sort cafés"
+            className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       <div className="mt-6 border-t border-ink">
         {search.items.map((cafe, i) => {
@@ -223,18 +242,14 @@ export function CafeFinder() {
                   whileHover="hover"
                   initial="rest"
                   animate="rest"
-                  className="group grid grid-cols-1 gap-3 border-b border-line py-7 pr-10 md:grid-cols-12 md:items-baseline md:gap-6"
+                  className="group grid grid-cols-1 gap-3 border-b border-line py-7 pr-10 transition-colors hover:bg-ink/[0.03] md:grid-cols-12 md:items-baseline md:gap-6"
                 >
-                  <span className="font-mono text-sm text-muted md:col-span-1">
-                    {cafe.index}
-                  </span>
-
                   <motion.div
                     variants={{ rest: { x: 0 }, hover: { x: 6 } }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="md:col-span-4"
+                    className="md:col-span-5"
                   >
-                    <h3 className="font-display text-2xl text-ink">{cafe.name}</h3>
+                    <h3 className="font-display text-2xl text-ink transition-colors group-hover:text-rust">{cafe.name}</h3>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
                       <MapPin size={12} aria-hidden />
                       {cafe.area}
@@ -266,7 +281,7 @@ export function CafeFinder() {
                       {cafe.parking && <ParkingCircle size={14} aria-label="Parking available" />}
                     </div>
 
-                    <p className="font-display text-lg text-rust">{formatPrice(cafe.priceAvg)}</p>
+                    <p className="font-display text-lg text-ink">{formatPrice(cafe.priceAvg)}</p>
 
                     <motion.span
                       variants={{ rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }}

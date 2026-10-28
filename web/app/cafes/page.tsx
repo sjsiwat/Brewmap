@@ -27,8 +27,8 @@ export default function CafesPage() {
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-soft">
                 Ask the AI finder in a sentence, Thai or English — or set
-                price, distance, parking and drink yourself and confirm to see
-                every café that matches.
+                price, distance, parking and drink yourself and the list
+                updates as you choose.
               </p>
             </Reveal>
           </div>

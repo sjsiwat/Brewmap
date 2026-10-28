@@ -15,7 +15,13 @@ import {
 } from 'class-validator';
 import { DRINK_TYPES, type DrinkType } from '../schemas/cafe.schema';
 
-export const CAFE_SORTS = ['rating', 'distance', 'reviews', 'price'] as const;
+export const CAFE_SORTS = [
+  'recommended',
+  'rating',
+  'distance',
+  'reviews',
+  'price',
+] as const;
 export type CafeSort = (typeof CAFE_SORTS)[number];
 
 type TransformArgs = {
@@ -130,7 +136,11 @@ export class QueryCafesDto {
   @Max(100)
   radiusKm?: number;
 
-  /** Defaults to `distance` when lat/lng are given, otherwise `rating`. */
+  /**
+   * Defaults to `distance` when lat/lng are given, otherwise `rating`.
+   * `recommended` ranks by Google rating weighted by review count, so a 5.0
+   * from 15 reviews doesn't beat a 4.9 from 2,000.
+   */
   @IsOptional()
   @Transform(emptyToUndefined)
   @IsIn(CAFE_SORTS)
