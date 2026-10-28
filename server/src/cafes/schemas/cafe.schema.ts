@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import type { OpeningPeriod } from '../opening-hours';
 
 export const DRINK_TYPES = ['Coffee', 'Tea', 'Non-Coffee'] as const;
 export type DrinkType = (typeof DRINK_TYPES)[number];
@@ -18,6 +19,15 @@ const AiSummarySchema = new MongooseSchema<AiSummary>(
     cons: { type: [String], default: [] },
     model: { type: String, required: true },
     generatedAt: { type: Date, required: true },
+  },
+  { _id: false },
+);
+
+const OpeningPeriodSchema = new MongooseSchema<OpeningPeriod>(
+  {
+    day: { type: Number, required: true, min: 0, max: 6 },
+    open: { type: Number, required: true, min: 0 },
+    close: { type: Number, required: true, min: 0 },
   },
   { _id: false },
 );
@@ -74,8 +84,16 @@ export class Cafe {
   @Prop({ type: [String], default: [], index: true })
   tags: string[];
 
+  /** Display summary of one day, e.g. "08:00–18:00"; see openingHours for the real week. */
   @Prop({ type: String, required: true })
   hours: string;
+
+  /**
+   * Every day's opening periods from Google Maps (scripts/import-opening-hours.ts).
+   * Absent until imported; [] would mean closed all week.
+   */
+  @Prop({ type: [OpeningPeriodSchema], default: undefined })
+  openingHours?: OpeningPeriod[];
 
   @Prop({ type: Number, required: true, min: 0, max: 5 })
   rating: number;

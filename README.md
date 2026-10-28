@@ -406,6 +406,7 @@ The API goes first, because the web build reads café data from it.
 ```bash
 npm run seed                                        # cafés
 npm --prefix server run import:google-reviews       # Google reviews: stars, text, date only
+npm --prefix server run import:opening-hours        # weekly opening hours (open now)
 npm --prefix server run ai:summarize                # AI pros/cons (uses Gemini)
 ```
 

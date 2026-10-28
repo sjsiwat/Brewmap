@@ -1,5 +1,15 @@
 export type DrinkType = "Coffee" | "Tea" | "Non-Coffee";
 
+/** Mirrors OpeningPeriod in server/src/cafes/opening-hours.ts. */
+export interface OpeningPeriod {
+  /** Day it opens: 0 = Sunday … 6 = Saturday. */
+  day: number;
+  /** Minutes after midnight. */
+  open: number;
+  /** Minutes after midnight of `day`; above 1440 when it closes after midnight. */
+  close: number;
+}
+
 /** Mirrors CafeResponseDto in server/src/cafes/dto/cafe-response.dto.ts. */
 export interface Cafe {
   slug: string;
@@ -14,7 +24,10 @@ export interface Cafe {
   /** Typical drink price in THB. */
   priceAvg: number;
   tags: string[];
+  /** One day's hours as text, e.g. "08:00–18:00"; openingHours has the real week. */
   hours: string;
+  /** Opening periods for the week (Chiang Mai time), or null if unknown. */
+  openingHours: OpeningPeriod[] | null;
   rating: number;
   reviewCount: number;
   petFriendly: boolean;

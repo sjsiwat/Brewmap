@@ -1,3 +1,4 @@
+import type { OpeningPeriod } from '../opening-hours';
 import type { Cafe, DrinkType } from '../schemas/cafe.schema';
 
 /** Public café shape - mirrors `Cafe` in web/lib/cafes.ts, plus optional distance. */
@@ -13,6 +14,8 @@ export class CafeResponseDto {
   priceAvg: number;
   tags: string[];
   hours: string;
+  /** Opening periods for the week (Chiang Mai time), or null if unknown. */
+  openingHours: OpeningPeriod[] | null;
   rating: number;
   reviewCount: number;
   petFriendly: boolean;
@@ -59,6 +62,9 @@ export function toCafeResponse(
     priceAvg: cafe.priceAvg,
     tags: cafe.tags,
     hours: cafe.hours,
+    openingHours: cafe.openingHours
+      ? cafe.openingHours.map(({ day, open, close }) => ({ day, open, close }))
+      : null,
     rating: cafe.rating,
     reviewCount: cafe.reviewCount,
     petFriendly: cafe.petFriendly,

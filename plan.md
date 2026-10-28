@@ -414,6 +414,28 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 
 ---
 
+### Phase 12 — หน้าค้นหา: การ์ดร้าน, header, เวลาเปิด-ปิดรายวัน (owner สั่ง 2026-10-28)
+**Status:** `approved` — [reviews/phase-12.md](reviews/phase-12.md)
+**Branch:** `phase-12-cards-header` (ต่อจาก `phase-11-unified-search` ซึ่งยังไม่ merge)
+**Review range:** `phase-11-unified-search..phase-12-cards-header`
+
+owner อนุญาตแล้ว: เพิ่ม field เวลาเปิด-ปิดรายวันใน schema + import + API · ไม่ใส่รูปร้าน (ข้อมูลมีแค่ลิงก์รูปของ Google)
+
+- [x] 12.1 **เวลาเปิด-ปิดรายวัน (server):** `cafes.openingHours: { day 0–6, open, close }[]` (นาทีหลังเที่ยงคืน, ปิดหลังเที่ยงคืน → `close` > 1440) · `src/cafes/opening-hours.ts` อ่าน "8 AM–6 PM", "8:30 AM–5:30 PM", "12–10 PM", "7 AM–1 AM", "Closed", "Open 24 hours", หลายช่วงต่อวัน · อ่านไม่ได้ → ไม่ใส่ (ไม่เดา) · `npm run import:opening-hours` (`--dry-run`) · Atlas: 173/173 ร้าน · `GET /api/cafes?openNow=true` (เวลาเชียงใหม่ รวมร้านที่เปิดข้ามคืนจากเมื่อวาน) · response มี `openingHours` (null ถ้าไม่รู้)
+- [x] 12.2 **การ์ดร้าน (`cafe-card.tsx`):** ชื่อ → ย่าน · ระยะ · ● Open · Closes 18:00 / Closed · Opens Mon 08:00 → ★ 4.9 (2,379 reviews) · ~110฿ → เมนูเด่น → tag ≤ 3 + Parking / Pets welcome (ไอคอนพร้อมข้อความ, ไม่ซ้ำกับ tag) · tag เป็นตัวอักษรปกติ ไม่ใช่ mono ตัวใหญ่ (ink-soft บนพื้น 8.9:1) · ทั้งการ์ดคลิกได้ (stretched link + focus ring ทั้งการ์ด) ♡ แยก · grid 2 คอลัมน์บน md · ไม่มีรูป (ไม่มีข้อมูล)
+- [x] 12.3 **"Open now" chip** ใน filter row · สีเขียว `--color-moss` 5.4:1
+- [x] 12.4 **หน้าร้าน:** Hours แสดงสถานะเปิด/ปิดตอนนี้ + ตารางทั้งสัปดาห์ (วันนี้ตัวหนา) · ไม่มีข้อมูล → แสดงข้อความเดิม
+- [x] 12.5 **Header:** เหลือ โลโก้ · ช่องค้นหา (หน้าอื่น → `/cafes?search=…` แล้วรันค้นหา/AI ครั้งเดียว ลบ param ออก) · Saved · Log in/out · ลบ Discover/Features/How it works/About + "Find your café" + เมนูมือถือ → ย้ายลิงก์ไป footer · หน้า `/cafes` ช่องค้นหาของ finder ปักใต้ header (sticky `top-16`)
+- [x] 12.6 **Hero `/cafes` สั้นลง:** หัวข้อบรรทัดเดียว + คำอธิบาย (ซ่อนบนมือถือ) · มือถือ: ปุ่ม Ask AI เป็นไอคอน, ตัวอย่างคำถามเลื่อนแนวนอน → การ์ดแรกเห็นในจอแรกที่ 375×812
+
+เบราว์เซอร์: Open now → 153 ร้าน (ตรงกับ API) ไม่มีการ์ด "Closed" · หน้า TWENTY MAR: Tuesday 08:30–18:00 วันอื่น 08:00–18:00 · ค้น "twenty mar" จาก header หน้า About → `/cafes` 1 ร้าน · QA 7 หน้า × 3 ขนาด: 0 ปัญหา (ยกเว้น "noRing" ของลิงก์การ์ด = false positive เพราะวง focus อยู่ที่ `::after` ครอบทั้งการ์ด ตรวจด้วยภาพแล้ว)
+
+หมายเหตุ deploy: หน้าร้าน (ISR `revalidate: 3600`) อาจยังแสดงเวลาแบบเดิมได้นานสุด 1 ชม. หลัง deploy เพราะ fetch cache
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews

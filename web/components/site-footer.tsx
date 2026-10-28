@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
+import { navLinks } from "@/lib/content";
 
+// The header keeps only search, saved and log in; the rest of the site lives here.
 const footerLinks = [
   { label: "Find a café", href: "/cafes" },
+  ...navLinks.filter((link) => link.href !== "/about"),
   { label: "Saved cafés", href: "/me/favorites" },
   { label: "About", href: "/about" },
 ];

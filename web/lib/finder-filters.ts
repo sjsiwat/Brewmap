@@ -18,6 +18,7 @@ export interface FinderFilters {
   drinkType?: DrinkType;
   tag?: string;
   area?: string;
+  openNow?: boolean;
 }
 
 export type FilterKey = keyof FinderFilters;
@@ -106,6 +107,7 @@ export function filterLabels(filters: FinderFilters): string[] {
   const price = priceLabel(filters);
   if (price) labels.push(price);
   if (filters.radiusKm) labels.push(distanceLabel(filters.radiusKm));
+  if (filters.openNow) labels.push("Open now");
   if (filters.parking) labels.push("Parking");
   if (filters.petFriendly) labels.push("Pet friendly");
   if (filters.drinkType) labels.push(filters.drinkType);

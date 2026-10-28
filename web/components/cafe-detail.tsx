@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -14,17 +15,23 @@ import type { Cafe } from "@/lib/cafes";
 import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
 import { DistanceFromOrigin } from "@/components/location-origin";
 import { FavoriteButton } from "@/components/favorite-button";
+import { OpenStatusText, WeeklyHours } from "@/components/opening-hours";
 import { Reveal } from "@/components/reveal";
 
 interface Fact {
   label: string;
-  value: string;
+  value: ReactNode;
   icon: typeof Clock;
 }
 
 export function CafeDetail({ cafe }: { cafe: Cafe }) {
   const facts: Fact[] = [
-    { label: "Hours", value: cafe.hours, icon: Clock },
+    {
+      label: "Hours",
+      // Unknown week: fall back to the one-line summary rather than guess open/closed.
+      value: cafe.openingHours ? <OpenStatusText periods={cafe.openingHours} /> : cafe.hours,
+      icon: Clock,
+    },
     {
       label: "Rating",
       value: `${cafe.rating.toFixed(1)} · ${cafe.reviewCount} reviews`,
@@ -128,6 +135,14 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
                 </div>
               ))}
             </dl>
+            {cafe.openingHours && (
+              <div className="border-b border-line py-4">
+                <p className="label-mono">Opening hours · Chiang Mai time</p>
+                <div className="mt-3">
+                  <WeeklyHours periods={cafe.openingHours} />
+                </div>
+              </div>
+            )}
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-7">
