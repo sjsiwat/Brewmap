@@ -457,7 +457,7 @@ owner เลือก: URL แยกภาษา `/th` `/en` · ข้ามเ�
 ---
 
 ### Phase 14 — แปลข้อมูลร้านเป็นภาษาไทย (owner สั่ง 2026-10-28)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-14.md](reviews/phase-14.md)
 **Branch:** `phase-14-cafe-translations`
 **Review range:** `main..phase-14-cafe-translations` (ใช้ `git diff main...HEAD`)
 
