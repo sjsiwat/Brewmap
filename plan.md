@@ -379,7 +379,7 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 ---
 
 ### Phase 10 — หน้าค้นหา: quick wins (owner สั่ง 2026-10-28)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-10.md](reviews/phase-10.md)
 **Branch:** `phase-10-finder-quick-wins`
 **Review range:** `main..phase-10-finder-quick-wins` (ใช้ `git diff main...HEAD`)
 
