@@ -6,6 +6,7 @@ import {
   CafeResponseDto,
   PaginatedCafesDto,
 } from './dto/cafe-response.dto';
+import { LangQueryDto } from './dto/lang.dto';
 import { QueryCafesDto } from './dto/query-cafes.dto';
 import { TopCafesDto } from './dto/top-cafes.dto';
 
@@ -34,7 +35,10 @@ export class CafesController {
 
   // Declared last so "top" and "filters" aren't captured as slugs.
   @Get(':slug')
-  findOne(@Param('slug') slug: string): Promise<CafeResponseDto> {
-    return this.cafesService.findBySlug(slug);
+  findOne(
+    @Param('slug') slug: string,
+    @Query() { lang }: LangQueryDto,
+  ): Promise<CafeResponseDto> {
+    return this.cafesService.findBySlug(slug, lang);
   }
 }

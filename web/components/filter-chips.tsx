@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { DrinkType } from "@/lib/cafes";
-import { format } from "@/lib/i18n/config";
+import { dataLabel, format } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import {
   activeFilterCount,
@@ -173,13 +173,16 @@ export function FilterChips({
         onClear={() => set({ drinkType: undefined })}
       />
       {filters.tag && (
-        <ValueChip label={filters.tag} onRemove={() => set({ tag: undefined })}>
-          {filters.tag}
+        <ValueChip label={dataLabel(dict.cafeTags, filters.tag)} onRemove={() => set({ tag: undefined })}>
+          {dataLabel(dict.cafeTags, filters.tag)}
         </ValueChip>
       )}
       {filters.area && (
-        <ValueChip label={format(t.areaLabel, { area: filters.area })} onRemove={() => set({ area: undefined })}>
-          {filters.area}
+        <ValueChip
+          label={format(t.areaLabel, { area: dataLabel(dict.areas, filters.area) })}
+          onRemove={() => set({ area: undefined })}
+        >
+          {dataLabel(dict.areas, filters.area)}
         </ValueChip>
       )}
       {filters.q && (

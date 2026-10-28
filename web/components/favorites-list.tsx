@@ -8,7 +8,7 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { useAuth } from "@/lib/auth";
 import { formatPrice } from "@/lib/cafes";
 import { useFavorites } from "@/lib/favorites";
-import { format, plural } from "@/lib/i18n/config";
+import { dataLabel, format, plural } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 
 const statusText = "font-mono text-xs uppercase tracking-[0.1em] text-muted";
@@ -83,7 +83,7 @@ export function FavoritesList() {
                 </h2>
                 <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
                   <MapPin size={12} aria-hidden />
-                  {cafe.area}
+                  {dataLabel(dict.areas, cafe.area)}
                 </p>
               </div>
               <p className="text-sm leading-relaxed text-ink-soft md:col-span-4">{cafe.specialty}</p>

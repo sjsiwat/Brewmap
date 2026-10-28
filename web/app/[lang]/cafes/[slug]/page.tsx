@@ -35,7 +35,7 @@ export async function generateMetadata({
 }: CafePageProps): Promise<Metadata> {
   const { lang, t } = await pageLanguage(params);
   const { slug } = await params;
-  const cafe = await getCafe(slug, cached);
+  const cafe = await getCafe(slug, cached, lang);
 
   return {
     title: cafe ? cafe.name : t.meta.cafeNotFound,
@@ -47,7 +47,7 @@ export async function generateMetadata({
 export default async function CafePage({ params }: CafePageProps) {
   const { lang } = await pageLanguage(params);
   const { slug } = await params;
-  const cafe = await getCafe(slug, cached);
+  const cafe = await getCafe(slug, cached, lang);
 
   if (!cafe) {
     notFound();

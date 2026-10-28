@@ -341,6 +341,39 @@ describe('Auth + Favorites API (e2e)', () => {
       ]);
     });
 
+    it('lists favorites in Thai with lang=th', async () => {
+      const db = await mongoose
+        .createConnection(process.env.MONGODB_URI!)
+        .asPromise();
+      await db.collection('cafes').updateOne(
+        { slug: slugs[0] },
+        {
+          $set: {
+            th: {
+              specialty: 'กาแฟดริป',
+              flavor: 'หอม',
+              atmosphere: 'เงียบ',
+              aiSummary: null,
+              model: 'test',
+              generatedAt: new Date(),
+            },
+          },
+        },
+      );
+      await db.close();
+
+      const res = await agent.get('/api/me/favorites?lang=th').expect(200);
+      expect(res.body).toEqual([
+        expect.objectContaining({
+          slug: slugs[0],
+          specialty: 'กาแฟดริป',
+          aiSummary: null,
+          textLang: 'th',
+        }),
+      ]);
+      await agent.get('/api/me/favorites?lang=xx').expect(400);
+    });
+
     it('unknown café -> 404', async () => {
       await agent.put('/api/me/favorites/no-such-cafe').expect(404);
       await agent.delete('/api/me/favorites/no-such-cafe').expect(404);

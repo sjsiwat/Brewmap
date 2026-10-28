@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, mongo } from 'mongoose';
 import { CafesService } from '../cafes/cafes.service';
 import { CafeResponseDto } from '../cafes/dto/cafe-response.dto';
+import type { Lang } from '../cafes/lang';
 import { Favorite } from './schemas/favorite.schema';
 
 @Injectable()
@@ -14,12 +15,15 @@ export class FavoritesService {
   ) {}
 
   /** The user's favorite cafés, most recently added first. */
-  async list(userId: string): Promise<CafeResponseDto[]> {
+  async list(userId: string, lang?: Lang): Promise<CafeResponseDto[]> {
     const favorites = await this.favoriteModel
       .find({ userId: new Types.ObjectId(userId) }, { cafeId: 1 })
       .sort({ createdAt: -1 })
       .lean<Pick<Favorite, 'cafeId'>[]>();
-    return this.cafesService.findByIds(favorites.map((f) => f.cafeId));
+    return this.cafesService.findByIds(
+      favorites.map((f) => f.cafeId),
+      lang,
+    );
   }
 
   /** Idempotent: adding a café that is already a favorite is a no-op. */

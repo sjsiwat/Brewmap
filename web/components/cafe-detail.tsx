@@ -14,7 +14,7 @@ import {
 import type { Cafe } from "@/lib/cafes";
 import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
 import { DistanceFromOrigin } from "@/components/location-origin";
-import { format, intlLocale, localePath, plural, type Locale } from "@/lib/i18n/config";
+import { dataLabel, format, intlLocale, localePath, plural, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { FavoriteButton } from "@/components/favorite-button";
 import { OpenStatusText, WeeklyHours } from "@/components/opening-hours";
@@ -27,7 +27,8 @@ interface Fact {
 }
 
 export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
-  const t = getDictionary(lang).detail;
+  const dict = getDictionary(lang);
+  const t = dict.detail;
   const hoursText = getDictionary(lang).hours;
   const facts: Fact[] = [
     {
@@ -65,7 +66,7 @@ export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
 
           <p className="mt-8 flex items-center gap-1.5 eyebrow">
             <MapPin size={13} aria-hidden />
-            {cafe.area} · {cafe.address}
+            {dataLabel(dict.areas, cafe.area)} · {cafe.address}
           </p>
           <h1 className="mt-3 max-w-2xl heading-page">
             {cafe.name}
@@ -82,7 +83,7 @@ export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
             <span>{formatPrice(cafe.priceAvg)}</span>
             <DistanceFromOrigin lat={cafe.lat} lng={cafe.lng} />
             {cafe.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
+              <span key={tag}>{dataLabel(dict.cafeTags, tag)}</span>
             ))}
           </div>
         </Reveal>

@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,6 +17,7 @@ import {
   WRITE_RATE_LIMIT,
 } from '../auth/user-throttler.guard';
 import { CafeResponseDto } from '../cafes/dto/cafe-response.dto';
+import { LangQueryDto } from '../cafes/dto/lang.dto';
 import { FavoritesService } from './favorites.service';
 
 /** The logged-in user's favorites. Unknown café slug -> 404. */
@@ -26,8 +28,11 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  list(@CurrentUserId() userId: string): Promise<CafeResponseDto[]> {
-    return this.favoritesService.list(userId);
+  list(
+    @CurrentUserId() userId: string,
+    @Query() { lang }: LangQueryDto,
+  ): Promise<CafeResponseDto[]> {
+    return this.favoritesService.list(userId, lang);
   }
 
   @Put(':slug')

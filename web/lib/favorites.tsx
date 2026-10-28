@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useI18n } from "@/lib/i18n/client";
 import type { Cafe } from "@/lib/cafes";
 
 interface FavoritesContextValue {
@@ -26,6 +27,7 @@ const NO_CAFES: Cafe[] = [];
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user, endSession } = useAuth();
+  const { lang } = useI18n();
   const userId = user?.id ?? null;
   const [state, setState] = useState<{
     userId: string | null;
@@ -39,7 +41,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     if (!userId) return;
     let cancelled = false;
     api
-      .getFavorites()
+      .getFavorites(lang)
       .then((cafes) => {
         if (!cancelled) setState({ userId, cafes, status: "ready" });
       })
@@ -49,7 +51,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [userId, attempt]);
+  }, [userId, attempt, lang]);
 
   // Results for another user (or from before logout) are never shown.
   const current =

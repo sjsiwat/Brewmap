@@ -456,9 +456,28 @@ owner เลือก: URL แยกภาษา `/th` `/en` · ข้ามเ�
 
 ---
 
+### Phase 14 — แปลข้อมูลร้านเป็นภาษาไทย (owner สั่ง 2026-10-28)
+**Status:** `awaiting-review`
+**Branch:** `phase-14-cafe-translations`
+**Review range:** `main..phase-14-cafe-translations` (ใช้ `git diff main...HEAD`)
+
+owner เลือก: เก็บในฐานข้อมูล + API · แปลด้วย Gemini script (อนุมัติการรันกับทุกร้าน)
+
+- [x] 14.1 **Schema:** `cafes.th` = `{ specialty, flavor, atmosphere, aiSummary: {pros, cons} | null, model, generatedAt }` · ชื่อร้าน ที่อยู่ แท็ก ย่าน ไม่แปลในฐานข้อมูล (แท็ก/ย่านเป็นค่าที่ใช้กรอง)
+- [x] 14.2 **API `lang=th`:** `GET /api/cafes`, `/cafes/top`, `/cafes/:slug`, `/me/favorites` · มีคำแปล → ข้อความไทย, ไม่มี → อังกฤษ · `textLang` บอกว่าได้ภาษาไหน · ไม่ส่ง `th` ออกไป · ภาษาอื่น → 400 · ค่า default (en) เดิมไม่เปลี่ยน · `src/cafes/lang.ts` ใช้ร่วมทุก DTO
+- [x] 14.3 **`npm run ai:translate`** (`--limit`, `--force`, `--dry-run`, `--rpm`) · ส่งแค่ข้อความอังกฤษของร้าน · `cleanTranslation` ไม่เชื่อผลจาก model: ทุกช่องต้องมีอักษรไทย, ≤ 160 ตัว, pros/cons ต้องมีจำนวนเท่าต้นฉบับ · ไม่ผ่าน → ไม่บันทึก รันใหม่ได้
+- [x] 14.4 **เว็บ:** หน้า `/th` ส่ง `lang=th` ทุกที่ที่ดึงร้าน (รายการ, hero, หน้าร้าน ISR, รายการโปรด) · แท็ก 77 ชื่อและย่าน 17 ชื่อแปลใน `th.ts` (`dataLabel`) ใช้ในการ์ด หน้าร้าน chip ของ AI และข้อความ "ข้าม …"
+- [x] 14.5 tests: unit `cleanTranslation` · e2e `lang=th` (detail/list/top, fallback อังกฤษ, ไม่มี `th` ใน response, 400) · favorites `lang=th`
+
+ผลบน Atlas: แปลครบ 173/173 ร้าน (รวมสรุปรีวิว AI) · รอบแรกผ่าน 161 · 12 ร้านไม่ผ่านเพราะ Gemini คงชื่อเมนูไว้เป็นอังกฤษ → ปรับ prompt ให้เขียนไทยทุกช่อง + ตัวอย่าง · ตรวจพบ 17 ร้านที่ผ่านแต่ยังเป็นอังกฤษเกินครึ่ง (เช่น "Hojicha latte และ specialty espresso") → เพิ่มกฎ "อักษรไทย ≥ ครึ่งหนึ่งของอักษรอังกฤษ" ลบคำแปลของ 17 ร้านแล้วแปลใหม่ · ใช้ Gemini ทั้งหมดราว 230 requests · หน้าร้านไทย: จุดเด่น/รสชาติ/บรรยากาศ/ที่คนชอบ/ควรระวัง/แท็ก/ย่าน เป็นไทย ชื่อร้านและที่อยู่คงเดิม · QA 7 หน้า × 3 ขนาด × 2 ภาษา = 0 ปัญหา · API ไม่ส่ง lang = อังกฤษเหมือนเดิม
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM) — เฟส 4 ของงาน UX หน้าค้นหา, owner ให้ข้ามไปก่อน (2026-10-28)
-- แปลข้อมูลร้าน (จุดเด่น, แท็ก, ย่าน) และข้อความ error จาก server เป็นภาษาไทย
+- ข้อความ error จาก server เป็นภาษาไทย
 - Personalized recommendations จาก favorites + reviews
 - Café owner dashboard / sponsored listing
 - Re-enrich flavor จาก review text → เปิดตัวกรอง Flavor กลับมา
