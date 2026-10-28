@@ -53,6 +53,7 @@ export const en = {
 
   units: {
     km: "{n} km",
+    outOf5: "{n} out of 5",
   },
 
   places: {

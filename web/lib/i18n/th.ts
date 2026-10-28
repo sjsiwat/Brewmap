@@ -50,6 +50,7 @@ export const th: Dictionary = {
 
   units: {
     km: "{n} กม.",
+    outOf5: "{n} จาก 5 ดาว",
   },
 
   places: {

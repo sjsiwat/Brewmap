@@ -169,7 +169,7 @@ function ReviewItem({ review, mine }: { review: Review; mine?: boolean }) {
         </p>
       </div>
       <div className="md:col-span-9">
-        <Stars value={review.rating} />
+        <Stars value={review.rating} outOf5={dict.units.outOf5} />
         <p className="mt-2 whitespace-pre-line text-base leading-relaxed text-ink-soft">{review.text}</p>
         {review.drinkOrdered && (
           <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-muted">
@@ -414,7 +414,7 @@ export function CafeReviews({ slug, cafeName }: { slug: string; cafeName: string
                 <>
                   <p className="font-display text-5xl text-ink">{list.communityRating.toFixed(1)}</p>
                   <div className="mt-2">
-                    <Stars value={Math.round(list.communityRating)} size={14} />
+                    <Stars value={Math.round(list.communityRating)} outOf5={dict.units.outOf5} size={14} />
                   </div>
                   <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-muted">
                     {plural(t.onBrewMap, list.communityReviewCount)}

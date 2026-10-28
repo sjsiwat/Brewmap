@@ -34,6 +34,7 @@ function ReviewText({ text, readFull }: { text: string; readFull: string }) {
 export function GoogleReviews({ cafe, reviews, lang }: { cafe: Cafe; reviews: GoogleReview[]; lang: Locale }) {
   if (reviews.length === 0) return null;
   const t: Dictionary["googleReviews"] = getDictionary(lang).googleReviews;
+  const units = getDictionary(lang).units;
   const dateFormat = new Intl.DateTimeFormat(intlLocale[lang], { month: "short", year: "numeric" });
 
   return (
@@ -47,7 +48,7 @@ export function GoogleReviews({ cafe, reviews, lang }: { cafe: Cafe; reviews: Go
             </h2>
             <p className="mt-6 font-display text-5xl text-ink">{cafe.rating.toFixed(1)}</p>
             <div className="mt-2">
-              <Stars value={Math.round(cafe.rating)} size={14} />
+              <Stars value={Math.round(cafe.rating)} outOf5={units.outOf5} size={14} />
             </div>
             <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-muted">
               {plural(t.onGoogle, cafe.reviewCount, { n: cafe.reviewCount.toLocaleString(intlLocale[lang]) })}
@@ -78,7 +79,7 @@ export function GoogleReviews({ cafe, reviews, lang }: { cafe: Cafe; reviews: Go
                     </p>
                   </div>
                   <div className="md:col-span-9">
-                    <Stars value={review.rating} />
+                    <Stars value={review.rating} outOf5={units.outOf5} />
                     <div className="mt-2" lang={review.language ?? undefined}>
                       <ReviewText text={review.text} readFull={t.readFull} />
                     </div>
