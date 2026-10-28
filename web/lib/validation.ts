@@ -14,33 +14,43 @@ const PASSWORD_CHARSET = /^[\x21-\x7E]+$/;
 const NAME_PATTERN = /^[\p{L}\p{N}][\p{L}\p{M}\p{N} ._'-]*$/u;
 
 export type RegisterField = "displayName" | "email" | "password";
-export type FieldErrors = Partial<Record<RegisterField, string>>;
+/** A key of the dictionary's auth.validation; the form shows it in the page's language. */
+export type ValidationError =
+  | "emailRequired"
+  | "emailInvalid"
+  | "passwordRequired"
+  | "passwordShort"
+  | "passwordLong"
+  | "passwordCharset"
+  | "passwordLetter"
+  | "passwordNumber"
+  | "nameShort"
+  | "nameLong"
+  | "nameCharset";
+export type FieldErrors = Partial<Record<RegisterField, ValidationError>>;
 
 export const normaliseEmail = (value: string) => value.trim().toLowerCase();
 export const normaliseName = (value: string) => value.trim().replace(/\s+/g, " ");
 
-export function emailError(raw: string): string | undefined {
+export function emailError(raw: string): ValidationError | undefined {
   const email = normaliseEmail(raw);
-  if (!email) return "Enter your email.";
-  if (email.length > EMAIL_MAX || !EMAIL_PATTERN.test(email))
-    return "Enter a valid email address, like name@example.com.";
+  if (!email) return "emailRequired";
+  if (email.length > EMAIL_MAX || !EMAIL_PATTERN.test(email)) return "emailInvalid";
 }
 
-export function passwordError(password: string): string | undefined {
-  if (password.length < PASSWORD_MIN) return `Use at least ${PASSWORD_MIN} characters.`;
-  if (password.length > PASSWORD_MAX) return `Use at most ${PASSWORD_MAX} characters.`;
-  if (!PASSWORD_CHARSET.test(password))
-    return "Use English letters, numbers and symbols only — no Thai, spaces or emoji.";
-  if (!/[A-Za-z]/.test(password)) return "Include at least one English letter.";
-  if (!/[0-9]/.test(password)) return "Include at least one number.";
+export function passwordError(password: string): ValidationError | undefined {
+  if (password.length < PASSWORD_MIN) return "passwordShort";
+  if (password.length > PASSWORD_MAX) return "passwordLong";
+  if (!PASSWORD_CHARSET.test(password)) return "passwordCharset";
+  if (!/[A-Za-z]/.test(password)) return "passwordLetter";
+  if (!/[0-9]/.test(password)) return "passwordNumber";
 }
 
-export function nameError(raw: string): string | undefined {
+export function nameError(raw: string): ValidationError | undefined {
   const name = normaliseName(raw);
-  if (name.length < NAME_MIN) return `Use at least ${NAME_MIN} characters.`;
-  if (name.length > NAME_MAX) return `Use at most ${NAME_MAX} characters.`;
-  if (!NAME_PATTERN.test(name))
-    return "Use letters (Thai or English), numbers, spaces and . _ - ' only.";
+  if (name.length < NAME_MIN) return "nameShort";
+  if (name.length > NAME_MAX) return "nameLong";
+  if (!NAME_PATTERN.test(name)) return "nameCharset";
 }
 
 export function validateRegister(values: Record<RegisterField, string>): FieldErrors {

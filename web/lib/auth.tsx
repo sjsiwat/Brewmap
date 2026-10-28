@@ -89,14 +89,14 @@ const NEXT_BASE = "https://brewmap.invalid";
  * Only same-site paths, so `?next=` can't redirect off BrewMap. Parsed as a URL
  * rather than prefix-checked: browsers read `/\evil.example` as `//evil.example`.
  */
-export function safeNextPath(next: string | null): string {
-  if (!next || !next.startsWith("/")) return "/cafes";
+export function safeNextPath(next: string | null, fallback = "/cafes"): string {
+  if (!next || !next.startsWith("/")) return fallback;
   try {
     const url = new URL(next, NEXT_BASE);
     // Dot segments can normalise to a protocol-relative path: `/.//evil` -> `//evil`.
-    if (url.origin !== NEXT_BASE || url.pathname.startsWith("//")) return "/cafes";
+    if (url.origin !== NEXT_BASE || url.pathname.startsWith("//")) return fallback;
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
-    return "/cafes";
+    return fallback;
   }
 }

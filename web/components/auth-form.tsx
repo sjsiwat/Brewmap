@@ -6,9 +6,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { ApiError } from "@/lib/api";
 import { safeNextPath, useAuth } from "@/lib/auth";
+import { format } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/client";
+import type { Dictionary } from "@/lib/i18n/en";
 import {
   EMAIL_MAX,
   NAME_MAX,
+  NAME_MIN,
   PASSWORD_MAX,
   PASSWORD_MIN,
   emailError,
@@ -19,47 +23,25 @@ import {
 
 type Mode = "login" | "register";
 
-const COPY: Record<
-  Mode,
-  { eyebrow: string; title: string; body: string; submit: string; busy: string }
-> = {
-  login: {
-    eyebrow: "Welcome back",
-    title: "Log in to keep your shortlist.",
-    body: "Your saved cafés follow you between visits — the creamy latte place, the quiet one with parking, the matcha bar you meant to try.",
-    submit: "Log in",
-    busy: "Logging in…",
-  },
-  register: {
-    eyebrow: "New to BrewMap",
-    title: "Start a shortlist of cafés worth the trip.",
-    body: "An account lets you save cafés as you browse and come back to them later. Email and a password are all it takes.",
-    submit: "Create account",
-    busy: "Creating account…",
-  },
-};
+type AuthText = Dictionary["auth"];
 
-function errorText(error: unknown, mode: Mode): string {
-  if (!(error instanceof ApiError)) return "Something went wrong. Try again.";
+function errorText(error: unknown, mode: Mode, t: AuthText["errors"]): string {
+  if (!(error instanceof ApiError)) return t.generic;
   switch (error.status) {
     case 0:
-      return "Can't reach BrewMap right now. Try again in a moment.";
+      return t.offline;
     case 401:
-      return "That email and password don't match an account.";
+      return t.badLogin;
     case 409:
-      return "That email already has an account — log in instead.";
+      return t.taken;
     case 429:
-      return "Too many attempts. Wait a minute, then try again.";
+      return t.rateLimited;
     case 400:
-      // Register: the server's own rule message, e.g. "Password must include at
-      // least one number". Login: a bad value can't match any account anyway.
-      return mode === "register"
-        ? error.message
-        : "That email and password don't match an account.";
+      // Register: the server's own rule message (English), e.g. "Password must
+      // include at least one number". Login: a bad value can't match any account anyway.
+      return mode === "register" ? error.message : t.badLogin;
     default:
-      return error.status >= 500
-        ? "Something went wrong on our side. Try again in a moment."
-        : error.message;
+      return error.status >= 500 ? t.server : error.message;
   }
 }
 
@@ -69,20 +51,35 @@ const labelClass = "font-mono text-[0.65rem] uppercase tracking-[0.14em] text-mu
 const hintClass = "mt-2 block text-xs text-muted";
 const fieldErrorClass = "mt-2 block text-xs text-rust";
 
-const HINTS: Record<RegisterField, string> = {
-  displayName: `2–${NAME_MAX} letters (Thai or English), numbers, spaces and . _ - '`,
-  email: "An address like name@example.com",
-  password: `${PASSWORD_MIN}–${PASSWORD_MAX} English letters, numbers or symbols, with at least one letter and one number. No Thai.`,
-};
+function hints(t: AuthText): Record<RegisterField, string> {
+  return {
+    displayName: format(t.hints.displayName, { max: NAME_MAX }),
+    email: t.hints.email,
+    password: format(t.hints.password, { min: PASSWORD_MIN, max: PASSWORD_MAX }),
+  };
+}
+
+/** A validation key from lib/validation.ts, in the page's language. */
+function fieldMessage(key: FieldErrors[RegisterField], t: AuthText): string | undefined {
+  if (!key) return undefined;
+  const isName = key.startsWith("name");
+  return format(t.validation[key], {
+    min: isName ? NAME_MIN : PASSWORD_MIN,
+    max: isName ? NAME_MAX : PASSWORD_MAX,
+  });
+}
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const { status, login, register } = useAuth();
   const router = useRouter();
-  const next = safeNextPath(useSearchParams().get("next"));
+  const { t: dict, href } = useI18n();
+  const t = dict.auth;
+  const HINTS = hints(t);
+  const next = safeNextPath(useSearchParams().get("next"), href("/cafes"));
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
-  const copy = COPY[mode];
+  const copy = t[mode];
 
   // Already logged in (e.g. opened /login in a second tab) - nothing to do here.
   useEffect(() => {
@@ -99,7 +96,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const errors: FieldErrors =
       mode === "register"
         ? validateRegister({ displayName, email, password })
-        : { email: emailError(email), password: password ? undefined : "Enter your password." };
+        : { email: emailError(email), password: password ? undefined : "passwordRequired" };
     if (!errors.email) delete errors.email;
     if (!errors.password) delete errors.password;
     setFieldErrors(errors);
@@ -120,14 +117,14 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
       router.replace(next);
     } catch (err) {
-      setError(errorText(err, mode));
+      setError(errorText(err, mode, t.errors));
       setSubmitting(false);
     }
   }
 
-  const otherHref = `${mode === "login" ? "/register" : "/login"}${
-    next === "/cafes" ? "" : `?next=${encodeURIComponent(next)}`
-  }`;
+  const otherHref = href(
+    `${mode === "login" ? "/register" : "/login"}${next === href("/cafes") ? "" : `?next=${encodeURIComponent(next)}`}`,
+  );
 
   return (
     <div className="page-container grid grid-cols-1 gap-12 py-16 md:grid-cols-12 md:gap-6 md:py-24">
@@ -147,23 +144,23 @@ export function AuthForm({ mode }: { mode: Mode }) {
         <div className="flex flex-col gap-8">
           {mode === "register" && (
             <label className="block">
-              <span className={labelClass}>Name</span>
+              <span className={labelClass}>{t.name}</span>
               <input
                 name="displayName"
                 type="text"
                 required
                 maxLength={NAME_MAX + 20}
                 autoComplete="nickname"
-                placeholder="What should we call you?"
+                placeholder={t.namePlaceholder}
                 aria-invalid={fieldErrors.displayName ? true : undefined}
                 aria-describedby="displayName-note"
                 className={inputClass}
               />
-              <FieldNote id="displayName-note" error={fieldErrors.displayName} hint={HINTS.displayName} />
+              <FieldNote id="displayName-note" error={fieldMessage(fieldErrors.displayName, t)} hint={HINTS.displayName} />
             </label>
           )}
           <label className="block">
-            <span className={labelClass}>Email</span>
+            <span className={labelClass}>{t.email}</span>
             <input
               name="email"
               type="email"
@@ -180,12 +177,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
             />
             <FieldNote
               id="email-note"
-              error={fieldErrors.email}
+              error={fieldMessage(fieldErrors.email, t)}
               hint={mode === "register" ? HINTS.email : undefined}
             />
           </label>
           <label className="block">
-            <span className={labelClass}>Password</span>
+            <span className={labelClass}>{t.password}</span>
             <input
               name="password"
               type="password"
@@ -193,14 +190,14 @@ export function AuthForm({ mode }: { mode: Mode }) {
               minLength={mode === "register" ? PASSWORD_MIN : undefined}
               maxLength={PASSWORD_MAX}
               autoComplete={mode === "register" ? "new-password" : "current-password"}
-              placeholder={mode === "register" ? `At least ${PASSWORD_MIN} characters` : undefined}
+              placeholder={mode === "register" ? format(t.passwordPlaceholder, { min: PASSWORD_MIN }) : undefined}
               aria-invalid={fieldErrors.password ? true : undefined}
               aria-describedby="password-note"
               className={inputClass}
             />
             <FieldNote
               id="password-note"
-              error={fieldErrors.password}
+              error={fieldMessage(fieldErrors.password, t)}
               hint={mode === "register" ? HINTS.password : undefined}
             />
           </label>
@@ -220,12 +217,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
             <ArrowUpRight size={16} aria-hidden />
           </button>
           <p className="text-sm text-ink-soft">
-            {mode === "login" ? "No account yet? " : "Already have an account? "}
+            {mode === "login" ? t.noAccount : t.haveAccount}
             <Link
               href={otherHref}
               className="text-ink underline decoration-line underline-offset-4 transition-colors hover:text-rust hover:decoration-rust focus-ring"
             >
-              {mode === "login" ? "Create one" : "Log in"}
+              {mode === "login" ? t.createOne : t.logIn}
             </Link>
           </p>
         </div>

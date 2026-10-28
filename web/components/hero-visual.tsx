@@ -6,7 +6,9 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowUpRight, LocateFixed, Star } from "lucide-react";
 import { getCafes, type CafeResult } from "@/lib/api";
 import { formatPrice } from "@/lib/cafes";
-import { DEFAULT_ORIGIN_LABEL, formatKm, haversineKm } from "@/lib/geo";
+import { formatKm, haversineKm } from "@/lib/geo";
+import { format, intlLocale, plural } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/client";
 import { requestUserLocation, useUserLocation } from "@/lib/use-user-location";
 
 const containerVariants: Variants = {
@@ -37,6 +39,9 @@ interface Pick {
  */
 export function HeroVisual() {
   const reduceMotion = useReducedMotion();
+  const { lang, t: dict, href } = useI18n();
+  const t = dict.home.heroCard;
+  const place = dict.places.thaPhaeGate;
   const { origin, status } = useUserLocation();
   const [pick, setPick] = useState<Pick | null>(null);
   const [failed, setFailed] = useState(false);
@@ -64,28 +69,34 @@ export function HeroVisual() {
   const fromYou = status === "device";
   const cafe = pick?.cafe;
   const km = cafe ? (cafe.distanceKm ?? haversineKm(origin, cafe)) : null;
+  const distance = km === null ? "" : formatKm(km, dict.units.km);
   const signals = [
-    { label: "Specialty", value: cafe?.specialty },
-    { label: "Atmosphere", value: cafe?.atmosphere },
-    { label: "Price", value: cafe ? formatPrice(cafe.priceAvg) : undefined },
+    { label: t.specialty, value: cafe?.specialty },
+    { label: t.atmosphere, value: cafe?.atmosphere },
+    { label: t.price, value: cafe ? formatPrice(cafe.priceAvg) : undefined },
     {
-      label: "Distance",
-      value: km === null ? undefined : `${formatKm(km)} ${fromYou ? "from you" : `from ${DEFAULT_ORIGIN_LABEL}`}`,
+      label: t.distance,
+      value:
+        km === null
+          ? undefined
+          : fromYou
+            ? format(t.fromYou, { km: distance })
+            : format(t.fromPlace, { km: distance, place }),
     },
   ];
 
   return (
     <div className="border border-line bg-paper-raised">
       <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3">
-        <span className="label-mono">{fromYou ? "Near you" : `Near ${DEFAULT_ORIGIN_LABEL}`}</span>
+        <span className="label-mono">{fromYou ? t.nearYou : format(t.nearPlace, { place })}</span>
         {status === "locating" ? (
           <span className="label-mono" aria-live="polite">
-            Locating you…
+            {t.locating}
           </span>
         ) : fromYou ? (
           <span className="flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
             <span className="h-1.5 w-1.5 bg-rust" aria-hidden />
-            Your location
+            {t.yourLocation}
           </span>
         ) : (
           <button
@@ -94,7 +105,7 @@ export function HeroVisual() {
             className="focus-ring inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust hover:underline"
           >
             <LocateFixed size={12} aria-hidden />
-            Use my location
+            {t.useMyLocation}
           </button>
         )}
       </div>
@@ -129,18 +140,18 @@ export function HeroVisual() {
         transition={{ duration: 0.5, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <Link
-          href={cafe ? `/cafes/${cafe.slug}` : "/cafes"}
+          href={href(cafe ? `/cafes/${cafe.slug}` : "/cafes")}
           className="focus-ring group flex items-center justify-between gap-4 border-t border-ink bg-ink px-5 py-4 transition-colors hover:bg-ink/90"
         >
           <div className="min-w-0">
             <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust-bright">
               {!cafe
                 ? failed
-                  ? "Browse all cafés"
-                  : "Finding a café near you…"
+                  ? t.browseAll
+                  : t.finding
                 : pick?.basis === "top"
-                  ? `Top rated within ${NEAR_KM} km`
-                  : "Nearest café"}
+                  ? format(t.topWithin, { km: NEAR_KM })
+                  : t.nearest}
             </p>
             {cafe && (
               <>
@@ -150,9 +161,9 @@ export function HeroVisual() {
                   <span aria-hidden>·</span>
                   <Star size={11} className="fill-current" aria-hidden />
                   {cafe.rating.toFixed(1)}
-                  <span className="sr-only">Google rating</span>
+                  <span className="sr-only">{t.googleRating}</span>
                   <span aria-hidden>·</span>
-                  {cafe.reviewCount.toLocaleString()} reviews
+                  {plural(t.reviews, cafe.reviewCount, { n: cafe.reviewCount.toLocaleString(intlLocale[lang]) })}
                 </p>
               </>
             )}

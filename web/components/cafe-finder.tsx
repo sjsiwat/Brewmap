@@ -14,24 +14,17 @@ import {
   type FinderFilters,
   type ReferencePlace,
 } from "@/lib/finder-filters";
+import { format, plural } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/client";
+import type { Dictionary } from "@/lib/i18n/en";
 import { useCafeSearch } from "@/lib/use-cafe-search";
 import { requestUserLocation, useUserLocation } from "@/lib/use-user-location";
 import { CafeCard } from "@/components/cafe-card";
 import { FilterChips } from "@/components/filter-chips";
 import { Reveal } from "@/components/reveal";
 
-const sortOptions: Array<{ value: CafeSort; label: string }> = [
-  { value: "recommended", label: "Recommended" },
-  { value: "distance", label: "Nearest" },
-  { value: "price", label: "Cheapest" },
-  { value: "rating", label: "Top rated" },
-];
-
-const placeOptions: Array<{ value: ReferencePlace; label: string }> = [
-  { value: "device", label: "Your location" },
-  { value: "nimman", label: referencePlaces.nimman.label },
-  { value: "oldCity", label: referencePlaces.oldCity.label },
-];
+const sortOptions: CafeSort[] = ["recommended", "distance", "price", "rating"];
+const placeOptions: ReferencePlace[] = ["device", "nimman", "oldCity"];
 
 const PAGE_SIZE = 24;
 /** Mirrors SEARCH_MAX in server/src/cafes/dto/query-cafes.dto.ts. */
@@ -42,21 +35,15 @@ const QUERY_MAX = 300;
 /** Wait for a pause in typing before searching, so each keystroke isn't a request. */
 const NAME_DEBOUNCE_MS = 300;
 
-const EXAMPLES = [
-  "ร้านเงียบ ๆ นั่งทำงานได้ มีที่จอดรถ",
-  "Matcha under 150 baht",
-  "คาเฟ่ใกล้ฉันที่พาหมาไปได้",
-];
-
 const normalise = (text: string) => text.trim().replace(/\s+/g, " ");
 
-function aiErrorText(error: unknown): string {
-  if (!(error instanceof api.ApiError)) return "Something went wrong. Try again.";
-  if (error.status === 0) return "Can't reach BrewMap right now. Try again in a moment.";
-  if (error.status === 429) return "That's a lot of questions — wait a minute, then ask again.";
-  if (error.status === 503) return "The AI is taking a break. Use the filters instead.";
-  if (error.status === 400) return `Describe what you want in ${QUERY_MIN}–${QUERY_MAX} characters.`;
-  return "Something went wrong on our side. Try again in a moment.";
+function aiErrorText(error: unknown, t: Dictionary["finder"]["aiErrors"]): string {
+  if (!(error instanceof api.ApiError)) return t.generic;
+  if (error.status === 0) return t.offline;
+  if (error.status === 429) return t.rateLimited;
+  if (error.status === 503) return t.unavailable;
+  if (error.status === 400) return format(t.length, { min: QUERY_MIN, max: QUERY_MAX });
+  return t.server;
 }
 
 /** What the AI made of the last question, shown under the search box. */
@@ -75,13 +62,14 @@ interface AiAnswer {
 function SearchFromUrl({ onSearch }: { onSearch: (search: string) => void }) {
   const search = useSearchParams().get("search")?.trim();
   const router = useRouter();
+  const { href } = useI18n();
   const handled = useRef(false);
   useEffect(() => {
     if (!search || handled.current) return;
     handled.current = true;
     onSearch(search.slice(0, QUERY_MAX));
-    router.replace("/cafes", { scroll: false });
-  }, [search, onSearch, router]);
+    router.replace(href("/cafes"), { scroll: false });
+  }, [search, onSearch, router, href]);
   return null;
 }
 
@@ -90,6 +78,8 @@ function SearchFromUrl({ onSearch }: { onSearch: (search: string) => void }) {
  * chips that both share, and the list. Everything applies as soon as it changes.
  */
 export function CafeFinder() {
+  const { t: dict } = useI18n();
+  const t = dict.finder;
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [filters, setFilters] = useState<FinderFilters>({});
@@ -105,7 +95,7 @@ export function CafeFinder() {
   const [chosenPlace, setChosenPlace] = useState<ReferencePlace | null>(null);
   const place: ReferencePlace = chosenPlace ?? (locationStatus === "device" ? "device" : "oldCity");
   const usingDevice = place === "device" && locationStatus === "device";
-  const origin = usingDevice ? deviceOrigin : referencePlaces[place === "nimman" ? "nimman" : "oldCity"].at;
+  const origin = usingDevice ? deviceOrigin : referencePlaces[place === "nimman" ? "nimman" : "oldCity"];
   const locationOff = locationStatus === "denied" || locationStatus === "unsupported";
 
   // A café name searches as you type (after a short pause). The sentence the
@@ -128,12 +118,13 @@ export function CafeFinder() {
   });
 
   const activeCount = activeFilterCount(filters);
-  const sortLabel = sortOptions.find((option) => option.value === sort)?.label ?? "";
+  const sortLabel = t.sorts[sort];
+  const placeLabel = (option: ReferencePlace) => (option === "device" ? t.yourLocation : dict.places[option]);
   const noNameMatch = !!name && search.status === "ready" && search.total === 0;
 
   async function ask(question: string) {
     if (question.length < QUERY_MIN) {
-      setAiError(`Describe what you want in ${QUERY_MIN}–${QUERY_MAX} characters.`);
+      setAiError(format(t.aiErrors.length, { min: QUERY_MIN, max: QUERY_MAX }));
       return;
     }
     const id = ++latestAsk.current;
@@ -148,14 +139,14 @@ export function CafeFinder() {
       setSort(result.filters.sort ?? "distance");
       setAnswer({
         asked: question,
-        skipped: filterLabels(fromAiFilters(result.relaxed ?? {})),
+        skipped: filterLabels(fromAiFilters(result.relaxed ?? {}), dict.filters),
         reasons: Object.fromEntries(
           result.items.flatMap(({ cafe, reason }) => (reason ? [[cafe.slug, reason]] : [])),
         ),
       });
     } catch (error) {
       if (id !== latestAsk.current) return;
-      setAiError(aiErrorText(error));
+      setAiError(aiErrorText(error, t.aiErrors));
     } finally {
       if (id === latestAsk.current) setAsking(false);
     }
@@ -165,7 +156,7 @@ export function CafeFinder() {
   async function submit(forceAi: boolean, typed = text) {
     const question = normalise(typed);
     if (!question) {
-      setAiError("Type a café name, or describe the café you want.");
+      setAiError(t.emptyQuestion);
       return;
     }
     if (!forceAi && question.length <= NAME_MAX) {
@@ -210,7 +201,7 @@ export function CafeFinder() {
           <div className="flex min-w-0 flex-1 items-center gap-3 pl-2 md:px-3">
             <Search size={16} className="shrink-0 text-muted" aria-hidden />
             <label htmlFor="cafe-search" className="sr-only">
-              Search by café name, or describe the café you want
+              {t.searchLabel}
             </label>
             <input
               id="cafe-search"
@@ -230,48 +221,41 @@ export function CafeFinder() {
               autoComplete="off"
               spellCheck={false}
               enterKeyHint="search"
-              placeholder="Café name, or what you feel like"
+              placeholder={t.searchPlaceholder}
               className="w-full min-w-0 border-0 bg-transparent py-2.5 font-sans text-base text-ink placeholder:text-muted focus:outline-none focus:ring-0"
             />
           </div>
           <button
             type="submit"
             disabled={asking}
-            aria-label={asking ? "Asking the AI" : "Ask AI"}
+            aria-label={asking ? t.asking : t.askAi}
             className="inline-flex shrink-0 items-center justify-center gap-2 bg-ink px-3.5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust"
           >
             <Sparkles size={14} aria-hidden />
-            <span className="max-sm:hidden">{asking ? "Thinking…" : "Ask AI"}</span>
+            <span className="max-sm:hidden">{asking ? t.thinking : t.askAi}</span>
           </button>
         </form>
       </div>
 
       <div aria-live="polite" className="min-h-6 text-sm">
         {asking ? (
-          <p className="text-muted">Reading “{normalise(text)}”…</p>
+          <p className="text-muted">{format(t.reading, { q: normalise(text) })}</p>
         ) : aiError ? (
           <p role="alert" className="text-rust">
             {aiError}
           </p>
         ) : noNameMatch ? (
-          <p className="text-ink-soft">
-            No café named “{name}”. Press Enter or <span className="text-ink">Ask AI</span> to search by what
-            you&apos;re after instead.
-          </p>
+          <p className="text-ink-soft">{format(t.noNameMatch, { name })}</p>
         ) : answer ? (
           <p className="flex flex-wrap items-baseline gap-x-1.5 text-ink-soft">
             <Sparkles size={13} className="self-center text-rust" aria-hidden />
-            The AI turned “{answer.asked}” into the filters below — remove any you don&apos;t want.
-            {answer.skipped.length > 0 && (
-              <span>
-                Nothing matched everything, so it skipped <span className="text-ink">{answer.skipped.join(", ")}</span>.
-              </span>
-            )}
+            {format(t.aiUnderstood, { q: answer.asked })}
+            {answer.skipped.length > 0 && <span>{format(t.aiSkipped, { list: answer.skipped.join(", ") })}</span>}
           </p>
         ) : (
           <div className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
-            <span className="shrink-0 text-muted">Try:</span>
-            {EXAMPLES.map((example) => (
+            <span className="shrink-0 text-muted">{t.tryLabel}</span>
+            {t.examples.map((example) => (
               <button
                 key={example}
                 type="button"
@@ -303,37 +287,37 @@ export function CafeFinder() {
           <p className="text-sm text-ink" aria-live="polite">
             {search.total === null ? (
               search.status === "error" ? (
-                "Couldn't load cafés"
+                t.loadFailed
               ) : (
-                "Loading cafés…"
+                t.loading
               )
             ) : (
               <>
                 <span className="font-display text-2xl">{search.total}</span>{" "}
-                café{search.total === 1 ? "" : "s"}
-                {name ? ` named “${name}”` : ""}
-                {activeCount > 0 ? " matching every filter" : ""}
-                <span className="sr-only"> · sorted by {sortLabel}</span>
+                {plural(t.count, search.total)}
+                {name ? format(t.named, { name }) : ""}
+                {activeCount > 0 ? t.matchingAll : ""}
+                <span className="sr-only">{format(t.sortedBy, { sort: sortLabel })}</span>
               </>
             )}
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-ink-soft">
-            <span>Distances from</span>
+            <span>{t.distancesFrom}</span>
             <label className="relative inline-flex items-center gap-1 text-ink focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-rust">
               <MapPin size={13} className="text-rust" aria-hidden />
               <span className="underline decoration-line underline-offset-4" aria-hidden>
-                {placeOptions.find((option) => option.value === place)?.label}
+                {placeLabel(place)}
               </span>
               <ChevronDown size={13} className="text-muted" aria-hidden />
               <select
                 value={place}
                 onChange={(event) => choosePlace(event.target.value as ReferencePlace)}
-                aria-label="Measure distances from"
+                aria-label={t.distanceFromLabel}
                 className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
               >
                 {placeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                  <option key={option} value={option}>
+                    {placeLabel(option)}
                   </option>
                 ))}
               </select>
@@ -341,7 +325,7 @@ export function CafeFinder() {
           </div>
         </div>
         <label className="relative flex shrink-0 items-center gap-2 border border-line bg-paper-raised py-2 pr-3 pl-3 md:pl-4 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-rust">
-          <span className="label-mono max-sm:sr-only">Sort</span>
+          <span className="label-mono max-sm:sr-only">{t.sort}</span>
           <span className="pointer-events-none flex items-center gap-1.5 text-sm text-ink" aria-hidden>
             {sortLabel}
             <ChevronDown size={13} className="text-muted" />
@@ -349,12 +333,12 @@ export function CafeFinder() {
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value as CafeSort)}
-            aria-label="Sort cafés"
+            aria-label={t.sortLabel}
             className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
           >
             {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+              <option key={option} value={option}>
+                {t.sorts[option]}
               </option>
             ))}
           </select>
@@ -364,26 +348,20 @@ export function CafeFinder() {
       {place === "device" && !usingDevice && (
         <p role="status" className="mt-3 flex gap-2 text-xs text-ink-soft md:text-sm">
           <LocateFixed size={14} className="mt-0.5 shrink-0 text-rust" aria-hidden />
-          {locationStatus === "locating"
-            ? "Finding your location… distances are from the Old City until then."
-            : locationOff
-              ? "Location is off for BrewMap, so distances are from the Old City (Tha Phae Gate). Allow location in your browser to measure from where you are."
-              : "Distances are from the Old City (Tha Phae Gate) until you share your location."}
+          {locationStatus === "locating" ? t.locating : locationOff ? t.locationOffChosen : t.locationNotShared}
         </p>
       )}
       {chosenPlace === null && !usingDevice && locationStatus !== "locating" && (
         <p role="status" className="mt-3 flex gap-2 text-xs text-ink-soft md:text-sm">
           <LocateFixed size={14} className="mt-0.5 shrink-0 text-rust" aria-hidden />
           <span>
-            {locationOff
-              ? "Location is off, so distances are from the Old City (Tha Phae Gate). "
-              : "Distances are from the Old City (Tha Phae Gate). "}
+            {locationOff ? t.locationOff : t.locationDefault}{" "}
             <button
               type="button"
               onClick={() => choosePlace("device")}
               className="text-rust underline-offset-4 hover:underline focus-ring"
             >
-              Use my location
+              {t.useMyLocation}
             </button>
           </span>
         </p>
@@ -402,9 +380,7 @@ export function CafeFinder() {
 
         {search.status === "ready" && search.items.length === 0 && (
           <p className="border-b border-line py-10 text-sm text-muted">
-            {name
-              ? `No café named “${name}”${activeCount > 0 ? " matches these filters" : " on BrewMap yet"}. Check the spelling${activeCount > 0 ? " or remove a filter" : ", or ask the AI"}.`
-              : "No cafés match every filter — try removing one."}
+            {name ? format(activeCount > 0 ? t.noNamedFiltered : t.noNamed, { name }) : t.noMatch}
           </p>
         )}
 
@@ -422,10 +398,10 @@ export function CafeFinder() {
             className="flex flex-col gap-4 border-b border-line py-10 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
-              <p className="font-display text-lg text-ink">Couldn&apos;t load cafés.</p>
+              <p className="font-display text-lg text-ink">{t.loadFailedTitle}</p>
               <p className="mt-1 text-sm text-muted">
                 {search.error?.status === 0
-                  ? "The BrewMap API isn't reachable right now."
+                  ? t.apiDown
                   : search.error?.message}
               </p>
             </div>
@@ -435,7 +411,7 @@ export function CafeFinder() {
               className="inline-flex items-center gap-2 self-start border border-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring"
             >
               <RotateCw size={14} aria-hidden />
-              Try again
+              {t.tryAgain}
             </button>
           </div>
         )}
@@ -449,8 +425,8 @@ export function CafeFinder() {
           className="mt-8 w-full border border-ink px-5 py-4 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-ring disabled:cursor-wait disabled:opacity-60"
         >
           {search.status === "loading"
-            ? "Loading…"
-            : `Show more · ${search.items.length} of ${search.total}`}
+            ? t.loadingMore
+            : format(t.showMore, { shown: search.items.length, total: search.total ?? 0 })}
         </button>
       )}
     </div>

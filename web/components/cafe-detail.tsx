@@ -14,6 +14,8 @@ import {
 import type { Cafe } from "@/lib/cafes";
 import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
 import { DistanceFromOrigin } from "@/components/location-origin";
+import { format, intlLocale, localePath, plural, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { FavoriteButton } from "@/components/favorite-button";
 import { OpenStatusText, WeeklyHours } from "@/components/opening-hours";
 import { Reveal } from "@/components/reveal";
@@ -24,21 +26,26 @@ interface Fact {
   icon: typeof Clock;
 }
 
-export function CafeDetail({ cafe }: { cafe: Cafe }) {
+export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
+  const t = getDictionary(lang).detail;
+  const hoursText = getDictionary(lang).hours;
   const facts: Fact[] = [
     {
-      label: "Hours",
+      label: t.hours,
       // Unknown week: fall back to the one-line summary rather than guess open/closed.
       value: cafe.openingHours ? <OpenStatusText periods={cafe.openingHours} /> : cafe.hours,
       icon: Clock,
     },
     {
-      label: "Rating",
-      value: `${cafe.rating.toFixed(1)} · ${cafe.reviewCount} reviews`,
+      label: t.rating,
+      value: plural(t.ratingValue, cafe.reviewCount, {
+        rating: cafe.rating.toFixed(1),
+        n: cafe.reviewCount.toLocaleString(intlLocale[lang]),
+      }),
       icon: Star,
     },
-    { label: "Pet friendly", value: cafe.petFriendly ? "Yes" : "No", icon: PawPrint },
-    { label: "Parking", value: cafe.parking ? "Yes" : "No", icon: ParkingCircle },
+    { label: t.petFriendly, value: cafe.petFriendly ? t.yes : t.no, icon: PawPrint },
+    { label: t.parking, value: cafe.parking ? t.yes : t.no, icon: ParkingCircle },
   ];
 
   return (
@@ -47,11 +54,11 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
         <Reveal>
           <div className="flex items-center justify-between gap-6">
             <Link
-              href="/cafes"
+              href={localePath(lang, "/cafes")}
               className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.1em] text-muted transition-colors hover:text-rust focus-ring"
             >
               <ArrowLeft size={14} aria-hidden />
-              All cafés
+              {t.allCafes}
             </Link>
             <FavoriteButton cafe={cafe} showLabel />
           </div>
@@ -64,8 +71,11 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
             {cafe.name}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">
-            {cafe.specialty}. Flavor profile: {cafe.flavor.toLowerCase()}.
-            Atmosphere: {cafe.atmosphere.toLowerCase()}.
+            {format(t.description, {
+              specialty: cafe.specialty,
+              flavor: cafe.flavor.toLowerCase(),
+              atmosphere: cafe.atmosphere.toLowerCase(),
+            })}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-muted">
@@ -83,15 +93,15 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
               <div className="md:col-span-4">
                 <p className="flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust">
                   <Sparkles size={13} aria-hidden />
-                  What reviewers say
+                  {t.reviewersSay}
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-muted">
-                  Summarised by AI from Google reviews.
+                  {t.summarised}
                 </p>
               </div>
               {cafe.aiSummary.pros.length > 0 && (
                 <div className="md:col-span-4">
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">Loved</p>
+                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">{t.loved}</p>
                   <ul className="mt-2 space-y-1.5 text-sm text-ink">
                     {cafe.aiSummary.pros.map((pro) => (
                       <li key={pro} className="flex gap-2">
@@ -104,7 +114,7 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
               )}
               {cafe.aiSummary.cons.length > 0 && (
                 <div className="md:col-span-4">
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">Watch out for</p>
+                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted">{t.watchOut}</p>
                   <ul className="mt-2 space-y-1.5 text-sm text-ink-soft">
                     {cafe.aiSummary.cons.map((con) => (
                       <li key={con} className="flex gap-2">
@@ -137,7 +147,7 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
             </dl>
             {cafe.openingHours && (
               <div className="border-b border-line py-4">
-                <p className="label-mono">Opening hours · Chiang Mai time</p>
+                <p className="label-mono">{hoursText.week}</p>
                 <div className="mt-3">
                   <WeeklyHours periods={cafe.openingHours} />
                 </div>
@@ -148,20 +158,18 @@ export function CafeDetail({ cafe }: { cafe: Cafe }) {
           <Reveal delay={0.1} className="lg:col-span-7">
             <div className="border border-line bg-paper-raised">
               <div className="flex items-center justify-between border-b border-line px-5 py-3">
-                <span className="label-mono">
-                  Location
-                </span>
+                <span className="label-mono">{t.location}</span>
                 <a
                   href={osmViewUrl(cafe.lat, cafe.lng)}
                   target="_blank"
                   rel="noreferrer"
                   className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-rust hover:underline focus-ring"
                 >
-                  View larger map
+                  {t.largerMap}
                 </a>
               </div>
               <iframe
-                title={`Map showing the location of ${cafe.name}`}
+                title={format(t.mapTitle, { name: cafe.name })}
                 src={osmEmbedUrl(cafe.lat, cafe.lng)}
                 loading="lazy"
                 className="h-72 w-full border-0 sm:h-80"

@@ -5,7 +5,6 @@ export interface LatLng {
 
 /** Fallback origin when the user hasn't shared their location: Tha Phae Gate, Old City. */
 export const DEFAULT_ORIGIN: LatLng = { lat: 18.7876, lng: 98.9933 };
-export const DEFAULT_ORIGIN_LABEL = "Tha Phae Gate";
 
 export function haversineKm(a: LatLng, b: LatLng): number {
   const R = 6371;
@@ -18,6 +17,7 @@ export function haversineKm(a: LatLng, b: LatLng): number {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-export function formatKm(km: number): string {
-  return `${km.toFixed(1)} km`;
+/** 1.23 → "1.2 km"; `unit` is the dictionary's units.km, e.g. "{n} กม.". */
+export function formatKm(km: number, unit = "{n} km"): string {
+  return unit.replace("{n}", km.toFixed(1));
 }

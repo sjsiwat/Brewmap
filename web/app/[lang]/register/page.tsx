@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { languageAlternates, pageLanguage, type LangParams } from "@/lib/i18n/server";
 import { AuthForm } from "@/components/auth-form";
 
-export const metadata: Metadata = {
-  title: "Create an account",
-  description: "Create a BrewMap account to save cafés as you browse.",
-};
+export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
+  const { lang, t } = await pageLanguage(params);
+  return {
+    title: t.meta.registerTitle,
+    description: t.meta.registerDescription,
+    alternates: languageAlternates(lang, "/register"),
+  };
+}
 
-export default function RegisterPage() {
+export default async function RegisterPage({ params }: LangParams) {
+  const { lang } = await pageLanguage(params);
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
@@ -19,7 +25,7 @@ export default function RegisterPage() {
           <AuthForm mode="register" />
         </Suspense>
       </main>
-      <SiteFooter />
+      <SiteFooter lang={lang} />
     </div>
   );
 }

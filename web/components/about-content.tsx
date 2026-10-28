@@ -1,7 +1,10 @@
-import { aboutCopy, aboutFacts } from "@/lib/content";
+import { CAFE_COUNT } from "@/lib/content";
+import { format, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Reveal } from "@/components/reveal";
 
-export function AboutContent() {
+export function AboutContent({ lang }: { lang: Locale }) {
+  const aboutCopy = getDictionary(lang).about;
   return (
     <section className="border-b border-line">
       <div className="page-container py-16 md:py-24">
@@ -17,7 +20,7 @@ export function AboutContent() {
             <div className="mt-8 max-w-xl space-y-5">
               {aboutCopy.paragraphs.map((paragraph) => (
                 <p key={paragraph} className="text-base leading-relaxed text-ink-soft">
-                  {paragraph}
+                  {format(paragraph, { n: CAFE_COUNT })}
                 </p>
               ))}
             </div>
@@ -25,7 +28,7 @@ export function AboutContent() {
 
           <Reveal delay={0.1} className="lg:col-span-5">
             <dl className="border-t border-ink">
-              {aboutFacts.map((fact) => (
+              {aboutCopy.facts.map((fact) => (
                 <div
                   key={fact.label}
                   className="flex items-baseline justify-between gap-4 border-b border-line py-4"

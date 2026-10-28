@@ -1,21 +1,21 @@
-import { capabilities } from "@/lib/content";
+import { format, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Reveal } from "@/components/reveal";
 
-export function CapabilityIndex() {
+export function CapabilityIndex({ lang }: { lang: Locale }) {
+  const t = getDictionary(lang).home.capabilities;
   return (
     <section className="border-b border-line bg-paper-raised">
       <div className="page-container py-20 md:py-24">
         <Reveal>
-          <p className="eyebrow">
-            Signals we read
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
           <h2 className="mt-4 max-w-lg heading-section">
-            {capabilities.length} things we match on.
+            {format(t.heading, { n: t.items.length })}
           </h2>
         </Reveal>
 
         <ul className="mt-12 grid grid-cols-1 gap-x-10 gap-y-0 sm:grid-cols-2">
-          {capabilities.map((capability, i) => (
+          {t.items.map((capability, i) => (
             <Reveal
               as="li"
               key={capability.label}
