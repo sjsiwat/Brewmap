@@ -415,7 +415,7 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 ---
 
 ### Phase 12 — หน้าค้นหา: การ์ดร้าน, header, เวลาเปิด-ปิดรายวัน (owner สั่ง 2026-10-28)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-12.md](reviews/phase-12.md)
 **Branch:** `phase-12-cards-header` (ต่อจาก `phase-11-unified-search` ซึ่งยังไม่ merge)
 **Review range:** `phase-11-unified-search..phase-12-cards-header`
 
