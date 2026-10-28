@@ -113,6 +113,7 @@ async function main() {
   const force = process.argv.includes('--force');
   const dryRun = process.argv.includes('--dry-run');
   const limit = Number(arg('--limit') ?? Infinity);
+  if (!(limit > 0)) throw new Error('--limit must be a positive number');
   const rpm = Number(arg('--rpm') ?? 10);
   if (!(rpm > 0)) throw new Error('--rpm must be a positive number');
   const gapMs = 60_000 / rpm;
