@@ -92,6 +92,35 @@ describe('Cafes API (e2e)', () => {
     expect(distances).toEqual([...distances].sort((a, b) => a - b));
   });
 
+  it('sort=recommended weights rating by review count, with or without coordinates', async () => {
+    const all = await get('/api/cafes?sort=recommended&limit=50').expect(200);
+    const body = all.body as PaginatedCafesDto;
+    expect(body.total).toBe(seeded);
+    expect(body.items[0]).not.toHaveProperty('score');
+
+    // A 5.0 with few reviews must not outrank a 4.9 with thousands.
+    const position = (predicate: (c: CafeResponseDto) => boolean) =>
+      body.items.findIndex(predicate);
+    const fewFive = position((c) => c.rating === 5 && c.reviewCount < 100);
+    const manyNearFive = position(
+      (c) => c.rating >= 4.9 && c.reviewCount >= 2000,
+    );
+    expect(manyNearFive).toBeGreaterThanOrEqual(0);
+    if (fewFive >= 0) expect(manyNearFive).toBeLessThan(fewFive);
+
+    const geo = await get(
+      `/api/cafes?sort=recommended&lat=${ORIGIN.lat}&lng=${ORIGIN.lng}&radiusKm=3&limit=50`,
+    ).expect(200);
+    const geoBody = geo.body as PaginatedCafesDto;
+    expect(geoBody.total).toBeGreaterThan(0);
+    expect(geoBody.items.every((c) => c.distanceKm! <= 3)).toBe(true);
+    const slugs = body.items.map((c) => c.slug);
+    const geoOrder = geoBody.items
+      .map((c) => slugs.indexOf(c.slug))
+      .filter((i) => i >= 0);
+    expect(geoOrder).toEqual([...geoOrder].sort((a, b) => a - b));
+  });
+
   it('rejects distance options without coordinates and bad input', async () => {
     await get('/api/cafes?radiusKm=3').expect(400);
     await get('/api/cafes?sort=distance').expect(400);

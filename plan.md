@@ -378,6 +378,25 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 
 ---
 
+### Phase 10 — หน้าค้นหา: quick wins (owner สั่ง 2026-10-28)
+**Status:** `awaiting-review`
+**Branch:** `phase-10-finder-quick-wins`
+**Review range:** `main..phase-10-finder-quick-wins` (ใช้ `git diff main...HEAD`)
+
+ที่มา: owner ขอปรับ UI/UX หน้า `/cafes` เป็น 4 เฟส (quick wins → ช่องค้นหาเดียว + chips → การ์ด/header → แผนที่) แล้วค่อยทำ i18n TH/EN เป็นเฟสแยก · owner ตอบแล้ว: เพิ่ม `sort=recommended` ใน API ได้ · เพิ่มเวลาเปิด-ปิดรายวันใน schema ได้ (เฟส 12) · ไม่ใส่รูปร้าน (รูปมีแค่ลิงก์ของ Google) · ทำระบบ i18n
+
+- [x] 10.1 **API `sort=recommended`:** Bayesian average `(n·rating + m·mean) / (n + m)` · `m = 250` (ราว median ของจำนวนรีวิว = 246) · `mean` = rating เฉลี่ยทุกร้าน · ใช้ได้ทั้งมี/ไม่มีพิกัด · ไม่แตะ schema, ไม่ส่ง `score` ออกไป · ค่า default ของ API เดิมไม่เปลี่ยน · `findAll` ใช้ aggregation pipeline เดียว (`$geoNear` หรือ `$match`) แทน find + countDocuments
+- [x] 10.2 **ตัวกรองมีผลทันที:** ตัดปุ่ม Confirm / "Find matching cafés" · หัวกล่องมีปุ่ม "Clear N filters" เมื่อมีตัวกรอง · จำนวนร้านใหญ่ขึ้น "173 cafés" อัปเดตตามตัวกรอง (aria-live)
+- [x] 10.3 **เรียงลำดับ:** dropdown Recommended (ค่าเริ่มต้น) / Nearest / Cheapest / Top rated
+- [x] 10.4 **การ์ด:** ลบเลขลำดับ (010, 062…) · ราคาสีปกติ (ink) ไม่ใช่สีส้ม · ทั้งการ์ดเป็นลิงก์ มี hover ทั้งแถว · ♡ ยังกดแยก
+- [x] 10.5 tests: e2e `sort=recommended` (5.0 รีวิวน้อยอยู่ใต้ 4.9 รีวิว 2,000+, ใช้กับ geo + radius ได้, ไม่มี `score`)
+
+ผลบน Atlas: อันดับต้น Sweet Home 5.0/1176 · Minna matcha 5.0/294 · TWENTY MAR 4.9/2379 · WHYs 4.9/2028 … Sensory 5.0/238 อยู่อันดับ 7 · เบราว์เซอร์: เลือก "Under 100฿" + Cheapest → 63 ร้านทันที, ~40฿ ก่อน · QA 7 หน้า × 3 ขนาด = 0 ปัญหา
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews
