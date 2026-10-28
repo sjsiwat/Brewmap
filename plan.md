@@ -398,7 +398,7 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 ---
 
 ### Phase 11 — หน้าค้นหา: ช่องค้นหาเดียว + filter chips (owner สั่ง 2026-10-28)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-11.md](reviews/phase-11.md)
 **Branch:** `phase-11-unified-search` (ต่อจาก `phase-10-finder-quick-wins` ซึ่งยังไม่ merge)
 **Review range:** `phase-10-finder-quick-wins..phase-11-unified-search`
 
