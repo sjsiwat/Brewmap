@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { AiFinder } from "@/components/ai-finder";
 import { CafeFinder } from "@/components/cafe-finder";
 import { Reveal } from "@/components/reveal";
 
@@ -26,9 +25,9 @@ export default function CafesPage() {
                 Chiang Mai cafés, one taste at a time.
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-soft">
-                Ask the AI finder in a sentence, Thai or English — or set
-                price, distance, parking and drink yourself and the list
-                updates as you choose.
+                Type a café&apos;s name, or describe what you feel like in Thai
+                or English and the AI sets the filters for you. Change any of
+                them and the list updates straight away.
               </p>
             </Reveal>
           </div>
@@ -36,10 +35,6 @@ export default function CafesPage() {
 
         <section>
           <div className="page-container py-12 md:py-16">
-            <AiFinder />
-            <p id="filters" className="mt-12 mb-6 scroll-mt-24 font-mono text-xs uppercase tracking-[0.16em] text-muted">
-              Or set the filters yourself
-            </p>
             <CafeFinder />
           </div>
         </section>

@@ -1,5 +1,3 @@
-import type { CafeQuery } from "@/lib/api";
-
 export type DrinkType = "Coffee" | "Tea" | "Non-Coffee";
 
 /** Mirrors CafeResponseDto in server/src/cafes/dto/cafe-response.dto.ts. */
@@ -43,36 +41,3 @@ export function osmEmbedUrl(lat: number, lng: number, delta = 0.006): string {
 export function osmViewUrl(lat: number, lng: number): string {
   return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
 }
-
-/** One choice in a finder dropdown; `query` is what it adds to the API request. */
-export interface FilterOption {
-  label: string;
-  query?: CafeQuery;
-}
-
-// priceAvg is a whole number of baht, so "under 100" is maxPrice 99.
-export const priceOptions: FilterOption[] = [
-  { label: "Any" },
-  { label: "Under 100฿", query: { maxPrice: 99 } },
-  { label: "100–140฿", query: { minPrice: 100, maxPrice: 140 } },
-  { label: "Over 140฿", query: { minPrice: 141 } },
-];
-
-export const distanceOptions: FilterOption[] = [
-  { label: "Any" },
-  { label: "Within 1 km", query: { radiusKm: 1 } },
-  { label: "Within 3 km", query: { radiusKm: 3 } },
-  { label: "Within 8 km", query: { radiusKm: 8 } },
-];
-
-export const parkingOptions: FilterOption[] = [
-  { label: "Any" },
-  { label: "Parking required", query: { parking: true } },
-];
-
-export const drinkTypeOptions: FilterOption[] = [
-  { label: "Any" },
-  { label: "Coffee", query: { drinkType: "Coffee" } },
-  { label: "Tea", query: { drinkType: "Tea" } },
-  { label: "Non-Coffee", query: { drinkType: "Non-Coffee" } },
-];

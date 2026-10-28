@@ -397,6 +397,23 @@ QA 7 หน้า × 375/768/1440 = 0 ปัญหา
 
 ---
 
+### Phase 11 — หน้าค้นหา: ช่องค้นหาเดียว + filter chips (owner สั่ง 2026-10-28)
+**Status:** `approved` — [reviews/phase-11.md](reviews/phase-11.md)
+**Branch:** `phase-11-unified-search` (ต่อจาก `phase-10-finder-quick-wins` ซึ่งยังไม่ merge)
+**Review range:** `phase-10-finder-quick-wins..phase-11-unified-search`
+
+- [x] 11.1 **ช่องค้นหาเดียว:** รวมช่อง AI กับช่องค้นชื่อร้าน (`#cafe-search`) · พิมพ์ = ค้นชื่อทันที (หน่วง 300 ms) · Enter = ถ้ามีร้านชื่อนี้ (`GET /api/cafes?q=…&limit=1` > 0) แสดงตามชื่อ ไม่งั้นส่ง AI · ปุ่ม "Ask AI" ส่ง AI เสมอ · ไม่เจอชื่อ → บอกให้กด Enter / Ask AI · ตัวอย่างคำถาม 3 ข้อยังอยู่ · ลบ `ai-finder.tsx` และ `LocationOrigin`
+- [x] 11.2 **AI → chips:** filter ที่ AI ตีความลง state เดียวกับ chips (`lib/finder-filters.ts`) ลบทีละอันได้ · tag / ย่าน / ชื่อร้านที่ AI ตั้งก็เป็น chip · บอกสิ่งที่ AI ข้าม (relaxed) · เหตุผลของ AI แสดงใต้ร้านที่ AI เลือก · เรียงตาม sort ของ AI หรือ Nearest (ตรงกับที่ AI เลือกมา)
+- [x] 11.3 **Filter แนวนอน:** Price ▾ · Distance ▾ · Parking · Pet friendly · Drink ▾ + "Clear all" · ราคา/ระยะที่ AI ตั้งนอก preset (เช่น "Up to 150฿") เลือกค้างได้ · มือถือเลื่อนแนวนอน · ใช้ `<select>` จริง (คีย์บอร์ด/มือถือใช้ได้) · ปรับ filter ติดกันหลายอันไม่หาย (functional update)
+- [x] 11.4 **แถบเหนือรายการ:** "N cafés · Distances from 📍 ▾" (Your location / Nimman / Old City) + Sort · ไม่อนุญาตตำแหน่ง → ข้อความบอกชัด + ใช้ Old City (Tha Phae Gate) · เลือก "Your location" → ขอสิทธิ์ · AI ใช้จุดอ้างอิงเดียวกัน
+- [ ] "เปิดอยู่ตอนนี้" — รอเฟส 12 (เพิ่มเวลาเปิด-ปิดรายวัน)
+
+เบราว์เซอร์: "arabica" + Enter → 1 ร้าน ไม่เรียก AI · "ร้านเงียบ นั่งทำงานได้ มีที่จอดรถ ไม่เกิน 150 บาท" + Enter → chips Up to 150฿ / Parking / Work-friendly → TORA BAKE พร้อมเหตุผลภาษาไทย · Parking + Under 100฿ → 1 ร้าน (ตรงกับ API) · QA 7 หน้า × 3 ขนาด = 0 ปัญหา
+
+**Gate:** `npm run gate:web` (ไม่แตะ server)
+
+---
+
 ## 4. Backlog (ยังไม่ทำ)
 - Interactive map แสดงทุกร้าน (Leaflet + OSM)
 - Personalized recommendations จาก favorites + reviews
