@@ -437,7 +437,7 @@ owner อนุญาตแล้ว: เพิ่ม field เวลาเป�
 ---
 
 ### Phase 13 — ภาษาไทย / อังกฤษ (i18n) (owner สั่ง 2026-10-28)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-13.md](reviews/phase-13.md)
 **Branch:** `phase-13-i18n`
 **Review range:** `main..phase-13-i18n` (ใช้ `git diff main...HEAD`)
 
