@@ -203,7 +203,11 @@ export function CafeFinder() {
               id="cafe-search"
               type="search"
               value={text}
-              onChange={(event) => setText(event.target.value)}
+              onChange={(event) => {
+                setText(event.target.value);
+                // A new search: the AI's note and reasons were about the old question.
+                if (answer && normalise(event.target.value) !== answer.asked) setAnswer(null);
+              }}
               onKeyDown={(event) => {
                 if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
                 event.preventDefault();
