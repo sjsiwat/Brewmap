@@ -56,6 +56,13 @@ export const en = {
     outOf5: "{n} out of 5",
   },
 
+  /**
+   * Display names for café tags and areas from the API, by their stored value.
+   * Empty in English: the stored value is shown as it is.
+   */
+  cafeTags: {} as Record<string, string>,
+  areas: {} as Record<string, string>,
+
   places: {
     thaPhaeGate: "Tha Phae Gate",
     oldCity: "Old City",

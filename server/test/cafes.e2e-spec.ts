@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
@@ -170,6 +171,67 @@ describe('Cafes API (e2e)', () => {
     const anyTime = await get('/api/cafes?openNow=false&limit=1').expect(200);
     expect((anyTime.body as PaginatedCafesDto).total).toBe(seeded);
     await get('/api/cafes?openNow=maybe').expect(400);
+  });
+
+  it('lang=th returns Thai text where translated, English otherwise', async () => {
+    const list = await get('/api/cafes?sort=rating&limit=2').expect(200);
+    const [translated, untranslated] = (list.body as PaginatedCafesDto).items;
+    const th = {
+      specialty: 'มัทฉะสไตล์ญี่ปุ่น',
+      flavor: 'รสชาเขียวเข้ม',
+      atmosphere: 'เงียบ มีสวน',
+      aiSummary: { pros: ['มัทฉะอร่อย'], cons: [] },
+      model: 'test',
+      generatedAt: new Date(),
+    };
+    const db = await mongoose
+      .createConnection(process.env.MONGODB_URI!)
+      .asPromise();
+    await db
+      .collection('cafes')
+      .updateOne({ slug: translated.slug }, { $set: { th } });
+    await db.close();
+
+    const thai = await get(`/api/cafes/${translated.slug}?lang=th`).expect(200);
+    const thaiCafe = thai.body as CafeResponseDto;
+    expect(thaiCafe).toMatchObject({
+      specialty: th.specialty,
+      flavor: th.flavor,
+      atmosphere: th.atmosphere,
+      aiSummary: th.aiSummary,
+      textLang: 'th',
+      // Never translated: names and filter values stay as stored.
+      name: translated.name,
+      area: translated.area,
+      tags: translated.tags,
+    });
+    expect(thaiCafe).not.toHaveProperty('th');
+
+    const english = await get(`/api/cafes/${translated.slug}`).expect(200);
+    expect(english.body).toMatchObject({
+      specialty: translated.specialty,
+      textLang: 'en',
+    });
+
+    // Lists and top honour lang too; a café without Thai falls back to English.
+    const thaiList = await get('/api/cafes?sort=rating&limit=2&lang=th').expect(
+      200,
+    );
+    const [first, second] = (thaiList.body as PaginatedCafesDto).items;
+    expect(first).toMatchObject({ specialty: th.specialty, textLang: 'th' });
+    expect(second).toMatchObject({
+      slug: untranslated.slug,
+      specialty: untranslated.specialty,
+      textLang: 'en',
+    });
+    const top = await get('/api/cafes/top?limit=50&lang=th').expect(200);
+    expect(
+      (top.body as CafeResponseDto[]).find((c) => c.slug === translated.slug),
+    ).toMatchObject({ specialty: th.specialty });
+
+    await get('/api/cafes?lang=fr').expect(400);
+    await get(`/api/cafes/${translated.slug}?lang=fr`).expect(400);
+    await get(`/api/cafes/${translated.slug}?lang=`).expect(200);
   });
 
   it('rejects distance options without coordinates and bad input', async () => {

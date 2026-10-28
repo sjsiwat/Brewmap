@@ -23,6 +23,38 @@ const AiSummarySchema = new MongooseSchema<AiSummary>(
   { _id: false },
 );
 
+/**
+ * The café's descriptive text in Thai, made from the English by
+ * scripts/translate-cafes.ts. Name, address, tags and area stay as they are.
+ */
+export interface CafeTranslation {
+  specialty: string;
+  flavor: string;
+  atmosphere: string;
+  /** The AI review summary in Thai, or null when the café has none. */
+  aiSummary: { pros: string[]; cons: string[] } | null;
+  model: string;
+  generatedAt: Date;
+}
+
+const CafeTranslationSchema = new MongooseSchema<CafeTranslation>(
+  {
+    specialty: { type: String, required: true },
+    flavor: { type: String, required: true },
+    atmosphere: { type: String, required: true },
+    aiSummary: {
+      type: new MongooseSchema(
+        { pros: [String], cons: [String] },
+        { _id: false },
+      ),
+      default: null,
+    },
+    model: { type: String, required: true },
+    generatedAt: { type: Date, required: true },
+  },
+  { _id: false },
+);
+
 const OpeningPeriodSchema = new MongooseSchema<OpeningPeriod>(
   {
     day: { type: Number, required: true, min: 0, max: 6 },
@@ -123,6 +155,10 @@ export class Cafe {
   /** Generated once offline, never per page view. Absent until the script runs. */
   @Prop({ type: AiSummarySchema, required: false })
   aiSummary?: AiSummary;
+
+  /** Thai text for the API's `lang=th`. Absent until scripts/translate-cafes.ts runs. */
+  @Prop({ type: CafeTranslationSchema, required: false })
+  th?: CafeTranslation;
 }
 
 export type CafeDocument = HydratedDocument<Cafe>;

@@ -40,3 +40,8 @@ export function plural(
 ): string {
   return format(n === 1 ? forms.one : forms.other, { n, ...values });
 }
+
+/** A café tag or area in the page's language; unknown values show as stored. */
+export function dataLabel(names: Record<string, string>, value: string): string {
+  return names[value] ?? value;
+}

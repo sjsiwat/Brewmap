@@ -1,7 +1,7 @@
 import type { AiFilters } from "@/lib/api";
 import type { DrinkType } from "@/lib/cafes";
 import { DEFAULT_ORIGIN, type LatLng } from "@/lib/geo";
-import { format } from "@/lib/i18n/config";
+import { dataLabel, format } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/en";
 
 type FilterText = Dictionary["filters"];
@@ -109,7 +109,8 @@ export function patchFilters(filters: FinderFilters, patch: Partial<FinderFilter
 }
 
 /** Short labels for a set of filters, e.g. for "the AI skipped: …". */
-export function filterLabels(filters: FinderFilters, t: FilterText): string[] {
+export function filterLabels(filters: FinderFilters, dict: Dictionary): string[] {
+  const t = dict.filters;
   const labels: string[] = [];
   if (filters.q) labels.push(`“${filters.q}”`);
   const price = priceLabel(filters, t);
@@ -119,7 +120,7 @@ export function filterLabels(filters: FinderFilters, t: FilterText): string[] {
   if (filters.parking) labels.push(t.parking);
   if (filters.petFriendly) labels.push(t.petFriendly);
   if (filters.drinkType) labels.push(t.drinkTypes[filters.drinkType]);
-  if (filters.tag) labels.push(filters.tag);
-  if (filters.area) labels.push(filters.area);
+  if (filters.tag) labels.push(dataLabel(dict.cafeTags, filters.tag));
+  if (filters.area) labels.push(dataLabel(dict.areas, filters.area));
   return labels;
 }

@@ -7,7 +7,7 @@ import { ArrowUpRight, LocateFixed, Star } from "lucide-react";
 import { getCafes, type CafeResult } from "@/lib/api";
 import { formatPrice } from "@/lib/cafes";
 import { formatKm, haversineKm } from "@/lib/geo";
-import { format, intlLocale, plural } from "@/lib/i18n/config";
+import { dataLabel, format, intlLocale, plural } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import { requestUserLocation, useUserLocation } from "@/lib/use-user-location";
 
@@ -49,7 +49,7 @@ export function HeroVisual() {
   useEffect(() => {
     if (status === "locating") return;
     const controller = new AbortController();
-    const near = { lat: origin.lat, lng: origin.lng, limit: 1 };
+    const near = { lat: origin.lat, lng: origin.lng, limit: 1, lang };
     (async () => {
       const top = await getCafes({ ...near, radiusKm: NEAR_KM, sort: "rating" }, { signal: controller.signal });
       if (top.items[0]) return { cafe: top.items[0], basis: "top" } satisfies Pick;
@@ -64,7 +64,7 @@ export function HeroVisual() {
         if (!controller.signal.aborted) setFailed(true);
       });
     return () => controller.abort();
-  }, [origin.lat, origin.lng, status]);
+  }, [origin.lat, origin.lng, status, lang]);
 
   const fromYou = status === "device";
   const cafe = pick?.cafe;
@@ -157,7 +157,7 @@ export function HeroVisual() {
               <>
                 <p className="mt-1 truncate font-display text-lg text-paper">{cafe.name}</p>
                 <p className="flex items-center gap-1.5 font-sans text-xs text-paper/70">
-                  {cafe.area}
+                  {dataLabel(dict.areas, cafe.area)}
                   <span aria-hidden>·</span>
                   <Star size={11} className="fill-current" aria-hidden />
                   {cafe.rating.toFixed(1)}

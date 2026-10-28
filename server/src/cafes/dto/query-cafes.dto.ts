@@ -13,6 +13,7 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
+import { LANGS, type Lang } from '../lang';
 import { DRINK_TYPES, type DrinkType } from '../schemas/cafe.schema';
 
 export const CAFE_SORTS = [
@@ -113,6 +114,12 @@ export class QueryCafesDto {
   @Transform(emptyToUndefined)
   @IsString()
   area?: string;
+
+  /** `th`: café text in Thai where translated. Default `en`. */
+  @IsOptional()
+  @Transform(emptyToUndefined)
+  @IsIn(LANGS)
+  lang?: Lang;
 
   /** true: only cafés open right now (Chiang Mai time). */
   @IsOptional()

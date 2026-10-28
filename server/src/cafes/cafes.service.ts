@@ -12,6 +12,7 @@ import {
   toCafeResponse,
 } from './dto/cafe-response.dto';
 import { CafeSort, QueryCafesDto, searchWords } from './dto/query-cafes.dto';
+import type { Lang } from './lang';
 import { TopCafesDto } from './dto/top-cafes.dto';
 import { openAtFilter } from './opening-hours';
 import { Cafe, DRINK_TYPES } from './schemas/cafe.schema';
@@ -95,7 +96,7 @@ export class CafesService {
     ]);
 
     return {
-      items: result.items.map(toCafeResponse),
+      items: result.items.map((cafe) => toCafeResponse(cafe, query.lang)),
       total: result.total[0]?.count ?? 0,
       page: query.page,
       limit: query.limit,
@@ -136,13 +137,13 @@ export class CafesService {
       .sort(SORT_ORDERS.rating)
       .limit(query.limit)
       .lean<Cafe[]>();
-    return cafes.map(toCafeResponse);
+    return cafes.map((cafe) => toCafeResponse(cafe, query.lang));
   }
 
-  async findBySlug(slug: string): Promise<CafeResponseDto> {
+  async findBySlug(slug: string, lang?: Lang): Promise<CafeResponseDto> {
     const cafe = await this.cafeModel.findOne({ slug }).lean<Cafe>();
     if (!cafe) throw new NotFoundException(`Café "${slug}" not found`);
-    return toCafeResponse(cafe);
+    return toCafeResponse(cafe, lang);
   }
 
   /** The café's document id, for other collections to reference. */
@@ -162,14 +163,17 @@ export class CafesService {
   }
 
   /** Cafés in the order of `ids`; ids with no café are skipped. */
-  async findByIds(ids: Types.ObjectId[]): Promise<CafeResponseDto[]> {
+  async findByIds(
+    ids: Types.ObjectId[],
+    lang?: Lang,
+  ): Promise<CafeResponseDto[]> {
     const cafes = await this.cafeModel
       .find({ _id: { $in: ids } })
       .lean<(Cafe & { _id: Types.ObjectId })[]>();
     const byId = new Map(cafes.map((cafe) => [cafe._id.toString(), cafe]));
     return ids.flatMap((id) => {
       const cafe = byId.get(id.toString());
-      return cafe ? [toCafeResponse(cafe)] : [];
+      return cafe ? [toCafeResponse(cafe, lang)] : [];
     });
   }
 

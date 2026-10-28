@@ -5,7 +5,7 @@ import { ParkingCircle, PawPrint, Sparkles, Star } from "lucide-react";
 import type { CafeResult } from "@/lib/api";
 import { formatPrice } from "@/lib/cafes";
 import { formatKm } from "@/lib/geo";
-import { intlLocale, plural } from "@/lib/i18n/config";
+import { dataLabel, intlLocale, plural } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import { FavoriteButton } from "@/components/favorite-button";
 import { OpenStatusText } from "@/components/opening-hours";
@@ -36,7 +36,7 @@ export function CafeCard({ cafe, reason }: { cafe: CafeResult; reason?: string }
       </h3>
 
       <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
-        <span>{cafe.area}</span>
+        <span>{dataLabel(dict.areas, cafe.area)}</span>
         {cafe.distanceKm !== undefined && (
           <>
             <span aria-hidden>·</span>
@@ -74,7 +74,7 @@ export function CafeCard({ cafe, reason }: { cafe: CafeResult; reason?: string }
       <ul className="mt-auto flex flex-wrap gap-1.5 pt-4" aria-label={t.highlights}>
         {tags.map((tag) => (
           <li key={tag} className="border border-line px-2 py-0.5 text-xs text-ink-soft">
-            {tag}
+            {dataLabel(dict.cafeTags, tag)}
           </li>
         ))}
         {cafe.parking && (

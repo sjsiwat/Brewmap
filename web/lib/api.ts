@@ -18,6 +18,8 @@ export class ApiError extends Error {
   }
 }
 
+export type CafeLang = "en" | "th";
+
 export type CafeSort = "recommended" | "rating" | "distance" | "reviews" | "price";
 
 /** Mirrors QueryCafesDto in server/src/cafes/dto/query-cafes.dto.ts. */
@@ -33,6 +35,8 @@ export interface CafeQuery {
   area?: string;
   /** Only cafés open right now (Chiang Mai time). */
   openNow?: boolean;
+  /** "th": specialty, flavor, atmosphere and AI summary in Thai where translated. */
+  lang?: CafeLang;
   lat?: number;
   lng?: number;
   radiusKm?: number;
@@ -133,9 +137,9 @@ export async function getGoogleReviews(slug: string, init?: RequestInit): Promis
 }
 
 /** Returns null when the café doesn't exist; throws ApiError for anything else. */
-export async function getCafe(slug: string, init?: RequestInit): Promise<Cafe | null> {
+export async function getCafe(slug: string, init?: RequestInit, lang?: CafeLang): Promise<Cafe | null> {
   try {
-    return await apiFetch<Cafe>(`/cafes/${encodeURIComponent(slug)}`, init);
+    return await apiFetch<Cafe>(`/cafes/${encodeURIComponent(slug)}${buildQuery({ lang })}`, init);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) return null;
     throw error;
@@ -190,8 +194,8 @@ export async function getMe(init?: RequestInit): Promise<User | null> {
   return user;
 }
 
-export function getFavorites(init?: RequestInit): Promise<Cafe[]> {
-  return apiFetch<Cafe[]>("/me/favorites", { cache: "no-store", ...init });
+export function getFavorites(lang?: CafeLang, init?: RequestInit): Promise<Cafe[]> {
+  return apiFetch<Cafe[]>(`/me/favorites${buildQuery({ lang })}`, { cache: "no-store", ...init });
 }
 
 export function addFavorite(slug: string): Promise<void> {

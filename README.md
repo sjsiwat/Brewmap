@@ -368,7 +368,7 @@ flowchart LR
 - The browser only ever talks to the web app's origin. `/api/*` is rewritten to the API, so the login cookie (`httpOnly`, `Secure`, `SameSite=Lax`) is first-party.
 - The web proxy forwards the visitor's IP with a shared `PROXY_SECRET`, so rate limits apply per visitor, not per Vercel server.
 - Café pages are static and revalidate hourly. The Gemini key and the database credentials live only on the API.
-- English and Thai: every page lives under `/en/…` or `/th/…` (`web/app/[lang]`). A path without one (`/cafes`) redirects using the visitor's last choice (`NEXT_LOCALE` cookie), else their browser language, else English. UI text is in `web/lib/i18n/en.ts` and `th.ts`; café data from the API (names, specialties, tags) stays in English.
+- English and Thai: every page lives under `/en/…` or `/th/…` (`web/app/[lang]`). A path without one (`/cafes`) redirects using the visitor's last choice (`NEXT_LOCALE` cookie), else their browser language, else English. UI text is in `web/lib/i18n/en.ts` and `th.ts`. Café text comes from the API with `?lang=th` (specialty, flavor, atmosphere and AI summary, translated once by `ai:translate`); tag and area names are translated in `th.ts`, and café names and addresses stay as listed.
 
 # Production
 
@@ -409,6 +409,7 @@ npm run seed                                        # cafés
 npm --prefix server run import:google-reviews       # Google reviews: stars, text, date only
 npm --prefix server run import:opening-hours        # weekly opening hours (open now)
 npm --prefix server run ai:summarize                # AI pros/cons (uses Gemini)
+npm --prefix server run ai:translate                # Thai text for each café (uses Gemini; after ai:summarize)
 ```
 
 Render's free tier sleeps after 15 minutes idle, so the first request after that takes about 30–60 s.

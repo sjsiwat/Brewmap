@@ -78,7 +78,7 @@ function SearchFromUrl({ onSearch }: { onSearch: (search: string) => void }) {
  * chips that both share, and the list. Everything applies as soon as it changes.
  */
 export function CafeFinder() {
-  const { t: dict } = useI18n();
+  const { lang, t: dict } = useI18n();
   const t = dict.finder;
   const [text, setText] = useState("");
   const [name, setName] = useState("");
@@ -115,6 +115,7 @@ export function CafeFinder() {
     lng: origin.lng,
     sort,
     limit: PAGE_SIZE,
+    lang,
   });
 
   const activeCount = activeFilterCount(filters);
@@ -139,7 +140,7 @@ export function CafeFinder() {
       setSort(result.filters.sort ?? "distance");
       setAnswer({
         asked: question,
-        skipped: filterLabels(fromAiFilters(result.relaxed ?? {}), dict.filters),
+        skipped: filterLabels(fromAiFilters(result.relaxed ?? {}), dict),
         reasons: Object.fromEntries(
           result.items.flatMap(({ cafe, reason }) => (reason ? [[cafe.slug, reason]] : [])),
         ),

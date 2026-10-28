@@ -40,6 +40,8 @@ export interface Cafe {
   communityReviewCount: number;
   /** Pros/cons distilled from Google reviews by AI (generated offline), null until then. */
   aiSummary: { pros: string[]; cons: string[] } | null;
+  /** Language of specialty, flavor, atmosphere and aiSummary: "th" only if asked for and translated. */
+  textLang: "en" | "th";
 }
 
 export function formatPrice(priceAvg: number): string {

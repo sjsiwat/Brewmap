@@ -1,5 +1,6 @@
 import { Transform, Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { LANGS, type Lang } from '../lang';
 import { emptyToUndefined } from './query-cafes.dto';
 
 export class TopCafesDto {
@@ -22,4 +23,10 @@ export class TopCafesDto {
   @Min(1)
   @Max(50)
   limit: number = 10;
+
+  /** `th`: café text in Thai where translated. Default `en`. */
+  @IsOptional()
+  @Transform(emptyToUndefined)
+  @IsIn(LANGS)
+  lang?: Lang;
 }

@@ -1,5 +1,6 @@
 import type { OpeningPeriod } from '../opening-hours';
 import type { Cafe, DrinkType } from '../schemas/cafe.schema';
+import type { Lang } from '../lang';
 
 /** Public café shape - mirrors `Cafe` in web/lib/cafes.ts, plus optional distance. */
 export class CafeResponseDto {
@@ -28,6 +29,11 @@ export class CafeResponseDto {
   communityReviewCount: number;
   /** AI summary of Google reviews, or null if not generated yet. */
   aiSummary: { pros: string[]; cons: string[] } | null;
+  /**
+   * Language of specialty, flavor, atmosphere and aiSummary: `th` only when
+   * Thai was asked for and the café has been translated, otherwise `en`.
+   */
+  textLang: Lang;
   /** Present only when the request included lat/lng. */
   distanceKm?: number;
 }
@@ -48,17 +54,21 @@ export class CafeFiltersDto {
 
 export function toCafeResponse(
   cafe: Cafe & { distanceMeters?: number },
+  lang: Lang = 'en',
 ): CafeResponseDto {
   const [lng, lat] = cafe.location.coordinates;
+  // Thai when asked for and available; otherwise the English original.
+  const th = lang === 'th' ? cafe.th : undefined;
+  const summary = th ? th.aiSummary : cafe.aiSummary;
   const response: CafeResponseDto = {
     slug: cafe.slug,
     index: cafe.index,
     name: cafe.name,
     area: cafe.area,
     address: cafe.address,
-    specialty: cafe.specialty,
-    flavor: cafe.flavor,
-    atmosphere: cafe.atmosphere,
+    specialty: th?.specialty ?? cafe.specialty,
+    flavor: th?.flavor ?? cafe.flavor,
+    atmosphere: th?.atmosphere ?? cafe.atmosphere,
     priceAvg: cafe.priceAvg,
     tags: cafe.tags,
     hours: cafe.hours,
@@ -75,9 +85,8 @@ export function toCafeResponse(
     // Documents seeded before Phase 4 don't have these yet.
     communityRating: cafe.communityRating ?? null,
     communityReviewCount: cafe.communityReviewCount ?? 0,
-    aiSummary: cafe.aiSummary
-      ? { pros: cafe.aiSummary.pros, cons: cafe.aiSummary.cons }
-      : null,
+    aiSummary: summary ? { pros: summary.pros, cons: summary.cons } : null,
+    textLang: th ? 'th' : 'en',
   };
   if (cafe.distanceMeters !== undefined) {
     response.distanceKm = Math.round(cafe.distanceMeters / 100) / 10;
