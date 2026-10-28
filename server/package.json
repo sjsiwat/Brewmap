@@ -22,6 +22,7 @@
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     "seed": "tsx scripts/seed.ts",
     "import:google-reviews": "tsx scripts/import-google-reviews.ts",
+    "import:opening-hours": "tsx scripts/import-opening-hours.ts",
     "ai:models": "tsx scripts/list-models.ts",
     "ai:summarize": "tsx scripts/summarize-reviews.ts"
   },

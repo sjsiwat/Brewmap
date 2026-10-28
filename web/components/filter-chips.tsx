@@ -143,6 +143,11 @@ export function FilterChips({
         onClear={() => set({ radiusKm: undefined })}
       />
       <ToggleChip
+        label="Open now"
+        on={!!filters.openNow}
+        onToggle={() => set({ openNow: filters.openNow ? undefined : true })}
+      />
+      <ToggleChip
         label="Parking"
         on={!!filters.parking}
         onToggle={() => set({ parking: filters.parking ? undefined : true })}

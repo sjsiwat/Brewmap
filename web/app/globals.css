@@ -11,6 +11,8 @@
   --color-rust-soft: #e8ddd0;
   /* Rust for text on ink backgrounds: 5.5:1 there, where --color-rust is 2.7:1. */
   --color-rust-bright: #d97a52;
+  /* "Open now": 5.6:1 on paper. */
+  --color-moss: #3e6b3a;
 }
 
 @theme inline {
@@ -23,6 +25,7 @@
   --color-rust: var(--color-rust);
   --color-rust-soft: var(--color-rust-soft);
   --color-rust-bright: var(--color-rust-bright);
+  --color-moss: var(--color-moss);
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter);

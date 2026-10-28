@@ -13,6 +13,7 @@ import {
 } from './dto/cafe-response.dto';
 import { CafeSort, QueryCafesDto, searchWords } from './dto/query-cafes.dto';
 import { TopCafesDto } from './dto/top-cafes.dto';
+import { openAtFilter } from './opening-hours';
 import { Cafe, DRINK_TYPES } from './schemas/cafe.schema';
 
 type ListedCafe = Cafe & { distanceMeters?: number };
@@ -207,6 +208,7 @@ export class CafesService {
     if (query.petFriendly !== undefined) filter.petFriendly = query.petFriendly;
     if (query.tag) filter.tags = query.tag;
     if (query.area) filter.area = query.area;
+    if (query.openNow) Object.assign(filter, openAtFilter(new Date()));
     if (query.q) {
       // Escaped, so the search is plain text, never a user-supplied regex.
       const words = searchWords(query.q).map(

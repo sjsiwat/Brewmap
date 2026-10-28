@@ -1,23 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  ChevronDown,
-  LocateFixed,
-  MapPin,
-  ParkingCircle,
-  PawPrint,
-  RotateCw,
-  Search,
-  Sparkles,
-  Star,
-} from "lucide-react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown, LocateFixed, MapPin, RotateCw, Search, Sparkles } from "lucide-react";
 import * as api from "@/lib/api";
 import type { CafeSort } from "@/lib/api";
-import { formatPrice } from "@/lib/cafes";
 import {
   activeFilterCount,
   filterLabels,
@@ -27,10 +14,9 @@ import {
   type FinderFilters,
   type ReferencePlace,
 } from "@/lib/finder-filters";
-import { formatKm } from "@/lib/geo";
 import { useCafeSearch } from "@/lib/use-cafe-search";
 import { requestUserLocation, useUserLocation } from "@/lib/use-user-location";
-import { FavoriteButton } from "@/components/favorite-button";
+import { CafeCard } from "@/components/cafe-card";
 import { FilterChips } from "@/components/filter-chips";
 import { Reveal } from "@/components/reveal";
 
@@ -80,6 +66,23 @@ interface AiAnswer {
   skipped: string[];
   /** Why each café it picked fits, by slug. */
   reasons: Record<string, string>;
+}
+
+/**
+ * A search typed in the header on another page arrives as /cafes?search=…:
+ * run it once, then drop it from the address so a reload doesn't ask the AI again.
+ */
+function SearchFromUrl({ onSearch }: { onSearch: (search: string) => void }) {
+  const search = useSearchParams().get("search")?.trim();
+  const router = useRouter();
+  const handled = useRef(false);
+  useEffect(() => {
+    if (!search || handled.current) return;
+    handled.current = true;
+    onSearch(search.slice(0, QUERY_MAX));
+    router.replace("/cafes", { scroll: false });
+  }, [search, onSearch, router]);
+  return null;
 }
 
 /**
@@ -159,8 +162,8 @@ export function CafeFinder() {
   }
 
   /** Enter: a café name if one matches, otherwise ask the AI. "Ask AI" always asks. */
-  async function submit(forceAi: boolean) {
-    const question = normalise(text);
+  async function submit(forceAi: boolean, typed = text) {
+    const question = normalise(typed);
     if (!question) {
       setAiError("Type a café name, or describe the café you want.");
       return;
@@ -184,7 +187,17 @@ export function CafeFinder() {
 
   return (
     <div>
-      <Reveal>
+      <Suspense fallback={null}>
+        <SearchFromUrl
+          onSearch={(search) => {
+            setText(search);
+            void submit(false, search);
+          }}
+        />
+      </Suspense>
+
+      {/* Pinned under the header (h-16) while the list scrolls. */}
+      <div className="sticky top-16 z-40 -mx-6 bg-paper px-6 py-2 md:-mx-10 md:px-10 md:py-3">
         <form
           role="search"
           // The button always asks the AI; Enter in the box is handled below.
@@ -192,9 +205,9 @@ export function CafeFinder() {
             event.preventDefault();
             void submit(true);
           }}
-          className="flex flex-col gap-3 border border-ink bg-paper-raised p-2 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-rust sm:flex-row sm:items-center"
+          className="flex items-center gap-2 border border-ink bg-paper-raised p-1.5 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-rust md:p-2"
         >
-          <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
+          <div className="flex min-w-0 flex-1 items-center gap-3 pl-2 md:px-3">
             <Search size={16} className="shrink-0 text-muted" aria-hidden />
             <label htmlFor="cafe-search" className="sr-only">
               Search by café name, or describe the café you want
@@ -217,22 +230,23 @@ export function CafeFinder() {
               autoComplete="off"
               spellCheck={false}
               enterKeyHint="search"
-              placeholder="A café name, or what you feel like — Thai or English"
+              placeholder="Café name, or what you feel like"
               className="w-full min-w-0 border-0 bg-transparent py-2.5 font-sans text-base text-ink placeholder:text-muted focus:outline-none focus:ring-0"
             />
           </div>
           <button
             type="submit"
             disabled={asking}
-            className="inline-flex shrink-0 items-center justify-center gap-2 bg-ink px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust"
+            aria-label={asking ? "Asking the AI" : "Ask AI"}
+            className="inline-flex shrink-0 items-center justify-center gap-2 bg-ink px-3.5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:bg-rust disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust"
           >
             <Sparkles size={14} aria-hidden />
-            {asking ? "Thinking…" : "Ask AI"}
+            <span className="max-sm:hidden">{asking ? "Thinking…" : "Ask AI"}</span>
           </button>
         </form>
-      </Reveal>
+      </div>
 
-      <div aria-live="polite" className="mt-3 min-h-6 text-sm">
+      <div aria-live="polite" className="min-h-6 text-sm">
         {asking ? (
           <p className="text-muted">Reading “{normalise(text)}”…</p>
         ) : aiError ? (
@@ -255,8 +269,8 @@ export function CafeFinder() {
             )}
           </p>
         ) : (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-muted">Try:</span>
+          <div className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
+            <span className="shrink-0 text-muted">Try:</span>
             {EXAMPLES.map((example) => (
               <button
                 key={example}
@@ -265,7 +279,7 @@ export function CafeFinder() {
                   setText(example);
                   void ask(example);
                 }}
-                className="border border-line px-3 py-1.5 text-xs text-ink-soft transition-colors hover:border-rust hover:text-rust focus-ring"
+                className="shrink-0 border border-line px-3 py-1.5 text-xs text-ink-soft transition-colors hover:border-rust hover:text-rust focus-ring"
               >
                 {example}
               </button>
@@ -274,7 +288,7 @@ export function CafeFinder() {
         )}
       </div>
 
-      <div className="mt-5">
+      <div className="mt-3 md:mt-5">
         <FilterChips
           filters={filters}
           onChange={(patch) => {
@@ -284,7 +298,7 @@ export function CafeFinder() {
         />
       </div>
 
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-ink pb-4">
+      <div className="mt-5 flex items-end justify-between gap-x-6 gap-y-3 border-b border-ink pb-3 md:mt-8 md:pb-4">
         <div>
           <p className="text-sm text-ink" aria-live="polite">
             {search.total === null ? (
@@ -326,8 +340,8 @@ export function CafeFinder() {
             </label>
           </div>
         </div>
-        <label className="relative flex items-center gap-2 border border-line bg-paper-raised py-2 pr-3 pl-4 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-rust">
-          <span className="label-mono">Sort</span>
+        <label className="relative flex shrink-0 items-center gap-2 border border-line bg-paper-raised py-2 pr-3 pl-3 md:pl-4 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-rust">
+          <span className="label-mono max-sm:sr-only">Sort</span>
           <span className="pointer-events-none flex items-center gap-1.5 text-sm text-ink" aria-hidden>
             {sortLabel}
             <ChevronDown size={13} className="text-muted" />
@@ -348,7 +362,7 @@ export function CafeFinder() {
       </div>
 
       {place === "device" && !usingDevice && (
-        <p role="status" className="mt-3 flex gap-2 text-sm text-ink-soft">
+        <p role="status" className="mt-3 flex gap-2 text-xs text-ink-soft md:text-sm">
           <LocateFixed size={14} className="mt-0.5 shrink-0 text-rust" aria-hidden />
           {locationStatus === "locating"
             ? "Finding your location… distances are from the Old City until then."
@@ -358,11 +372,11 @@ export function CafeFinder() {
         </p>
       )}
       {chosenPlace === null && !usingDevice && locationStatus !== "locating" && (
-        <p role="status" className="mt-3 flex gap-2 text-sm text-ink-soft">
+        <p role="status" className="mt-3 flex gap-2 text-xs text-ink-soft md:text-sm">
           <LocateFixed size={14} className="mt-0.5 shrink-0 text-rust" aria-hidden />
           <span>
             {locationOff
-              ? "Location is off for BrewMap, so distances are from the Old City (Tha Phae Gate). "
+              ? "Location is off, so distances are from the Old City (Tha Phae Gate). "
               : "Distances are from the Old City (Tha Phae Gate). "}
             <button
               type="button"
@@ -376,85 +390,15 @@ export function CafeFinder() {
       )}
 
       <div>
-        {search.items.map((cafe, i) => {
-          const reason = answer?.reasons[cafe.slug];
-          return (
-            <Reveal
-              key={cafe.slug}
-              delay={Math.min((i % PAGE_SIZE) * 0.03, 0.3)}
-              className="relative"
-            >
-              <Link href={`/cafes/${cafe.slug}`} className="block">
-                <motion.div
-                  whileHover="hover"
-                  initial="rest"
-                  animate="rest"
-                  className="group grid grid-cols-1 gap-3 border-b border-line py-7 pr-10 transition-colors hover:bg-ink/[0.03] md:grid-cols-12 md:items-baseline md:gap-6"
-                >
-                  <motion.div
-                    variants={{ rest: { x: 0 }, hover: { x: 6 } }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="md:col-span-5"
-                  >
-                    <h3 className="font-display text-2xl text-ink transition-colors group-hover:text-rust">{cafe.name}</h3>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
-                      <MapPin size={12} aria-hidden />
-                      {cafe.area}
-                      {cafe.distanceKm !== undefined && ` · ${formatKm(cafe.distanceKm)}`}
-                    </p>
-                  </motion.div>
-
-                  <div className="md:col-span-4">
-                    <p className="text-sm leading-relaxed text-ink-soft">
-                      {cafe.specialty}
-                    </p>
-                    <p className="mt-1 text-xs text-muted">{cafe.flavor}</p>
-                    <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.08em] text-muted">
-                      {cafe.tags.map((tag) => (
-                        <span key={tag}>{tag}</span>
-                      ))}
-                    </p>
-                    {reason && (
-                      <p className="mt-3 flex gap-2 text-sm leading-relaxed text-ink">
-                        <Sparkles size={13} className="mt-1 shrink-0 text-rust" aria-hidden />
-                        <span>
-                          <span className="sr-only">Why the AI picked it: </span>
-                          {reason}
-                        </span>
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 md:col-span-3 md:flex-col md:items-end">
-                    <div className="flex items-center gap-1.5 text-xs text-ink">
-                      <Star size={12} className="fill-current text-rust" aria-hidden />
-                      {cafe.rating.toFixed(1)}
-                      <span className="text-muted">({cafe.reviewCount})</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-muted">
-                      {cafe.petFriendly && <PawPrint size={14} aria-label="Pet friendly" />}
-                      {cafe.parking && <ParkingCircle size={14} aria-label="Parking available" />}
-                    </div>
-
-                    <p className="font-display text-lg text-ink">{formatPrice(cafe.priceAvg)}</p>
-
-                    <motion.span
-                      variants={{ rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }}
-                      transition={{ duration: 0.25 }}
-                      className="hidden items-center gap-1 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-rust md:flex"
-                    >
-                      View details
-                      <ArrowUpRight size={14} aria-hidden />
-                    </motion.span>
-                  </div>
-                </motion.div>
-              </Link>
-              {/* Outside the link: a button can't be nested inside an <a>. */}
-              <FavoriteButton cafe={cafe} className="absolute top-6 right-0 p-1" />
-            </Reveal>
-          );
-        })}
+        {search.items.length > 0 && (
+          <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+            {search.items.map((cafe, i) => (
+              <Reveal as="li" key={cafe.slug} delay={Math.min((i % PAGE_SIZE) * 0.03, 0.3)}>
+                <CafeCard cafe={cafe} reason={answer?.reasons[cafe.slug]} />
+              </Reveal>
+            ))}
+          </ul>
+        )}
 
         {search.status === "ready" && search.items.length === 0 && (
           <p className="border-b border-line py-10 text-sm text-muted">

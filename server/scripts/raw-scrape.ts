@@ -30,6 +30,8 @@ export interface RawReview {
 
 export interface RawCafe {
   title: string;
+  /** Per weekday, e.g. { Monday: ["8 AM–6 PM"], Tuesday: ["Closed"] }. */
+  open_hours?: Record<string, string[]> | null;
   user_reviews?: RawReview[] | null;
 }
 

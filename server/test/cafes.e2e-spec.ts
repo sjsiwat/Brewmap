@@ -9,7 +9,9 @@ import {
   CafeResponseDto,
   PaginatedCafesDto,
 } from '../src/cafes/dto/cafe-response.dto';
+import { importOpeningHours } from '../scripts/import-opening-hours';
 import { seedCafes } from '../scripts/seed';
+import { isOpenAt } from '../src/cafes/opening-hours';
 
 // Tha Phae Gate
 const ORIGIN = { lat: 18.7876, lng: 98.9933 };
@@ -119,6 +121,55 @@ describe('Cafes API (e2e)', () => {
       .map((c) => slugs.indexOf(c.slug))
       .filter((i) => i >= 0);
     expect(geoOrder).toEqual([...geoOrder].sort((a, b) => a - b));
+  });
+
+  it('imports weekly opening hours and filters by open now', async () => {
+    const before = await get('/api/cafes?limit=1').expect(200);
+    expect((before.body as PaginatedCafesDto).items[0].openingHours).toBeNull();
+    // Before the import nothing has hours, so nothing counts as open.
+    const noneYet = await get('/api/cafes?openNow=true&limit=1').expect(200);
+    expect((noneYet.body as PaginatedCafesDto).total).toBe(0);
+
+    const { imported, unreadable } = await importOpeningHours(
+      process.env.MONGODB_URI!,
+    );
+    expect(imported + unreadable).toBe(seeded);
+    expect(imported).toBeGreaterThan(seeded * 0.9);
+    // Repeating it changes nothing.
+    expect(await importOpeningHours(process.env.MONGODB_URI!)).toEqual({
+      imported,
+      unreadable,
+    });
+
+    const all = await get('/api/cafes?limit=50').expect(200);
+    const sample = (all.body as PaginatedCafesDto).items.find(
+      (c) => c.openingHours,
+    )!;
+    expect(Object.keys(sample.openingHours![0]).sort()).toEqual([
+      'close',
+      'day',
+      'open',
+    ]);
+
+    // openNow agrees with isOpenAt for every café, open or not.
+    const now = new Date();
+    const open = await get('/api/cafes?openNow=true&limit=50').expect(200);
+    const openBody = open.body as PaginatedCafesDto;
+    expect(
+      openBody.items.every((c) => isOpenAt(c.openingHours ?? [], now)),
+    ).toBe(true);
+    const everyCafe: CafeResponseDto[] = [];
+    for (let page = 1; everyCafe.length < seeded; page++) {
+      const res = await get(`/api/cafes?limit=50&page=${page}`).expect(200);
+      everyCafe.push(...(res.body as PaginatedCafesDto).items);
+    }
+    expect(openBody.total).toBe(
+      everyCafe.filter((c) => isOpenAt(c.openingHours ?? [], now)).length,
+    );
+
+    const anyTime = await get('/api/cafes?openNow=false&limit=1').expect(200);
+    expect((anyTime.body as PaginatedCafesDto).total).toBe(seeded);
+    await get('/api/cafes?openNow=maybe').expect(400);
   });
 
   it('rejects distance options without coordinates and bad input', async () => {

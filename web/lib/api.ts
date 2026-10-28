@@ -31,6 +31,8 @@ export interface CafeQuery {
   petFriendly?: boolean;
   tag?: string;
   area?: string;
+  /** Only cafés open right now (Chiang Mai time). */
+  openNow?: boolean;
   lat?: number;
   lng?: number;
   radiusKm?: number;

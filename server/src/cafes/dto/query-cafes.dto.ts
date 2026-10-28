@@ -114,6 +114,12 @@ export class QueryCafesDto {
   @IsString()
   area?: string;
 
+  /** true: only cafés open right now (Chiang Mai time). */
+  @IsOptional()
+  @Transform(toBoolean)
+  @IsBoolean()
+  openNow?: boolean;
+
   /** User latitude. Required together with `lng`; enables `distanceKm` in results. */
   @ValidateIf((o: QueryCafesDto) => o.lng !== undefined || o.lat !== undefined)
   @Type(() => Number)
