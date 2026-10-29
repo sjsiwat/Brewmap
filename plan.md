@@ -473,6 +473,15 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 15 — ปุ่ม "ค้นหาแก้วที่ใช่" ใต้การ์ดหน้าแรก (owner สั่ง 2026-10-29)
+**Status:** `approved` — [reviews/phase-15.md](reviews/phase-15.md)
+**Branch:** `phase-15-hero-search-button`
+**Review range:** `main..phase-15-hero-search-button` (ใช้ `git diff main...HEAD`)
+
+- [x] 15.1 ปุ่มเต็มความกว้างใต้การ์ดร้านใน hero → `/{lang}/cafes` · "ค้นหาแก้วที่ใช่" / "Find your cup" (`home.hero.findCup`) · สีสนิม hover เป็นสีหมึก ตามปุ่ม CTA เดิม · เป็นลิงก์ธรรมดา ใช้คีย์บอร์ดได้ มี focus ring · QA 375px และ desktop ทั้งสองภาษา
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
