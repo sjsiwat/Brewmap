@@ -483,7 +483,7 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 **Gate:** `npm run gate:web`
 
 ### Phase 16 — เรียงใกล้สุดเป็นค่าเริ่มต้น + ตัวกรองคะแนน/รีวิว (owner สั่ง 2026-10-29)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-16.md](reviews/phase-16.md)
 **Branch:** `phase-16-nearest-and-review-filters`
 **Review range:** `main..phase-16-nearest-and-review-filters` (ใช้ `git diff main...HEAD`)
 
