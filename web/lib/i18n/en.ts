@@ -7,10 +7,10 @@ export const en = {
   meta: {
     siteTitle: "BrewMap — Taste first. Location second.",
     siteDescription:
-      "Find the right café in Chiang Mai: ask the AI finder in Thai or English, filter 173 real cafés by price, distance, parking and drink, and read AI review summaries.",
+      "Find the right café in Chiang Mai: ask the AI finder in Thai or English, filter {n} real cafés by price, distance, parking and drink, and read AI review summaries.",
     cafesTitle: "Find your café",
     cafesDescription:
-      "Search 173 Chiang Mai cafés by name, or describe what you want and the AI sets the filters — budget, distance, parking, drink and open now.",
+      "Search {n} Chiang Mai cafés by name, or describe what you want and the AI sets the filters — budget, distance, parking, drink and open now.",
     aboutTitle: "About",
     aboutDescription: "Why BrewMap exists, and who built it — a solo prototype by Siwat Jankam.",
     loginTitle: "Log in",

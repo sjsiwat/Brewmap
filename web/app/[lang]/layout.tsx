@@ -4,7 +4,8 @@ import { Fraunces, Inter, Geist_Mono, Noto_Sans_Thai, Noto_Serif_Thai } from "ne
 import { AuthProvider } from "@/lib/auth";
 import { FavoritesProvider } from "@/lib/favorites";
 import { LocationOnEntry } from "@/components/location-on-entry";
-import { hasLocale, locales } from "@/lib/i18n/config";
+import { CAFE_COUNT } from "@/lib/content";
+import { format, hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { I18nProvider } from "@/lib/i18n/client";
 import "../globals.css";
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: LangParams): Promise<Metadata
     // Makes canonical and hreflang links absolute.
     metadataBase: new URL(process.env.SITE_URL ?? "https://brewmap-cafe.vercel.app"),
     title: { default: t.meta.siteTitle, template: "%s — BrewMap" },
-    description: t.meta.siteDescription,
+    description: format(t.meta.siteDescription, { n: CAFE_COUNT }),
   };
 }
 

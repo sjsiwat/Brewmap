@@ -494,6 +494,23 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 17 — คาเฟ่ทั่วเชียงใหม่ (scrape รอบ 3) (owner สั่ง 2026-10-29)
+**Status:** `in-progress`
+**Branch:** `phase-17-citywide-cafes`
+**Review range:** `main..phase-17-citywide-cafes` (ใช้ `git diff main...HEAD`)
+
+owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scraper (เครื่องมือเดิม) ให้ครอบคลุมทั้งเชียงใหม่ · Gemini ~0.1 บาท/ร้าน · ถามก่อนรัน Gemini จำนวนมาก
+
+- [x] 17.1 **คำค้น** `queries-batch3.txt` (186 คำ): ทุกตำบลของอำเภอเมือง (อังกฤษ + ไทย) · ทุกตำบลของ 6 อำเภอรอบเมือง (หางดง สันทราย สันกำแพง สารภี แม่ริม ดอยสะเก็ด) · ทั้ง 25 อำเภอ · คำค้นตามประเภท (specialty, matcha, วิวดอย ฯลฯ)
+- [ ] 17.2 **`build_raw_all.py`** → `raw-all.json`: 173 ร้านเดิมตามลำดับเดิม + ร้านใหม่ (หมวดคาเฟ่, ในจังหวัดเชียงใหม่, รีวิว ≥ 15, ไม่ซ้ำ place_id/cid) เรียงตาม rating × log(reviews) · ตัดชื่อ/รูป/ลิงก์ผู้รีวิวทิ้งก่อนเขียนไฟล์ · server import scripts อ่านไฟล์นี้ (`FIRST_NEW_POSITION`)
+- [ ] 17.3 **`npm run ai:enrich`** → `enrich3.json` (key = place_id): specialty / flavor / atmosphere / ราคา / แท็ก (เฉพาะ 36 แท็กที่มีอยู่แล้ว) / สัตว์เลี้ยง / ที่จอดรถ / เครื่องดื่มหลัก จากรีวิวจริง · `cleanEnrichment` ตรวจทุกช่อง · บันทึกทุกร้าน รันต่อได้ · `priceFromReviews` บอกว่าราคามาจากรีวิวหรือเป็นค่าประมาณ
+- [ ] 17.4 **`build_cafes_all.py`** → `web/data/cafes.json` (173 ร้านเดิมไม่เปลี่ยน + ร้านใหม่) และ `cafe-count.json` · ย่าน: ตำบลในอำเภอเมือง / ชื่ออำเภอนอกเมือง / ถ้าไม่รู้ใช้ย่านของร้านที่ใกล้ที่สุด · ชื่อไทยล้วนคงไว้เป็นไทย
+- [x] 17.5 **เว็บ:** จำนวนร้านอ่านจาก `cafe-count.json` (hero, about, features, meta) · ชื่อไทยของย่านใหม่ใน `th.ts` · หน้าร้าน prerender แค่ 200 ร้านแนะนำสูงสุด ที่เหลือ render ตอนเปิดครั้งแรกแล้ว cache (`dynamicParams = true`)
+- [ ] 17.6 **ข้อมูลบน Atlas** (หลัง owner อนุมัติ): `seed` → `import:opening-hours` → `import:google-reviews` → `ai:summarize` → `ai:translate`
+- [ ] 17.7 tests: unit `cleanEnrichment` / `reviewLines` · gates · QA
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

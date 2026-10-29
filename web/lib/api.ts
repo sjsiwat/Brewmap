@@ -152,13 +152,15 @@ export async function getCafe(slug: string, init?: RequestInit, lang?: CafeLang)
 
 const MAX_PAGE_SIZE = 50;
 
-export async function getAllCafeSlugs(init?: RequestInit): Promise<string[]> {
+/** Slugs of the `count` most recommended cafés (or all of them, if fewer). */
+export async function getTopCafeSlugs(count: number, init?: RequestInit): Promise<string[]> {
   const slugs: string[] = [];
-  for (let page = 1; ; page++) {
-    const result = await getCafes({ page, limit: MAX_PAGE_SIZE }, init);
+  for (let page = 1; slugs.length < count; page++) {
+    const result = await getCafes({ page, limit: MAX_PAGE_SIZE, sort: "recommended" }, init);
     slugs.push(...result.items.map((cafe) => cafe.slug));
-    if (slugs.length >= result.total || result.items.length === 0) return slugs;
+    if (slugs.length >= result.total || result.items.length === 0) break;
   }
+  return slugs.slice(0, count);
 }
 
 /** Mirrors UserResponseDto in server/src/users/user-response.dto.ts. */
