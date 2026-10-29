@@ -212,6 +212,12 @@ export class CafesService {
     if (query.petFriendly !== undefined) filter.petFriendly = query.petFriendly;
     if (query.tag) filter.tags = query.tag;
     if (query.area) filter.area = query.area;
+    if (query.minRating !== undefined) {
+      filter.rating = { $gte: query.minRating };
+    }
+    if (query.minReviews !== undefined) {
+      filter.reviewCount = { $gte: query.minReviews };
+    }
     if (query.openNow) Object.assign(filter, openAtFilter(new Date()));
     if (query.q) {
       // Escaped, so the search is plain text, never a user-supplied regex.

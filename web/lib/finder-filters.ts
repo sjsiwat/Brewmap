@@ -23,6 +23,8 @@ export interface FinderFilters {
   tag?: string;
   area?: string;
   openNow?: boolean;
+  minRating?: number;
+  minReviews?: number;
 }
 
 export type FilterKey = keyof FinderFilters;
@@ -40,6 +42,11 @@ export const pricePresets: Array<PriceRange & { label: "priceUnder100" | "price1
 ];
 
 export const distancePresets = [1, 3, 8];
+
+// Every café here has 4.0+ on Google, so the useful steps are high ones.
+export const ratingPresets = [4.5, 4.7, 4.9];
+
+export const reviewPresets = [100, 300, 1000];
 
 export const drinkTypes: DrinkType[] = ["Coffee", "Tea", "Non-Coffee"];
 
@@ -72,6 +79,14 @@ export function isPricePreset(range: PriceRange): boolean {
 
 export function distanceLabel(km: number, t: FilterText): string {
   return format(t.within, { km });
+}
+
+export function ratingLabel(min: number, t: FilterText): string {
+  return format(t.ratingAtLeast, { n: min.toFixed(1) });
+}
+
+export function reviewsLabel(min: number, t: FilterText, locale: string): string {
+  return format(t.reviewsAtLeast, { n: min.toLocaleString(locale) });
 }
 
 export function activeFilterCount(filters: FinderFilters): number {

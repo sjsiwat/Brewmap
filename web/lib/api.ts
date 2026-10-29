@@ -35,6 +35,10 @@ export interface CafeQuery {
   area?: string;
   /** Only cafés open right now (Chiang Mai time). */
   openNow?: boolean;
+  /** Lowest Google rating, e.g. 4.7. */
+  minRating?: number;
+  /** Fewest Google reviews. */
+  minReviews?: number;
   /** "th": specialty, flavor, atmosphere and AI summary in Thai where translated. */
   lang?: CafeLang;
   lat?: number;

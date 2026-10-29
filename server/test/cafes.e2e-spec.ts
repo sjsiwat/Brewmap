@@ -77,6 +77,26 @@ describe('Cafes API (e2e)', () => {
     }
   });
 
+  it('filters by lowest rating and fewest reviews, with the distance sort', async () => {
+    const all = await get('/api/cafes?limit=1').expect(200);
+    const res = await get(
+      `/api/cafes?minRating=4.8&minReviews=300&lat=${ORIGIN.lat}&lng=${ORIGIN.lng}&sort=distance&limit=50`,
+    ).expect(200);
+    const body = res.body as PaginatedCafesDto;
+    expect(body.total).toBeGreaterThan(0);
+    expect(body.total).toBeLessThan((all.body as PaginatedCafesDto).total);
+    for (const cafe of body.items) {
+      expect(cafe.rating).toBeGreaterThanOrEqual(4.8);
+      expect(cafe.reviewCount).toBeGreaterThanOrEqual(300);
+    }
+    const km = body.items.map((cafe) => cafe.distanceKm!);
+    expect(km).toEqual([...km].sort((a, b) => a - b));
+
+    await get('/api/cafes?minRating=6').expect(400);
+    await get('/api/cafes?minReviews=-1').expect(400);
+    await get('/api/cafes?minReviews=1.5').expect(400);
+  });
+
   it('parking=true returns only cafés with parking', async () => {
     const res = await get('/api/cafes?parking=true&limit=50').expect(200);
     const body = res.body as PaginatedCafesDto;

@@ -340,6 +340,8 @@ export const th: Dictionary = {
     group: "ตัวกรอง",
     price: "ราคา",
     distance: "ระยะทาง",
+    rating: "คะแนน",
+    reviews: "รีวิว",
     drink: "เครื่องดื่ม",
     any: "{name}ทั้งหมด",
     openNow: "เปิดอยู่ตอนนี้",
@@ -357,6 +359,8 @@ export const th: Dictionary = {
     priceFrom: "{min}฿ ขึ้นไป",
     priceRange: "{min}–{max}฿",
     within: "ภายใน {km} กม.",
+    ratingAtLeast: "{n} ดาวขึ้นไป",
+    reviewsAtLeast: "{n}+ รีวิว",
     drinkTypes: { Coffee: "กาแฟ", Tea: "ชา", "Non-Coffee": "ไม่ใช่กาแฟ" },
   },
 

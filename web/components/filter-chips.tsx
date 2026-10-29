@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { DrinkType } from "@/lib/cafes";
-import { dataLabel, format } from "@/lib/i18n/config";
+import { dataLabel, format, intlLocale } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import {
   activeFilterCount,
@@ -15,6 +15,10 @@ import {
   priceKey,
   priceLabel,
   pricePresets,
+  ratingLabel,
+  ratingPresets,
+  reviewPresets,
+  reviewsLabel,
   type FinderFilters,
 } from "@/lib/finder-filters";
 
@@ -112,8 +116,9 @@ export function FilterChips({
   /** Changes to apply (undefined removes a filter), or null to clear them all. */
   onChange: (patch: Partial<FinderFilters> | null) => void;
 }) {
-  const { t: dict } = useI18n();
+  const { lang, t: dict } = useI18n();
   const t = dict.filters;
+  const locale = intlLocale[lang];
   const set = onChange;
   const price = { minPrice: filters.minPrice, maxPrice: filters.maxPrice };
   const currentPrice = priceLabel(price, t);
@@ -148,6 +153,22 @@ export function FilterChips({
         options={distances.map((km) => ({ value: String(km), label: distanceLabel(km, t) }))}
         onChange={(value) => set({ radiusKm: value ? Number(value) : undefined })}
         onClear={() => set({ radiusKm: undefined })}
+      />
+      <SelectChip
+        name={t.rating}
+        value={filters.minRating ? String(filters.minRating) : ""}
+        current={filters.minRating ? ratingLabel(filters.minRating, t) : null}
+        options={ratingPresets.map((min) => ({ value: String(min), label: ratingLabel(min, t) }))}
+        onChange={(value) => set({ minRating: value ? Number(value) : undefined })}
+        onClear={() => set({ minRating: undefined })}
+      />
+      <SelectChip
+        name={t.reviews}
+        value={filters.minReviews ? String(filters.minReviews) : ""}
+        current={filters.minReviews ? reviewsLabel(filters.minReviews, t, locale) : null}
+        options={reviewPresets.map((min) => ({ value: String(min), label: reviewsLabel(min, t, locale) }))}
+        onChange={(value) => set({ minReviews: value ? Number(value) : undefined })}
+        onClear={() => set({ minReviews: undefined })}
       />
       <ToggleChip
         label={t.openNow}

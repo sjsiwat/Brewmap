@@ -23,7 +23,8 @@ import { CafeCard } from "@/components/cafe-card";
 import { FilterChips } from "@/components/filter-chips";
 import { Reveal } from "@/components/reveal";
 
-const sortOptions: CafeSort[] = ["recommended", "distance", "price", "rating"];
+// Nearest first by default: the list starts from where the visitor is.
+const sortOptions: CafeSort[] = ["distance", "recommended", "price", "rating"];
 const placeOptions: ReferencePlace[] = ["device", "nimman", "oldCity"];
 
 const PAGE_SIZE = 24;
@@ -83,7 +84,7 @@ export function CafeFinder() {
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [filters, setFilters] = useState<FinderFilters>({});
-  const [sort, setSort] = useState<CafeSort>("recommended");
+  const [sort, setSort] = useState<CafeSort>("distance");
   const [answer, setAnswer] = useState<AiAnswer | null>(null);
   const [asking, setAsking] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
