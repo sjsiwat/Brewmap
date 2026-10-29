@@ -41,7 +41,7 @@ export function Hero({ lang }: { lang: Locale }) {
           <HeroVisual />
           <Link
             href={localePath(lang, "/cafes")}
-            className="group mt-4 flex items-center justify-center gap-3 border border-rust bg-rust px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:border-ink hover:bg-ink focus-ring"
+            className="mt-4 flex items-center justify-center gap-3 border border-rust bg-rust px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:border-ink hover:bg-ink focus-ring"
           >
             <Search size={16} aria-hidden />
             {t.findCup}
