@@ -76,6 +76,7 @@ export const en = {
       titleLine2: "Location second.",
       body: "Most map apps sort cafés by distance and star rating. Tell BrewMap what you actually want — a quiet table to work at, matcha under 150 baht, somewhere with parking near Nimman — and it picks real Chiang Mai cafés that fit, and says why.",
       stats: ["Real cafés in Chiang Mai", "Ask the AI finder in either", "AI review summaries"],
+      findCup: "Find your cup",
     },
     heroCard: {
       specialty: "Specialty",

@@ -1,5 +1,7 @@
+import Link from "next/link";
+import { Search } from "lucide-react";
 import { heroStatValues } from "@/lib/content";
-import type { Locale } from "@/lib/i18n/config";
+import { localePath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { HeroVisual } from "@/components/hero-visual";
 
@@ -37,6 +39,13 @@ export function Hero({ lang }: { lang: Locale }) {
 
         <div className="lg:col-span-5 lg:pt-2">
           <HeroVisual />
+          <Link
+            href={localePath(lang, "/cafes")}
+            className="group mt-4 flex items-center justify-center gap-3 border border-rust bg-rust px-6 py-4 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:border-ink hover:bg-ink focus-ring"
+          >
+            <Search size={16} aria-hidden />
+            {t.findCup}
+          </Link>
         </div>
       </div>
     </section>
