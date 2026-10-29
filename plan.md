@@ -474,7 +474,7 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 15 — ปุ่ม "ค้นหาแก้วที่ใช่" ใต้การ์ดหน้าแรก (owner สั่ง 2026-10-29)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-15.md](reviews/phase-15.md)
 **Branch:** `phase-15-hero-search-button`
 **Review range:** `main..phase-15-hero-search-button` (ใช้ `git diff main...HEAD`)
 
