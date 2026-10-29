@@ -251,6 +251,8 @@ export const en = {
     group: "Filters",
     price: "Price",
     distance: "Distance",
+    rating: "Rating",
+    reviews: "Reviews",
     drink: "Drink",
     any: "Any {name}",
     openNow: "Open now",
@@ -268,6 +270,8 @@ export const en = {
     priceFrom: "{min}฿ and up",
     priceRange: "{min}–{max}฿",
     within: "Within {km} km",
+    ratingAtLeast: "{n}★ and up",
+    reviewsAtLeast: "{n}+ reviews",
     drinkTypes: { Coffee: "Coffee", Tea: "Tea", "Non-Coffee": "Non-coffee" },
   },
 

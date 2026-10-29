@@ -121,6 +121,23 @@ export class QueryCafesDto {
   @IsIn(LANGS)
   lang?: Lang;
 
+  /** Lowest Google rating, e.g. 4.7. */
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(emptyToUndefined)
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  minRating?: number;
+
+  /** Fewest Google reviews, e.g. 300. */
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(emptyToUndefined)
+  @IsInt()
+  @Min(0)
+  minReviews?: number;
+
   /** true: only cafés open right now (Chiang Mai time). */
   @IsOptional()
   @Transform(toBoolean)
