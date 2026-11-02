@@ -9,8 +9,49 @@ in two rounds:
   `data/cafes.json`, which reuses round 1's `ENRICH`/overrides from
   `build_cafes.py` and adds `enrich2.py` on top for the new 113.
 
-`data/cafes.json` is built from **round 2's output** (173 cafés). Round 1's
-files are kept for history/diffing — you don't need to re-run them separately.
+- **Round 3 (city-wide, Phase 17)** — `queries-batch3.txt` + `build_raw_all.py`
+  → `raw-all.json`, `npm run ai:enrich` (server) → `enrich3.json`, then
+  `build_cafes_all.py` → `data/cafes.json`. Rounds 1-2's 173 cafés stay first
+  and unchanged; round 3 appends Mueang Chiang Mai and the six districts
+  around it.
+
+`data/cafes.json` is built from **round 3's output**. Rounds 1-2's files are
+kept for history/diffing — you don't need to re-run them separately.
+
+## Round 3: whole of Chiang Mai
+
+```bash
+# 1. scrape (about 2 hours; results land in out/, which git ignores)
+mkdir -p out && cp queries-batch3.txt out/queries.txt
+docker run --rm -v gmaps-playwright-cache:/opt -v "$PWD/out:/out" \
+  gosom/google-maps-scraper -input /out/queries.txt -results /out/batch3.json \
+  -json -depth 10 -c 8 -exit-on-inactivity 3m
+
+# 2. merge: cafés only, in Chiang Mai, 15+ reviews, no duplicates, no reviewer data
+python3 build_raw_all.py out/batch3.json
+
+# 3. describe each new café from its reviews (Gemini; billed - ask the owner first)
+npm --prefix ../../../server run ai:enrich -- --limit 5   # try a few
+npm --prefix ../../../server run ai:enrich                # the rest
+
+# 4. cafes.json + cafe-count.json
+python3 build_cafes_all.py
+
+# 5. database (server/): seed, then the per-café data for the new ones
+npm run seed && npm run import:opening-hours && npm run import:google-reviews
+npm run ai:summarize && npm run ai:translate
+```
+
+`queries-batch3.txt` covers every sub-district of Mueang Chiang Mai, every
+sub-district of the six districts around it (Hang Dong, San Sai, San
+Kamphaeng, Saraphi, Mae Rim, Doi Saket), all 25 districts, and a few
+café-type searches, in English and Thai. `build_raw_all.py` then keeps only
+Mueang and those six districts (the owner left the far districts out); the
+scrape itself found cafés in all 25. A new café's area is its Mueang
+sub-district (as in rounds 1-2) or its district name outside Mueang.
+Round 3's `priceAvg` comes from prices in the reviews where they mention one,
+otherwise it is Gemini's estimate (`priceFromReviews: false` in
+`enrich3.json`).
 
 ## Pipeline
 

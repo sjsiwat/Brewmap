@@ -494,6 +494,27 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 17 — คาเฟ่ทั่วเชียงใหม่ (scrape รอบ 3) (owner สั่ง 2026-10-29)
+**Status:** `approved` — [reviews/phase-17.md](reviews/phase-17.md)
+**Branch:** `phase-17-citywide-cafes`
+**Review range:** `main..phase-17-citywide-cafes` (ใช้ `git diff main...HEAD`)
+
+owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scraper (เครื่องมือเดิม) ให้ครอบคลุมทั้งเชียงใหม่ · Gemini ~0.1 บาท/ร้าน · ถามก่อนรัน Gemini จำนวนมาก
+
+ผล scrape: 3,541 รายการ → ผ่านเกณฑ์ 1,660 ร้านใน 25 อำเภอ · owner เลือก (2026-11-02) **ตัดอำเภอไกลออก** เก็บเฉพาะอำเภอเมือง + 6 อำเภอรอบเมือง → ร้านใหม่ 1,269 รวม **1,442 ร้าน** · อนุมัติรัน Gemini + เขียน Atlas
+
+- [x] 17.1 **คำค้น** `queries-batch3.txt` (186 คำ): ทุกตำบลของอำเภอเมือง (อังกฤษ + ไทย) · ทุกตำบลของ 6 อำเภอรอบเมือง (หางดง สันทราย สันกำแพง สารภี แม่ริม ดอยสะเก็ด) · ทั้ง 25 อำเภอ · คำค้นตามประเภท (specialty, matcha, วิวดอย ฯลฯ)
+- [x] 17.2 **`build_raw_all.py`** → `raw-all.json`: 173 ร้านเดิมตามลำดับเดิม + ร้านใหม่ (หมวดคาเฟ่, อำเภอเมือง + 6 อำเภอรอบเมือง (ไม่มีชื่ออำเภอในที่อยู่ → ภายใน 30 กม. จากประตูท่าแพ), รีวิว ≥ 15, ไม่ซ้ำ place_id/cid) เรียงตาม rating × log(reviews) · ตัดชื่อ/รูป/ลิงก์ผู้รีวิวทิ้งก่อนเขียนไฟล์ · server import scripts อ่านไฟล์นี้ (`FIRST_NEW_POSITION`)
+- [x] 17.3 **`npm run ai:enrich`** → `enrich3.json` (key = place_id): specialty / flavor / atmosphere / ราคา / แท็ก (เฉพาะ 36 แท็กที่มีอยู่แล้ว) / สัตว์เลี้ยง / ที่จอดรถ / เครื่องดื่มหลัก จากรีวิวจริง · `cleanEnrichment` ตรวจทุกช่อง · บันทึกทุกร้าน รันต่อได้ · `priceFromReviews` บอกว่าราคามาจากรีวิวหรือเป็นค่าประมาณ
+- [x] 17.4 **`build_cafes_all.py`** → `web/data/cafes.json` (173 ร้านเดิมไม่เปลี่ยน + ร้านใหม่) และ `cafe-count.json` · ย่าน: ตำบลในอำเภอเมือง / ชื่ออำเภอนอกเมือง / ถ้าไม่รู้ใช้ย่านของร้านที่ใกล้ที่สุด · ชื่อไทยล้วนคงไว้เป็นไทย
+- [x] 17.5 **เว็บ:** จำนวนร้านอ่านจาก `cafe-count.json` แสดงเป็น "1,438" (hero, about, features, meta) · ชื่อไทยของย่านใหม่ใน `th.ts` · หน้าร้าน prerender แค่ 200 ร้านแนะนำสูงสุด ที่เหลือ render ตอนเปิดครั้งแรกแล้ว cache · เอา `dynamicParams = false` ออกจาก `[lang]/layout.tsx` (ภาษาที่ไม่มี → `notFound()` อยู่แล้ว) เพราะมันทำให้หน้าร้านที่ไม่ได้ prerender เป็น 404
+- [x] 17.6 **ข้อมูลบน Atlas** (หลัง owner อนุมัติ): `seed` → `import:opening-hours` → `import:google-reviews` → `ai:summarize` → `ai:translate`
+- [x] 17.7 tests: unit `cleanEnrichment` / `reviewLines` · gates · QA
+
+ผล: Gemini เติมข้อมูล 1,269 ร้าน (ล้ม 8 เพราะช่วงราคาแคบไป 30–600฿ → ขยายเป็น 15–1,500฿ แล้วผ่าน) · ตัด 4 แห่งที่ไม่ใช่คาเฟ่ (คาร์แคร์ รีสอร์ท ที่พัก สนามเด็กเล่น — Gemini ตอบ "N/A") → `cleanEnrichment` ไม่รับข้อความแบบนี้ · ราคา 1,047 ร้านเป็นค่าประมาณ (`priceFromReviews: false`) · **รวม 1,438 ร้าน** · Atlas: seed 1,265 ใหม่ · เวลาเปิดปิด 1,384 (54 ไม่มีบน Google) · รีวิว Google 7,162 · สรุป AI ครบ 1,438 · แปลไทยครบยกเว้น 3 ร้าน (ชื่อเมนูอังกฤษเยอะ ไม่ผ่านกฎ → แสดงอังกฤษ) · 173 ร้านเดิมข้อมูลไม่เปลี่ยน · bug ที่เจอ: `import-opening-hours` นับ unreadable ของ place ที่ไม่มีในฐานข้อมูล · e2e 3 ข้อสมมติว่าไม่มี Starbucks / มี Arabica ร้านเดียว → แก้ · ใช้ Gemini ~3,900 requests
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

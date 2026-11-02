@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { CAFE_COUNT } from "@/lib/content";
+import { format } from "@/lib/i18n/config";
 import { languageAlternates, pageLanguage, type LangParams } from "@/lib/i18n/server";
 import { CafeFinder } from "@/components/cafe-finder";
 
@@ -8,7 +10,7 @@ export async function generateMetadata({ params }: LangParams): Promise<Metadata
   const { lang, t } = await pageLanguage(params);
   return {
     title: t.meta.cafesTitle,
-    description: t.meta.cafesDescription,
+    description: format(t.meta.cafesDescription, { n: CAFE_COUNT }),
     alternates: languageAlternates(lang, "/cafes"),
   };
 }

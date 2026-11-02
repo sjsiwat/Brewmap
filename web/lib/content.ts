@@ -3,8 +3,13 @@
  * lib/i18n/en.ts and th.ts, and describe only what BrewMap really does today.
  */
 
-/** How many cafés are in the database (Google Maps listings, Chiang Mai). */
-export const CAFE_COUNT = 173;
+import cafeCount from "@/data/cafe-count.json";
+
+/**
+ * How many cafés are in the database (Google Maps listings, Chiang Mai).
+ * Written by web/scripts/scrape-cafes/build_cafes_all.py with cafes.json.
+ */
+export const CAFE_COUNT = cafeCount.count.toLocaleString("en-US");
 
 /** Home-page sections and pages, by their key in the dictionary's `nav`. */
 export const navLinks = [
@@ -15,7 +20,7 @@ export const navLinks = [
 ] as const;
 
 /** The hero's three numbers; their labels are `home.hero.stats`, in order. */
-export const heroStatValues = [String(CAFE_COUNT), "TH · EN", String(CAFE_COUNT)];
+export const heroStatValues = [CAFE_COUNT, "TH · EN", CAFE_COUNT];
 
 /**
  * Where each feature on the home page leads, in the order of

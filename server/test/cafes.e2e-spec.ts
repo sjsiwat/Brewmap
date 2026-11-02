@@ -332,7 +332,7 @@ describe('Cafes API (e2e)', () => {
 
     it('needs every word, and finds nothing for a café we do not have', async () => {
       expect(await names('/api/cafes?q=arabica%20starbucks')).toEqual([]);
-      expect(await names('/api/cafes?q=starbucks')).toEqual([]);
+      expect(await names('/api/cafes?q=blue%20bottle')).toEqual([]);
     });
 
     it('combines with filters and with the distance search', async () => {

@@ -28,12 +28,9 @@ export async function importOpeningHours(
     for (const [i, source] of raw.entries()) {
       const index = cafeIndexOf(i);
       const periods = parseWeeklyHours(source.open_hours);
-      if (!periods) {
-        console.warn(`#${index} ${source.title}: hours unreadable, left out`);
-        unreadable++;
-      }
       if (dryRun) {
         if (periods) imported++;
+        else unreadable++;
         continue;
       }
       const result = await CafeModel.updateOne(
@@ -42,12 +39,16 @@ export async function importOpeningHours(
           ? { $set: { openingHours: periods } }
           : { $unset: { openingHours: 1 } },
       );
+      // A scraped place left out of cafes.json (e.g. not a café) has no row.
       if (!result.matchedCount) {
         console.warn(
           `#${index} ${source.title}: no café with this index, skipped`,
         );
       } else if (periods) {
         imported++;
+      } else {
+        console.warn(`#${index} ${source.title}: hours unreadable, left out`);
+        unreadable++;
       }
     }
     console.log(
