@@ -495,7 +495,7 @@ owner เลือก: เก็บในฐานข้อมูล + API · �
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 17 — คาเฟ่ทั่วเชียงใหม่ (scrape รอบ 3) (owner สั่ง 2026-10-29)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-17.md](reviews/phase-17.md)
 **Branch:** `phase-17-citywide-cafes`
 **Review range:** `main..phase-17-citywide-cafes` (ใช้ `git diff main...HEAD`)
 
