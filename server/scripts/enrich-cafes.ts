@@ -80,7 +80,7 @@ export const ENRICH_TAGS = [
 const MAX_TEXT = 60;
 const MAX_TAGS = 4;
 const MIN_REVIEWS_WITH_TEXT = 2;
-const PRICE = { min: 30, max: 600 };
+const PRICE = { min: 15, max: 1500 };
 
 const SYSTEM = `You describe one café in Chiang Mai, Thailand for a café-discovery website, using ONLY its Google reviews.
 Write in English, short and concrete, in the style of these examples:
@@ -140,11 +140,18 @@ export interface Enrichment {
 }
 
 const THAI = /[฀-๿]/;
+// "N/A" and the like: the reviews describe something that isn't a café (a
+// car wash, a resort), so the place is left out rather than stored.
+const PLACEHOLDER =
+  /not applicable|\bn\/?a\b|unknown|not mentioned|no information/i;
 
 function cleanText(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const text = value.replace(/\s+/g, ' ').trim();
-  return text.length >= 3 && text.length <= MAX_TEXT && !THAI.test(text)
+  return text.length >= 3 &&
+    text.length <= MAX_TEXT &&
+    !THAI.test(text) &&
+    !PLACEHOLDER.test(text)
     ? text
     : null;
 }

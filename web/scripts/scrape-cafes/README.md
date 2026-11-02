@@ -12,7 +12,8 @@ in two rounds:
 - **Round 3 (city-wide, Phase 17)** — `queries-batch3.txt` + `build_raw_all.py`
   → `raw-all.json`, `npm run ai:enrich` (server) → `enrich3.json`, then
   `build_cafes_all.py` → `data/cafes.json`. Rounds 1-2's 173 cafés stay first
-  and unchanged; round 3 appends the rest of Chiang Mai province.
+  and unchanged; round 3 appends Mueang Chiang Mai and the six districts
+  around it.
 
 `data/cafes.json` is built from **round 3's output**. Rounds 1-2's files are
 kept for history/diffing — you don't need to re-run them separately.
@@ -44,7 +45,9 @@ npm run ai:summarize && npm run ai:translate
 `queries-batch3.txt` covers every sub-district of Mueang Chiang Mai, every
 sub-district of the six districts around it (Hang Dong, San Sai, San
 Kamphaeng, Saraphi, Mae Rim, Doi Saket), all 25 districts, and a few
-café-type searches, in English and Thai. A new café's area is its Mueang
+café-type searches, in English and Thai. `build_raw_all.py` then keeps only
+Mueang and those six districts (the owner left the far districts out); the
+scrape itself found cafés in all 25. A new café's area is its Mueang
 sub-district (as in rounds 1-2) or its district name outside Mueang.
 Round 3's `priceAvg` comes from prices in the reviews where they mention one,
 otherwise it is Gemini's estimate (`priceFromReviews: false` in

@@ -176,7 +176,10 @@ def main():
         known.append((here, area))
 
         name = clean_name(place['title'])
-        base = slugify(name) or 'cafe'
+        base = slugify(name)
+        # A Thai name leaves little or nothing in ASCII ("", "2", "pt").
+        if len(base.replace('-', '')) < 4 or base.replace('-', '').isdigit():
+            base = f"cafe-{slugify(area)}-{position + 1}"
         slug = base if base not in slugs else f"{base}-{slugify(area)}"
         n = 2
         while slug in slugs:

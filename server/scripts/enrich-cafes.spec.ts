@@ -39,6 +39,7 @@ describe('cleanEnrichment', () => {
   it.each([
     ['a missing field', { ...reply, flavor: undefined }],
     ['text in Thai', { ...reply, specialty: 'กาแฟเย็น' }],
+    ['a placeholder (not a café)', { ...reply, flavor: 'N/A' }],
     ['text too long', { ...reply, atmosphere: 'x'.repeat(61) }],
     ['a price out of range', { ...reply, priceAvg: 5000 }],
     ['no usable tag', { ...reply, tags: ['Not a tag'] }],

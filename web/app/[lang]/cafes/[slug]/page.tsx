@@ -15,7 +15,7 @@ export const revalidate = 3600;
 const cached = { next: { revalidate: 3600 } } satisfies RequestInit;
 
 // The most visited cafés are built ahead; any other café is rendered on its
-// first visit and then cached the same way. Building all 1,000+ (× 2
+// first visit and then cached the same way. Building all 1,400+ (× 2
 // languages) would make every deploy slow and hammer the API.
 const PRERENDERED = 200;
 export const dynamicParams = true;

@@ -122,29 +122,29 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
   });
 
   it('finds a café the visitor names, and says so when we do not have it', async () => {
-    geminiReplies({ q: 'Arabica' });
-    const named = (await find({ query: 'อยากไป % Arabica' }).expect(200))
+    // "One": there is also a "Himalaya arabica coffee".
+    geminiReplies({ q: 'Arabica One' });
+    const named = (await find({ query: 'อยากไป % Arabica One' }).expect(200))
       .body as AiFindResponseDto;
-    expect(named.filters).toEqual({ q: 'Arabica' });
+    expect(named.filters).toEqual({ q: 'Arabica One' });
     expect(named.relaxed).toEqual({});
     expect(named.items.map((m) => m.cafe.name)).toEqual([
       '% Arabica Chiang Mai One Nimman',
     ]);
 
-    geminiReplies({ q: 'Starbucks Reserve', area: 'Nimman' });
-    const missing = (
-      await find({ query: 'Starbucks Reserve Nimman' }).expect(200)
-    ).body as AiFindResponseDto;
+    geminiReplies({ q: 'Blue Bottle', area: 'Nimman' });
+    const missing = (await find({ query: 'Blue Bottle Nimman' }).expect(200))
+      .body as AiFindResponseDto;
     // We have no such café: the name is dropped, but "Nimman" is kept.
-    expect(missing.relaxed).toEqual({ q: 'Starbucks Reserve' });
+    expect(missing.relaxed).toEqual({ q: 'Blue Bottle' });
     expect(missing.filters).toEqual({ area: 'Nimman' });
     expect(missing.items.length).toBeGreaterThan(0);
     for (const { cafe } of missing.items) expect(cafe.area).toBe('Nimman');
 
     // A café we have, but not with these filters: the filters go first.
-    geminiReplies({ q: 'Arabica', area: 'Old City' });
+    geminiReplies({ q: 'Arabica One', area: 'Old City' });
     const elsewhere = (
-      await find({ query: '% Arabica in the Old City' }).expect(200)
+      await find({ query: '% Arabica One in the Old City' }).expect(200)
     ).body as AiFindResponseDto;
     expect(elsewhere.relaxed).toEqual({ area: 'Old City' });
     expect(elsewhere.items.map((m) => m.cafe.name)).toEqual([

@@ -45,9 +45,9 @@ interface LangParams {
   params: Promise<{ lang: string }>;
 }
 
-// Only /en and /th exist; anything else is a 404 (proxy.ts adds the prefix).
-export const dynamicParams = false;
-
+// Only /en and /th exist; anything else is a 404 below (proxy.ts adds the
+// prefix). No `dynamicParams = false` here: it would also 404 every café page
+// not prerendered at build.
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
