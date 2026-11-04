@@ -224,7 +224,12 @@ export class CafesService {
       const words = searchWords(query.q).map(
         (word) => new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'),
       );
-      if (words.length) filter.$and = words.map((word) => ({ name: word }));
+      // Each word in the English or the Thai name.
+      if (words.length) {
+        filter.$and = words.map((word) => ({
+          $or: [{ name: word }, { nameTh: word }],
+        }));
+      }
     }
     return filter;
   }

@@ -93,6 +93,13 @@ export class Cafe {
   @Prop({ type: String, required: true })
   name: string;
 
+  /**
+   * The café's name on Google Maps in Thai, when it differs from `name`
+   * (e.g. "Banta Coffee" → "ร้านกาแฟบ้านตา"), so a search in Thai finds it.
+   */
+  @Prop({ type: String })
+  nameTh?: string;
+
   @Prop({ type: String, required: true, index: true })
   area: string;
 

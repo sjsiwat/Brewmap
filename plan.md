@@ -515,6 +515,23 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 18 — ค้นหาด้วยชื่อร้านภาษาไทย (owner สั่ง 2026-11-04)
+**Status:** `awaiting-review`
+**Branch:** `phase-18-thai-names`
+**Review range:** `main..phase-18-thai-names` (ใช้ `git diff main...HEAD`)
+
+ปัญหาที่ owner เจอ: พิมพ์ "ร้านกาแฟบ้านตา" ไม่เจอ ทั้งที่มีร้านนี้ในระบบเป็น "Banta Coffee" · สาเหตุ: scrape ด้วย `-lang en` จึงได้แต่ชื่ออังกฤษ และค้นหาเทียบแค่ `name` · owner อนุมัติ: scrape ชื่อไทย + เพิ่ม field `nameTh`
+
+- [x] 18.1 **Scrape ภาษาไทย:** คำค้นเดิมทั้ง 3 รอบ (196 คำ) ด้วย `-lang th` → `build_names_th.py` จับคู่ด้วย place_id/cid → `names-th.json` (เก็บแค่ชื่อ) · รอบแรกจับคู่ได้ 1,059 ร้าน (ผลค้นหาภาษาไทยไม่ตรงกับอังกฤษ) → ค้นทีละร้านอีก 382 คำ (`"<name> <area> Chiang Mai"`) → ได้ชื่อไทย 1,440 / 1,442
+- [x] 18.2 **Schema/API:** `nameTh?: string` ใน `cafes` · response มี `nameTh` (null ถ้าไม่มี) · `q` ค้นทั้ง `name` และ `nameTh` · ตัด "ร้าน" หน้าคำค้น ("ร้านกาแฟบ้านตา" เจอ "กาแฟบ้านตา")
+- [x] 18.3 **`build_cafes_all.py`:** `nameTh` = ชื่อไทยบน Google เมื่อต่างจาก `name` · ถ้ามีชื่ออังกฤษอยู่ในชื่อไทย ตัดออก · เก็บส่วนที่เหลือเฉพาะเมื่อดูเป็นชื่อร้าน (มี กาแฟ/คาเฟ่/ร้าน/คอฟฟี่…) ไม่ใช่สาขา/ที่ตั้ง ("Roastniyom Coffee แยกหลุยส์") · วงเล็บที่ไม่ปิดตัดทิ้ง · ผล: **358 ร้านมีชื่อไทย** (ร้านอื่นชื่อบน Google เหมือนกันทั้งสองภาษา)
+- [x] 18.4 **เว็บ:** ชื่อไทยใต้ชื่อร้านในการ์ดและหน้าร้าน (`lang="th"`)
+- [x] 18.5 tests (e2e ค้นชื่อไทย) · Atlas seed · QA
+
+ผล: e2e ค้น "ร้านกาแฟบ้านตา" / "กาแฟบ้านตา" / "banta" เจอ Banta Coffee · Atlas seed แล้ว · QA `/th/cafes` พิมพ์ "ร้านกาแฟบ้านตา" → Banta Coffee พร้อมชื่อไทย · ไม่ใช้ Gemini
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
