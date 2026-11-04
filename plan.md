@@ -516,7 +516,7 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 18 — ค้นหาด้วยชื่อร้านภาษาไทย (owner สั่ง 2026-11-04)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-18.md](reviews/phase-18.md)
 **Branch:** `phase-18-thai-names`
 **Review range:** `main..phase-18-thai-names` (ใช้ `git diff main...HEAD`)
 
