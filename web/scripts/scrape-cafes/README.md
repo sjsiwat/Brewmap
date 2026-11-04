@@ -18,6 +18,24 @@ in two rounds:
 `data/cafes.json` is built from **round 3's output**. Rounds 1-2's files are
 kept for history/diffing — you don't need to re-run them separately.
 
+## Thai names (Phase 18)
+
+Round 3 was scraped with Google in English, so a café with an English name
+there ("Banta Coffee") didn't have its Thai one ("ร้านกาแฟบ้านตา"). The
+same queries scraped again with `-lang th`, plus one search per café still
+missing (`"<name> <area> Chiang Mai"`), give each place's Thai title:
+
+```bash
+docker run --rm -v gmaps-playwright-cache:/opt -v "$PWD/out:/out" \
+  gosom/google-maps-scraper -input /out/queries-th.txt -results /out/names-th.json \
+  -json -lang th -depth 10 -c 8 -exit-on-inactivity 3m
+python3 build_names_th.py out/names-th.json out/names-th-missing.json   # -> names-th.json
+python3 build_cafes_all.py                                              # adds nameTh
+```
+
+`nameTh` is set only when Google's Thai title is a different name: the
+English name and a branch or place ("สาขา…", "สุเทพ") are not.
+
 ## Round 3: whole of Chiang Mai
 
 ```bash

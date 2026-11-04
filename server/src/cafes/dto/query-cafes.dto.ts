@@ -56,6 +56,9 @@ const normaliseSearch = ({ value }: TransformArgs) => {
 
 export const SEARCH_MAX = 60;
 
+/** "ร้าน" (shop) in front of a Thai name: "ร้านกาแฟบ้านตา" also finds "กาแฟบ้านตา". */
+const THAI_SHOP = 'ร้าน';
+
 /**
  * The words of a name search: letters (any script, with Thai vowel and tone
  * marks), digits. Punctuation is ignored, so "%arabica" finds "% Arabica".
@@ -63,6 +66,9 @@ export const SEARCH_MAX = 60;
 export function searchWords(q: string): string[] {
   return q
     .split(/[^\p{L}\p{M}\p{N}]+/u)
+    .map((word) =>
+      word.startsWith(THAI_SHOP) ? word.slice(THAI_SHOP.length) : word,
+    )
     .filter(Boolean)
     .slice(0, 6);
 }

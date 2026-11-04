@@ -34,6 +34,11 @@ export function CafeCard({ cafe, reason }: { cafe: CafeResult; reason?: string }
           {cafe.name}
         </Link>
       </h3>
+      {cafe.nameTh && (
+        <p lang="th" className="mt-1 pr-10 text-sm text-muted">
+          {cafe.nameTh}
+        </p>
+      )}
 
       <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
         <span>{dataLabel(dict.areas, cafe.area)}</span>

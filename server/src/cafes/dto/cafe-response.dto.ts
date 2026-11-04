@@ -7,6 +7,8 @@ export class CafeResponseDto {
   slug: string;
   index: string;
   name: string;
+  /** Thai name on Google Maps, when it differs from `name`. */
+  nameTh: string | null;
   area: string;
   address: string;
   specialty: string;
@@ -64,6 +66,7 @@ export function toCafeResponse(
     slug: cafe.slug,
     index: cafe.index,
     name: cafe.name,
+    nameTh: cafe.nameTh ?? null,
     area: cafe.area,
     address: cafe.address,
     specialty: th?.specialty ?? cafe.specialty,

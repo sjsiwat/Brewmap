@@ -6,7 +6,8 @@ until it has one.
 
   python3 build_cafes_all.py
 
-Also writes web/data/cafe-count.json, which the site shows as its café count.
+Also writes web/data/cafe-count.json, which the site shows as its café count,
+and gives every café its Thai name from names-th.json (Phase 18) as `nameTh`.
 """
 import json, math, os, re, unicodedata
 from collections import Counter
@@ -152,6 +153,49 @@ def fmt_hours_24(open_hours):
     return f"{to24(parts[0], None if has_own else end_period and end_period.upper())}–{to24(parts[1])}"
 
 
+# Thai words that, left alone next to an English name, are a location or branch.
+PLACE_WORDS = sorted(
+    {k for _, keys in MUEANG_AREAS + DISTRICTS for k in keys if THAI_RUN.fullmatch(k.replace('.', ''))}
+    # Every sub-district searched in round 3 ("คาเฟ่ ต.สันนาเม็ง อ.สันทราย เชียงใหม่").
+    | set(re.findall(r'ต\.(\S+)', open(os.path.join(HERE, 'queries-batch3.txt')).read()))
+    | {'สาขา', 'จังหวัด', 'เชียงใหม่', 'อำเภอ', 'ตำบล', 'อ.', 'ต.', 'นิมมาน', 'นิมมานเหมินท์', 'คูเมือง', 'ถนน', 'ริมปิง'},
+    key=len, reverse=True)
+
+
+# Words of a Thai café name, as opposed to a branch or location.
+NAME_HINTS = ('กาแฟ', 'คาเฟ่', 'ร้าน', 'คอฟฟี่', 'โรงคั่ว', 'เบเกอรี่', 'ขนม', 'ชา', 'บ้าน')
+
+
+def thai_name(title, name):
+    """The Thai title, minus the English name when Google shows both; None if no different Thai name."""
+    if not THAI_RUN.search(title or ''):
+        return None
+    text = re.sub(r'[\u200b-\u200d]', '', unicodedata.normalize('NFKC', title))
+    low, en = text.lower(), name.lower()
+    if en and en in low:
+        start = low.index(en)
+        text = text[:start] + ' ' + text[start + len(en):]
+        # What's left after the English name is usually the branch ("สาขา…",
+        # "แยกหลุยส์"); keep it only when it reads as a café's Thai name
+        # ("Banta Coffee. กาแฟบ้านตา").
+        rest = text.strip(' .|-·,()')
+        if rest.startswith('สาขา') or not any(w in rest for w in NAME_HINTS):
+            return None
+    # A bracket left open: "กาแฟสร้างสรรค์ (ฟ้าฮ่าม" → "กาแฟสร้างสรรค์".
+    if text.count('(') > text.count(')'):
+        text = text[:text.rindex('(')]
+    text = re.sub(r'\s{2,}', ' ', text).strip(' .|-·,()')
+    if not THAI_RUN.search(text) or text == name:
+        return None
+    # "The Baristro Asian Style สุเทพ": only a place or branch, not a Thai name.
+    rest = text
+    for word in PLACE_WORDS:
+        rest = rest.replace(word, ' ')
+    if not THAI_RUN.search(rest):
+        return None
+    return text
+
+
 def main():
     raw = json.load(open(os.path.join(HERE, 'raw-all.json')))
     enrich = json.load(open(os.path.join(HERE, 'enrich3.json')))
@@ -210,12 +254,27 @@ def main():
         })
 
     out = cafes + added
+    names = json.load(open(os.path.join(HERE, 'names-th.json')))
+    with_thai = 0
+    for cafe in out:
+        place = raw[int(cafe['index']) - 1]
+        thai = thai_name(names.get(place.get('place_id')), cafe['name'])
+        cafe.pop('nameTh', None)
+        if thai:
+            # Right after the name, to keep the JSON readable.
+            items = list(cafe.items())
+            cafe.clear()
+            for key, value in items:
+                cafe[key] = value
+                if key == 'name':
+                    cafe['nameTh'] = thai
+            with_thai += 1
     json.dump(out, open(CAFES, 'w'), ensure_ascii=False, indent=2)
     open(CAFES, 'a').write('\n')
     json.dump({'count': len(out)}, open(COUNT, 'w'))
     open(COUNT, 'a').write('\n')
     print(f'{FIRST_NEW} + {len(added)} = {len(out)} cafés; {waiting} waiting for enrichment; '
-          f'{guessed} areas taken from the nearest café')
+          f'{guessed} areas taken from the nearest café; {with_thai} with a Thai name')
     print('areas:', Counter(c['area'] for c in added).most_common())
 
 

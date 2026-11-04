@@ -71,6 +71,11 @@ export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
           <h1 className="mt-3 max-w-2xl heading-page">
             {cafe.name}
           </h1>
+          {cafe.nameTh && (
+            <p lang="th" className="mt-2 text-lg text-ink-soft">
+              {cafe.nameTh}
+            </p>
+          )}
           <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">
             {format(t.description, {
               specialty: cafe.specialty,

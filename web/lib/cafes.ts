@@ -15,6 +15,8 @@ export interface Cafe {
   slug: string;
   index: string;
   name: string;
+  /** Thai name on Google Maps, when it differs from `name`. */
+  nameTh: string | null;
   area: string;
   address: string;
   specialty: string;

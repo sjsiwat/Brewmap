@@ -330,6 +330,21 @@ describe('Cafes API (e2e)', () => {
       }
     });
 
+    it('finds a café by its Thai name too, with or without "ร้าน"', async () => {
+      for (const q of ['ร้านกาแฟบ้านตา', 'กาแฟบ้านตา', 'banta']) {
+        expect(await names(`/api/cafes?q=${encodeURIComponent(q)}`)).toContain(
+          'Banta Coffee',
+        );
+      }
+      const res = await get(
+        `/api/cafes?q=${encodeURIComponent('บ้านตา')}`,
+      ).expect(200);
+      const banta = (res.body as PaginatedCafesDto).items.find(
+        (c) => c.name === 'Banta Coffee',
+      );
+      expect(banta?.nameTh).toMatch(/บ้านตา/);
+    });
+
     it('needs every word, and finds nothing for a café we do not have', async () => {
       expect(await names('/api/cafes?q=arabica%20starbucks')).toEqual([]);
       expect(await names('/api/cafes?q=blue%20bottle')).toEqual([]);
