@@ -243,8 +243,9 @@ def main():
     raw = json.load(open(os.path.join(HERE, 'raw-all.json')))
     enrich = json.load(open(os.path.join(HERE, 'enrich3.json')))
     previous = json.load(open(CAFES))
-    cafes = previous[:FIRST_NEW]
-    assert len(cafes) == FIRST_NEW
+    # Rounds 1-2 by index, not position: once one of them is excluded the
+    # list is shorter, and slicing would pull round-3 cafés in twice.
+    cafes = [c for c in previous if int(c['index']) <= FIRST_NEW]
     # A café keeps its slug from the last build even if its name is cleaned
     # up: the slug is its URL and the seed's key (a new one would duplicate it).
     slug_of = {c['index']: c['slug'] for c in previous}
