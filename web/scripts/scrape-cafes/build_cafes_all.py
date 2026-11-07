@@ -108,14 +108,52 @@ def clean_address(addr):
     return re.sub(r"\s*,\s*", ", ", addr).strip(", ").strip()
 
 
+# Brackets with no letter or digit inside (any script), once Thai is taken out: "()", "( & )".
+EMPTY_BRACKETS = re.compile(r'\([^\w)]*\)')
+# Words that alone don't name a café: ". CAFE" (from "<Thai name>. CAFE") is not a name.
+GENERIC = {'cafe', 'café', 'coffee', 'bar', 'tea', 'shop', 'house', 'home', 'homes', 'the', 'and', 'slow', 's', 'by'}
+
+
+def tidy(text):
+    """Collapse spaces, drop empty brackets, close or cut unbalanced ones, trim
+    stray punctuation and a dangling "by" / "&" at the ends - but keep a
+    closing bracket that belongs ("(มีใจให้มัทฉะ)")."""
+    text = EMPTY_BRACKETS.sub(' ', text)
+    while text.count('(') > text.count(')'):
+        text = text[:text.rindex('(')]
+    while text.count(')') > text.count('('):
+        i = text.index(')')
+        text = text[:i] + text[i + 1:]
+    text = re.sub(r'\(\s+', '(', re.sub(r'\s+\)', ')', text))
+    text = re.sub(r'\s{2,}', ' ', text)
+    text = re.sub(r'^[\s.|\-·,:;=@&☕]+', '', text)
+    # "(คาเมะคาเฟ่) - ถนนสนามกีฬา": a name that starts in brackets.
+    text = re.sub(r'^\(([^)]*)\)', r'\1', text)
+    text = re.sub(r'[\s.|\-·•,:;=@&]+$', '', text)
+    text = re.sub(r'\s+(by|&|and|x)$', '', text, flags=re.I)
+    return text.strip()
+
+
+def is_untidy(name):
+    """A name the round-2 cleaning left broken, e.g. "CHARLIE () Thai Tea … (Grab&Go"."""
+    return tidy(name) != name or name.count('(') != name.count(')')
+
+
 def clean_name(title):
-    name = unicodedata.normalize('NFKC', title)
-    name = re.sub(r'[​-‍]', '', name)
-    latin_only = re.sub(r'\s{2,}', ' ', THAI_RUN.sub('', name)).strip(' |-·,()')
+    name = re.sub(r'[\u200b-\u200d]', '', unicodedata.normalize('NFKC', title))
+    latin = tidy(THAI_RUN.sub(' ', name))
+    # "s (SAAO BAHTs COFFEE)": the English name is the part in brackets.
+    outside = re.sub(r'\([^)]*\)', ' ', latin)
+    inside = re.findall(r'\(([^)]*)\)', latin)
+    if len(re.findall(r'[A-Za-z0-9]', outside)) < 3 and inside:
+        best = max(inside, key=lambda part: len(LATIN.findall(part)))
+        if len(LATIN.findall(best)) >= 3:
+            latin = tidy(best)
+    words = {w.lower() for w in re.findall(r"[A-Za-zÀ-ÿ']+", latin)}
     # Keep the English name when there is one; a Thai-only name stays Thai.
-    if len(LATIN.findall(latin_only)) >= 3:
-        name = latin_only
-    return re.sub(r'\s{2,}', ' ', name).strip(' |-·,')
+    if len(LATIN.findall(latin)) >= 3 and not words <= GENERIC:
+        return latin
+    return tidy(name)
 
 
 def slugify(s):
@@ -181,10 +219,7 @@ def thai_name(title, name):
         rest = text.strip(' .|-·,()')
         if rest.startswith('สาขา') or not any(w in rest for w in NAME_HINTS):
             return None
-    # A bracket left open: "กาแฟสร้างสรรค์ (ฟ้าฮ่าม" → "กาแฟสร้างสรรค์".
-    if text.count('(') > text.count(')'):
-        text = text[:text.rindex('(')]
-    text = re.sub(r'\s{2,}', ' ', text).strip(' .|-·,()')
+    text = tidy(text)
     if not THAI_RUN.search(text) or text == name:
         return None
     # "The Baristro Asian Style สุเทพ": only a place or branch, not a Thai name.
@@ -196,18 +231,43 @@ def thai_name(title, name):
     return text
 
 
+# Google categories of places that are not cafés even when also tagged "Cafe".
+EXCLUDED_CATEGORIES = {'cannabis store', 'cannabis club'}
+
+
+def excluded(place):
+    return any(c.lower() in EXCLUDED_CATEGORIES for c in place.get('categories') or [])
+
+
 def main():
     raw = json.load(open(os.path.join(HERE, 'raw-all.json')))
     enrich = json.load(open(os.path.join(HERE, 'enrich3.json')))
-    cafes = json.load(open(CAFES))[:FIRST_NEW]
-    assert len(cafes) == FIRST_NEW
+    previous = json.load(open(CAFES))
+    # Rounds 1-2 by index, not position: once one of them is excluded the
+    # list is shorter, and slicing would pull round-3 cafés in twice.
+    cafes = [c for c in previous if int(c['index']) <= FIRST_NEW]
+    # A café keeps its slug from the last build even if its name is cleaned
+    # up: the slug is its URL and the seed's key (a new one would duplicate it).
+    slug_of = {c['index']: c['slug'] for c in previous}
 
-    slugs = {c['slug'] for c in cafes}
+    removed = 0
+    for cafe in cafes:
+        place = raw[int(cafe['index']) - 1]
+        if is_untidy(cafe['name']):
+            cafe['name'] = clean_name(place['title'])
+    kept = [c for c in cafes if not excluded(raw[int(c['index']) - 1])]
+    removed += len(cafes) - len(kept)
+    cafes = kept
+
+    slugs = set(slug_of.values())
     known = [((c['lat'], c['lng']), c['area']) for c in cafes]
     added, waiting, guessed = [], 0, 0
     for position in range(FIRST_NEW, len(raw)):
         place = raw[position]
         e = enrich.get(place.get('place_id'))
+        if excluded(place):
+            removed += 1
+            continue
         if not e:
             waiting += 1
             continue
@@ -220,15 +280,17 @@ def main():
         known.append((here, area))
 
         name = clean_name(place['title'])
-        base = slugify(name)
-        # A Thai name leaves little or nothing in ASCII ("", "2", "pt").
-        if len(base.replace('-', '')) < 4 or base.replace('-', '').isdigit():
-            base = f"cafe-{slugify(area)}-{position + 1}"
-        slug = base if base not in slugs else f"{base}-{slugify(area)}"
-        n = 2
-        while slug in slugs:
-            slug, n = f"{base}-{n}", n + 1
-        slugs.add(slug)
+        slug = slug_of.get(f"{position + 1:03d}")
+        if not slug:
+            base = slugify(name)
+            # A Thai name leaves little or nothing in ASCII ("", "2", "pt").
+            if len(base.replace('-', '')) < 4 or base.replace('-', '').isdigit():
+                base = f"cafe-{slugify(area)}-{position + 1}"
+            slug = base if base not in slugs else f"{base}-{slugify(area)}"
+            n = 2
+            while slug in slugs:
+                slug, n = f"{base}-{n}", n + 1
+            slugs.add(slug)
 
         ca = place.get('complete_address') or {}
         address = clean_address(', '.join(filter(None, [ca.get('street'), ca.get('borough'), ca.get('city')])))
@@ -273,7 +335,7 @@ def main():
     open(CAFES, 'a').write('\n')
     json.dump({'count': len(out)}, open(COUNT, 'w'))
     open(COUNT, 'a').write('\n')
-    print(f'{FIRST_NEW} + {len(added)} = {len(out)} cafés; {waiting} waiting for enrichment; '
+    print(f'{FIRST_NEW} + {len(added)} = {len(out)} cafés; {waiting} waiting for enrichment; {removed} not cafés (excluded categories); '
           f'{guessed} areas taken from the nearest café; {with_thai} with a Thai name')
     print('areas:', Counter(c['area'] for c in added).most_common())
 
