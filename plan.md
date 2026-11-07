@@ -628,7 +628,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:web`
 
 ### Phase 26 — Analytics: ให้ endpoint ของ Vercel ผ่าน proxy (ต่อจาก Phase 25)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-26.md](reviews/phase-26.md)
 **Branch:** `phase-26-analytics-endpoints`
 **Review range:** `main..phase-26-analytics-endpoints` (ใช้ `git diff main...HEAD`)
 
