@@ -343,6 +343,8 @@ describe('Cafes API (e2e)', () => {
         (c) => c.name === 'Banta Coffee',
       );
       expect(banta?.nameTh).toMatch(/บ้านตา/);
+      // Google's place id, for directions that name the café.
+      expect(banta?.placeId).toMatch(/^ChIJ[\w-]+$/);
     });
 
     it('needs every word, and finds nothing for a café we do not have', async () => {

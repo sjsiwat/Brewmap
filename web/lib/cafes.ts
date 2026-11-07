@@ -17,6 +17,8 @@ export interface Cafe {
   name: string;
   /** Thai name on Google Maps, when it differs from `name`. */
   nameTh: string | null;
+  /** Google Maps place id, or null if unknown. */
+  placeId: string | null;
   area: string;
   address: string;
   specialty: string;
@@ -53,6 +55,20 @@ export function formatPrice(priceAvg: number): string {
 export function osmEmbedUrl(lat: number, lng: number, delta = 0.006): string {
   const bbox = `${lng - delta}%2C${lat - delta}%2C${lng + delta}%2C${lat + delta}`;
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+}
+
+/**
+ * Google Maps directions to the café (opens the app on phones). With Google's
+ * place id the destination shows the café's name; without it, a pin at its
+ * coordinates.
+ */
+export function googleMapsDirectionsUrl(
+  cafe: Pick<Cafe, "name" | "placeId" | "lat" | "lng">,
+): string {
+  const base = "https://www.google.com/maps/dir/?api=1&destination=";
+  return cafe.placeId
+    ? `${base}${encodeURIComponent(cafe.name)}&destination_place_id=${encodeURIComponent(cafe.placeId)}`
+    : `${base}${cafe.lat}%2C${cafe.lng}`;
 }
 
 export function osmViewUrl(lat: number, lng: number): string {

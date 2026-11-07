@@ -9,6 +9,8 @@ export class CafeResponseDto {
   name: string;
   /** Thai name on Google Maps, when it differs from `name`. */
   nameTh: string | null;
+  /** Google Maps place id (for directions), or null if unknown. */
+  placeId: string | null;
   area: string;
   address: string;
   specialty: string;
@@ -67,6 +69,7 @@ export function toCafeResponse(
     index: cafe.index,
     name: cafe.name,
     nameTh: cafe.nameTh ?? null,
+    placeId: cafe.placeId ?? null,
     area: cafe.area,
     address: cafe.address,
     specialty: th?.specialty ?? cafe.specialty,

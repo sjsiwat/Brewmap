@@ -391,6 +391,8 @@ export const th: Dictionary = {
     reviews: { one: "({n} รีวิว)", other: "({n} รีวิว)" },
     stars: "ดาว",
     typicalDrink: "ราคาเครื่องดื่มโดยประมาณ",
+    directions: "นำทาง",
+    directionsTo: "นำทางไป {name} ด้วย Google Maps",
     highlights: "จุดเด่น",
     parking: "ที่จอดรถ",
     pets: "พาสัตว์เลี้ยงได้",
@@ -428,6 +430,8 @@ export const th: Dictionary = {
     no: "ไม่มี",
     location: "ที่ตั้ง",
     largerMap: "ดูแผนที่ใหญ่",
+    googleMaps: "นำทางด้วย Google Maps",
+    opensGoogleMaps: "(เปิด Google Maps)",
     mapTitle: "แผนที่ตำแหน่งของ {name}",
   },
 

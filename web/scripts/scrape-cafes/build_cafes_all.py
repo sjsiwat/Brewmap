@@ -322,6 +322,9 @@ def main():
         place = raw[int(cafe['index']) - 1]
         thai = thai_name(names.get(place.get('place_id')), cafe['name'])
         cafe.pop('nameTh', None)
+        # Google's id for the place: lets "Directions" name the café in Google Maps.
+        cafe.pop('placeId', None)
+        cafe['placeId'] = place['place_id']
         if thai:
             # Right after the name, to keep the JSON readable.
             items = list(cafe.items())
