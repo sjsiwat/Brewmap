@@ -613,7 +613,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 25 — Vercel Web Analytics (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-25.md](reviews/phase-25.md)
 **Branch:** `phase-25-vercel-analytics`
 **Review range:** `main..phase-25-vercel-analytics` (ใช้ `git diff main...HEAD`)
 
