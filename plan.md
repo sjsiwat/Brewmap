@@ -533,7 +533,7 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 19 — ตรวจความปลอดภัยและบั๊กก่อนเปิดให้คนอื่นทดสอบ (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-19.md](reviews/phase-19.md)
 **Branch:** `phase-19-prelaunch-fixes`
 **Review range:** `main..phase-19-prelaunch-fixes` (ใช้ `git diff main...HEAD`)
 
