@@ -652,6 +652,19 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:web`
 
+### Phase 28 — เพิ่มร้าน Kneads to Dough (owner สั่ง 2026-11-07)
+**Status:** `awaiting-review`
+**Branch:** `phase-28-kneads-to-dough`
+**Review range:** `main..phase-28-kneads-to-dough` (ใช้ `git diff main...HEAD`)
+
+ที่มา: owner ส่ง Kneads to Dough (หางดง, 4.8★ 307 รีวิว) · ไม่อยู่ในผล scrape เลย · Google จัดเป็น Bakery อย่างเดียว ซึ่งกฎ `NEEDS_CAFE_TOO` จะตัดออกอยู่แล้ว (รีวิวพูดถึงกาแฟ)
+
+- [x] 28.1 `add_places.py`: เพิ่มร้านที่ owner เลือกต่อท้าย `raw-all.json` (index เดิมไม่ขยับ) · ยังตรวจเชียงใหม่ / พื้นที่ / รีวิว ≥ 15 แต่ข้ามการตรวจหมวดคาเฟ่ · ตัดข้อมูลผู้รีวิวแบบเดียวกับ `build_raw_all.py` · ชื่อไทยลง `names-th.json` · วิธีใช้ใน README
+- [x] 28.2 scrape อังกฤษ + ไทย → #1443 "Kneads to Dough" / "นีดส์ ทู โดว์" · `ai:enrich` (enrich รอบนี้ลองร้านเก่าที่เคยล้ม 4 ร้านด้วย: 2 ไม่ผ่านเหมือนเดิม, "แม่หวานใจ (มวจ.)" ผ่าน → เอาออกจาก `enrich3.json` เพราะ owner ไม่ได้ขอ) · `cafes.json` +1 ร้าน ร้านอื่นไม่เปลี่ยน · 1,429 ร้าน
+- [x] 28.3 Atlas: seed (1 ใหม่) · เวลาเปิด-ปิด · รีวิว Google 5 · สรุป AI · แปลไทย · Gemini ~8 requests
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

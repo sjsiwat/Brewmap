@@ -156,3 +156,21 @@ names, profile photos, profile links, review photos, Google review ids and the
 owner's replies (which greet the reviewer by name) were removed (Phase 4c), and
 the pipeline above never used them. The git history was rewritten the same way
 (owner-approved, 2026-10-27), so no older commit has them either.
+
+## Owner picks: adding one place
+
+A place the scrape missed, or a bakery Google doesn't also call a café, can be
+added on request. It goes to the end of `raw-all.json`, so no café's index moves.
+
+```bash
+printf 'Kneads to Dough Hang Dong Chiang Mai\n' > out/q-place.txt
+docker run --rm -v gmaps-playwright-cache:/opt -v "$PWD/out:/out" \
+  gosom/google-maps-scraper -input /out/q-place.txt -results /out/place.json -json -depth 1 -c 2 -exit-on-inactivity 1m
+docker run --rm -v gmaps-playwright-cache:/opt -v "$PWD/out:/out" \
+  gosom/google-maps-scraper -input /out/q-place.txt -results /out/place-th.json -json -lang th -depth 1 -c 2 -exit-on-inactivity 1m
+python3 add_places.py out/place.json out/place-th.json   # -> raw-all.json, names-th.json
+(cd ../../../server && npm run ai:enrich)                 # also retries the few earlier failures
+python3 build_cafes_all.py
+# server: seed, import:opening-hours, import:google-reviews, ai:summarize, ai:translate
+```
+

@@ -36414,5 +36414,32 @@
     "lat": 18.7994099,
     "lng": 99.0169516,
     "placeId": "ChIJfVmfpqYl2jARToJ5O-W7lcA"
+  },
+  {
+    "slug": "kneads-to-dough",
+    "index": "1443",
+    "name": "Kneads to Dough",
+    "nameTh": "นีดส์ ทู โดว์",
+    "area": "Hang Dong",
+    "address": "178, 108 4, Nong Kwai, Hang Dong District",
+    "specialty": "Fruit pies & chocolate pistachio bread",
+    "flavor": "High-quality, balanced, not overly sweet",
+    "atmosphere": "Cozy, intimate, French-style home bakehouse",
+    "priceAvg": 80,
+    "tags": [
+      "Bakery",
+      "Cozy",
+      "Pet-friendly",
+      "Hidden gem"
+    ],
+    "hours": "09:00–16:00",
+    "rating": 4.8,
+    "reviewCount": 307,
+    "petFriendly": true,
+    "parking": false,
+    "drinkType": "Coffee",
+    "lat": 18.7279154,
+    "lng": 98.94159769999999,
+    "placeId": "ChIJP0Wtmhkx2jAR6O-7zrpik44"
   }
 ]
