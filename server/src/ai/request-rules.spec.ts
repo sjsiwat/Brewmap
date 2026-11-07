@@ -119,6 +119,7 @@ describe('areasMentioned', () => {
     ]);
     expect(areasMentioned('close to CMU', context.areas)).toEqual(['Suthep']);
     expect(areasMentioned('somewhere quiet', context.areas)).toEqual([]);
+    expect(areasMentioned('acmusic cafe', context.areas)).toEqual([]);
   });
 });
 

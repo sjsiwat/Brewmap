@@ -37,7 +37,7 @@ const FILTER_KEYS = [
 const FILTER_SYSTEM = `You turn a café request from Chiang Mai, Thailand (Thai or English) into search filters.
 Only set a filter the request clearly asks for; leave everything else out.
 Set "parking": true when the request mentions parking or coming by car, and "petFriendly": true when it mentions bringing a dog, cat or pet.
-"drinkType" is the café's main drink: "Tea" for a tea house or Thai tea, "Non-Coffee" only when the visitor wants no coffee at all (cocoa, juice, smoothies). Matcha is the "Matcha" tag, not a drink type.
+"drinkType" is the café's main drink: "Tea" for a tea house, "Non-Coffee" only when the visitor wants no coffee at all (cocoa, juice, smoothies). Matcha and Thai tea are the "Matcha" and "Thai tea" tags, not a drink type.
 Set "q" only when the request names a particular café or chain (e.g. "% Arabica", "Starbucks"): just the name, without words like "café" or "near".
 Prices are typical drink prices in Thai baht (THB).
 "tag" and "area" must be one of the allowed values exactly; pick the single closest tag or leave it out.

@@ -75,7 +75,10 @@ export function areasMentioned(request: string, areas: string[]): string[] {
   const text = request.toLowerCase();
   return areas.filter((area) =>
     [area.toLowerCase(), ...(AREA_WORDS[area] ?? [])].some((word) =>
-      text.includes(word),
+      // Latin words whole ("cmu", not inside another word); Thai has no spaces.
+      /^[a-z ]+$/.test(word)
+        ? new RegExp(`\\b${word}\\b`).test(text)
+        : text.includes(word),
     ),
   );
 }
