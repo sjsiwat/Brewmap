@@ -235,7 +235,22 @@ def thai_name(title, name):
 EXCLUDED_CATEGORIES = {'cannabis store', 'cannabis club'}
 
 
+# Shown as "Temporarily closed" on Google Maps (checked 2026-11-07; the scrape
+# has no field for it). Take a place out of this list when it reopens.
+CLOSED_PLACE_IDS = {
+    'ChIJu_PMHO4_2jARSeiy9yt4gyE',  # Titu Cafe
+    'ChIJGW3AAxYz2jARfKahVr8iFBU',  # TAMA.O COFFEE
+    'ChIJbWOLf9-r2zAR_1-xVDdNcnc',  # 22 Aquarius Glamping Cafe' (i love flower farm)
+    'ChIJD13Fbmsl2jAROaRZXDaHCho',  # Coffee Jame Cafe in garden
+    'ChIJZ9DTClmL2TARlCEFyU7uG0I',  # Brick Box Pool Villa & Café
+    'ChIJN1RdOwEx2jARLASPnOmQkPY',  # Brightz erabica coffee
+    'ChIJecpWKH422jAR-WMse2elPY8',  # Phufinn Doi
+}
+
+
 def excluded(place):
+    if place.get('place_id') in CLOSED_PLACE_IDS:
+        return True
     return any(c.lower() in EXCLUDED_CATEGORIES for c in place.get('categories') or [])
 
 
@@ -338,7 +353,7 @@ def main():
     open(CAFES, 'a').write('\n')
     json.dump({'count': len(out)}, open(COUNT, 'w'))
     open(COUNT, 'a').write('\n')
-    print(f'{FIRST_NEW} + {len(added)} = {len(out)} cafés; {waiting} waiting for enrichment; {removed} not cafés (excluded categories); '
+    print(f'{FIRST_NEW} + {len(added)} = {len(out)} cafés; {waiting} waiting for enrichment; {removed} excluded (not cafés, or closed); '
           f'{guessed} areas taken from the nearest café; {with_thai} with a Thai name')
     print('areas:', Counter(c['area'] for c in added).most_common())
 

@@ -6709,33 +6709,6 @@
     "placeId": "ChIJawFo4Jw72jARPDSQHwetc6I"
   },
   {
-    "slug": "phufinn-doi",
-    "index": "271",
-    "name": "Phufinn Doi",
-    "nameTh": "ภูฟิน ดอย",
-    "area": "Hang Dong",
-    "address": "MVWJ+52Q, Nam Phrae, Hang Dong District",
-    "specialty": "Caramel coffee & spicy spaghetti",
-    "flavor": "Well-presented, satisfying",
-    "atmosphere": "Scenic, photogenic, relaxing",
-    "priceAvg": 150,
-    "tags": [
-      "Scenic view",
-      "Photogenic",
-      "Cozy",
-      "Quiet"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.2,
-    "reviewCount": 1058,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.6954729,
-    "lng": 98.8801192,
-    "placeId": "ChIJecpWKH422jAR-WMse2elPY8"
-  },
-  {
     "slug": "aob-sook-cafe-restaurant",
     "index": "272",
     "name": "Aob-Sook Cafe & Restaurant",
@@ -14215,33 +14188,6 @@
     "placeId": "ChIJ3d3bJVE72jAR1N-Ot-84EAg"
   },
   {
-    "slug": "22-aquarius-glamping-cafe-i-love-flower-farm",
-    "index": "563",
-    "name": "22 Aquarius Glamping Cafe' (i love flower farm)",
-    "nameTh": "22 Aquarius Glamping Cafe' (ย้ายมาเปิดที่สวน i love flower farm)",
-    "area": "Mae Rim",
-    "address": "Mueang Kaeo, Mae Rim District",
-    "specialty": "Dirty coffee & bakery",
-    "flavor": "Balanced, mild",
-    "atmosphere": "Glamping, garden, scenic mountain views",
-    "priceAvg": 80,
-    "tags": [
-      "Photogenic",
-      "Nature",
-      "Bakery",
-      "Dirty coffee"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.8,
-    "reviewCount": 145,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.897807699999998,
-    "lng": 98.9806047,
-    "placeId": "ChIJbWOLf9-r2zAR_1-xVDdNcnc"
-  },
-  {
     "slug": "all-about-coffee-mae-hia",
     "index": "564",
     "name": "All About Coffee",
@@ -15534,32 +15480,6 @@
     "lat": 18.7734514,
     "lng": 99.06303659999999,
     "placeId": "ChIJa2swTq4v2jARwr8U1HiRhwE"
-  },
-  {
-    "slug": "brick-box-pool-villa-cafe",
-    "index": "614",
-    "name": "Brick Box Pool Villa & Café",
-    "area": "Doi Saket",
-    "address": "65 4, Pa Miang, Doi Saket District",
-    "specialty": "Coffee & cheesecake",
-    "flavor": "Consistent, tasty, satisfying",
-    "atmosphere": "Quiet, peaceful, lakeside view",
-    "priceAvg": 100,
-    "tags": [
-      "Quiet",
-      "Nature",
-      "Dessert",
-      "Breakfast"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.4,
-    "reviewCount": 192,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.907075199999998,
-    "lng": 99.2393761,
-    "placeId": "ChIJZ9DTClmL2TARlCEFyU7uG0I"
   },
   {
     "slug": "tree-co-coffee",
@@ -20620,32 +20540,6 @@
     "placeId": "ChIJ91U4Y-k72jAR54-vmMGbovQ"
   },
   {
-    "slug": "titu-cafe",
-    "index": "811",
-    "name": "Titu Cafe",
-    "area": "Mae Rim",
-    "address": "251, Mae Raem, Mae Rim District",
-    "specialty": "Carrot cake, scones & signature coffee",
-    "flavor": "Homemade, balanced, delicious",
-    "atmosphere": "Warm, charming, family-run",
-    "priceAvg": 90,
-    "tags": [
-      "Cozy",
-      "Dessert",
-      "Bakery",
-      "Matcha"
-    ],
-    "hours": "Hours vary",
-    "rating": 5,
-    "reviewCount": 61,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.910038,
-    "lng": 98.9178469,
-    "placeId": "ChIJu_PMHO4_2jARSeiy9yt4gyE"
-  },
-  {
     "slug": "tara-cafe-coffee-and-bakery",
     "index": "812",
     "name": "Tara Cafe' Coffee and bakery",
@@ -22925,31 +22819,6 @@
     "placeId": "ChIJyQFR35ov2jARGOa15P709Ik"
   },
   {
-    "slug": "brightz-erabica-coffee",
-    "index": "901",
-    "name": "Brightz erabica coffee",
-    "area": "Hang Dong",
-    "address": "259 moo 12, Nong Kwai, Hang Dong District",
-    "specialty": "Coconut milk coffee & Nan-grown espresso",
-    "flavor": "Rich, fresh, stevia-sweetened",
-    "atmosphere": "Small, photogenic, lively",
-    "priceAvg": 80,
-    "tags": [
-      "Specialty",
-      "Photogenic",
-      "Dessert"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.4,
-    "reviewCount": 84,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.738155799999998,
-    "lng": 98.931804,
-    "placeId": "ChIJN1RdOwEx2jARLASPnOmQkPY"
-  },
-  {
     "slug": "rox-coffee-craft",
     "index": "902",
     "name": "ROX Coffee Craft",
@@ -23461,32 +23330,6 @@
     "lat": 18.782467999999998,
     "lng": 98.8254508,
     "placeId": "ChIJZUhI2QRJ2jARQlLECGkV6o0"
-  },
-  {
-    "slug": "tama-o-coffee",
-    "index": "922",
-    "name": "TAMA.O COFFEE",
-    "area": "Saraphi",
-    "address": "1, 3, Pratu Pa, Mueang Chiang Mai District",
-    "specialty": "Coffee, chocolate brownies & cookies",
-    "flavor": "Rich, balanced, satisfying",
-    "atmosphere": "Small, cozy, garden seating",
-    "priceAvg": 80,
-    "tags": [
-      "Parking",
-      "Garden",
-      "Dessert",
-      "Cozy"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.9,
-    "reviewCount": 51,
-    "petFriendly": false,
-    "parking": true,
-    "drinkType": "Coffee",
-    "lat": 18.6284457,
-    "lng": 98.99819409999999,
-    "placeId": "ChIJGW3AAxYz2jARfKahVr8iFBU"
   },
   {
     "slug": "morning-olive",
@@ -27517,32 +27360,6 @@
     "lat": 18.837486,
     "lng": 99.04166459999999,
     "placeId": "ChIJeS76BNol2jARyx3cmSwUy0Y"
-  },
-  {
-    "slug": "coffee-jame-cafe-in-garden",
-    "index": "1082",
-    "name": "Coffee Jame Cafe in garden",
-    "area": "Nong Pa Khrang",
-    "address": "Q2VC+W64, Thung Hotel Soi 1, Nong Pa Khrang, Mueang Chiang Mai District",
-    "specialty": "Coconut Americano, French toast & breakfast sets",
-    "flavor": "Fresh, high-quality, homemade",
-    "atmosphere": "Garden, pet-filled, friendly, hidden gem",
-    "priceAvg": 80,
-    "tags": [
-      "Hidden gem",
-      "Garden",
-      "Cozy",
-      "Budget-friendly"
-    ],
-    "hours": "Hours vary",
-    "rating": 4.7,
-    "reviewCount": 41,
-    "petFriendly": true,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.7948125,
-    "lng": 99.0205625,
-    "placeId": "ChIJD13Fbmsl2jAROaRZXDaHCho"
   },
   {
     "slug": "connect-coffee",
