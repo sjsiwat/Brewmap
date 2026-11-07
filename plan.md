@@ -598,7 +598,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:web`
 
 ### Phase 24 — เอาร้านที่ปิดชั่วคราวออก (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-24.md](reviews/phase-24.md)
 **Branch:** `phase-24-remove-closed-cafes`
 **Review range:** `main..phase-24-remove-closed-cafes` (ใช้ `git diff main...HEAD`)
 
