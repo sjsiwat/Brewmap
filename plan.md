@@ -597,6 +597,21 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:web`
 
+### Phase 24 — เอาร้านที่ปิดชั่วคราวออก (owner สั่ง 2026-11-07)
+**Status:** `awaiting-review`
+**Branch:** `phase-24-remove-closed-cafes`
+**Review range:** `main..phase-24-remove-closed-cafes` (ใช้ `git diff main...HEAD`)
+
+ที่มา: owner เจอ Angus Coffee Roasters ปิดชั่วคราวบน Google (ไม่อยู่ใน BrewMap — ไม่เคยติดผล scrape) · scraper (gosom) ไม่มีช่องบอกว่าปิด (`status` ว่าง, `open_hours` ว่าง) → ตรวจ 54 ร้านที่ไม่มีเวลาเปิด-ปิดบน Google Maps ทีละร้าน (place_id): ปิดชั่วคราว 7 · ปิดถาวร 0 · ที่เหลือเปิดแต่ไม่ลงเวลา · ไม่มี favorites/รีวิวผู้ใช้ผูกอยู่
+
+- [x] 24.1 `build_cafes_all.py`: `CLOSED_PLACE_IDS` (7 ร้าน, ตรวจ 2026-11-07) ตัดออกเหมือน `EXCLUDED_CATEGORIES` · ร้านกลับมาเปิด → เอาออกจากรายการ · `cafes.json` ลบ 7 ร้านพอดี ร้านอื่นไม่เปลี่ยน (slug เดิม) · `cafe-count.json` 1,428
+- [x] 24.2 Atlas (owner อนุมัติ): ลบ 7 ร้าน + รีวิว Google 35 รายการ · favorites/รีวิวผู้ใช้ 0 · เหลือ 1,428 ร้าน
+- [x] 24.3 ร้านที่ลบ: Titu Cafe, TAMA.O COFFEE, 22 Aquarius Glamping Cafe', Coffee Jame Cafe in garden, Brick Box Pool Villa & Café, Brightz erabica coffee, Phufinn Doi
+
+**ข้อจำกัด:** ตรวจเฉพาะร้านที่ไม่มีเวลาเปิด-ปิด (ร้านที่มีเวลาอาจปิดได้เหมือนกัน) · Google เปลี่ยนสถานะได้ตลอด
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
