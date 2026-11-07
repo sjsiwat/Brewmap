@@ -108,7 +108,7 @@ export function CafeCard({ cafe, reason }: { cafe: CafeResult; reason?: string }
 
       {/* Like ♡: above the stretched link, so it opens Google Maps, not the café page. */}
       <a
-        href={googleMapsDirectionsUrl(cafe.lat, cafe.lng)}
+        href={googleMapsDirectionsUrl(cafe)}
         target="_blank"
         rel="noreferrer"
         aria-label={format(t.directionsTo, { name: cafe.name })}

@@ -94,7 +94,7 @@ export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
           </div>
 
           <a
-            href={googleMapsDirectionsUrl(cafe.lat, cafe.lng)}
+            href={googleMapsDirectionsUrl(cafe)}
             target="_blank"
             rel="noreferrer"
             className="mt-6 flex w-full items-center justify-center gap-3 border border-rust bg-rust px-6 py-3.5 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:border-ink hover:bg-ink focus-ring sm:inline-flex sm:w-auto"

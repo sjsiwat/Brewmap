@@ -100,6 +100,10 @@ export class Cafe {
   @Prop({ type: String })
   nameTh?: string;
 
+  /** Google Maps place id, so directions can name the café. */
+  @Prop({ type: String })
+  placeId?: string;
+
   @Prop({ type: String, required: true, index: true })
   area: string;
 
