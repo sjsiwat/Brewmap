@@ -64,11 +64,18 @@ export function analyticsPrefixes(config = process.env.NEXT_PUBLIC_VERCEL_OBSERV
 }
 
 const ANALYTICS_PREFIXES = analyticsPrefixes();
+// The variable isn't always visible to the proxy on Vercel, so also let
+// through anything shaped like those endpoints: /<16 hex>/view|event|session.
+const ANALYTICS_PATH = /^\/[0-9a-f]{16}\/(view|event|session)$/;
+
+export function isAnalyticsPath(pathname: string): boolean {
+  return ANALYTICS_PATH.test(pathname) || ANALYTICS_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (pathname === "/api" || pathname.startsWith("/api/")) return forwardToApi(request);
-  if (ANALYTICS_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return NextResponse.next();
+  if (isAnalyticsPath(pathname)) return NextResponse.next();
 
   // Pages: every URL starts with /en or /th. Remember the one in use, so a
   // bare link (/cafes) later opens in the same language.
