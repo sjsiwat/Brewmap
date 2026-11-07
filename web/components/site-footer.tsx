@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, Coffee, Download, MapPin } from "lucide-react";
 import { navLinks } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -59,6 +60,45 @@ export function SiteFooter({ lang }: { lang: Locale }) {
             </ul>
           </div>
         </div>
+
+        <section
+          aria-labelledby="support-coffee"
+          className="mt-16 flex flex-col gap-6 border border-paper/15 p-6 sm:flex-row sm:items-center sm:gap-8 md:p-8"
+        >
+          {/* White around the code: banking apps need the quiet zone to scan it. */}
+          <div className="w-36 shrink-0 bg-white p-2 sm:w-40">
+            <Image
+              src="/support/promptpay-qr.png"
+              alt={t.footer.supportAlt}
+              width={460}
+              height={460}
+              className="h-auto w-full"
+            />
+          </div>
+          <div>
+            <h2
+              id="support-coffee"
+              className="flex items-center gap-2 font-display text-2xl text-paper"
+            >
+              <Coffee size={20} className="text-rust-bright" aria-hidden />
+              {t.footer.supportTitle}
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-paper/70">
+              {t.footer.supportBody}
+            </p>
+            <p className="mt-2 max-w-md text-xs leading-relaxed text-paper/50">
+              {t.footer.supportMobile}
+            </p>
+            <a
+              href="/support/promptpay-qr.png"
+              download="brewmap-promptpay-qr.png"
+              className="focus-ring mt-4 inline-flex items-center gap-2 border border-paper/30 px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-paper/80 transition-colors hover:border-rust-bright hover:text-rust-bright"
+            >
+              <Download size={13} aria-hidden />
+              {t.footer.supportSave}
+            </a>
+          </div>
+        </section>
 
         <div className="mt-16 flex flex-col gap-2 border-t border-paper/15 pt-6 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-paper/60 sm:flex-row sm:items-center sm:justify-between">
           <span>© {year} BrewMap</span>

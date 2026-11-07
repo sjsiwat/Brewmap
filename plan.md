@@ -586,6 +586,17 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 23 — "สนับสนุนค่ากาแฟ" QR พร้อมเพย์ใน footer (owner สั่ง 2026-11-07)
+**Status:** `approved` — [reviews/phase-23.md](reviews/phase-23.md)
+**Branch:** `phase-23-footer-support-qr` (ต่อจาก `phase-22-google-maps-directions`)
+**Review range:** `phase-22-google-maps-directions..phase-23-footer-support-qr`
+
+- [x] 23.1 รูป QR จาก owner ตัดเหลือแค่ตัว QR (ไม่มีชื่อ/เลขบัญชี/เลขอ้างอิง) + ขอบขาวให้แอปธนาคารสแกนได้ → `web/public/support/promptpay-qr.png` · ตรวจแล้วถอดรหัสได้เหมือนรูปต้นฉบับ (EMV payload เดียวกัน)
+- [x] 23.2 footer ทุกหน้า: กล่อง "สนับสนุนค่ากาแฟ" / "Support me for coffee" ก่อนแถบ © · QR บนพื้นขาว · ข้อความอธิบาย + คำแนะนำสำหรับมือถือ (บันทึกรูปแล้วเปิดในแอปธนาคาร) · ปุ่ม "บันทึกรูป QR" (`download`) · ไอคอนกาแฟสี rust-bright · `next/image` · `img-src 'self'` ใน CSP พอแล้ว
+- [x] 23.3 QA: desktop + 375px (ไม่ล้นจอ) ทั้งสองภาษา
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

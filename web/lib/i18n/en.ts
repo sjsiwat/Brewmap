@@ -49,6 +49,11 @@ export const en = {
     chiangMai: "Chiang Mai, Thailand",
     explore: "Explore",
     motto: "Taste first. Location second.",
+    supportTitle: "Support me for coffee",
+    supportBody: "Enjoying BrewMap? Buy me a coffee. Scan with any Thai banking app (PromptPay).",
+    supportMobile: "On your phone? Save the QR, then open it in your banking app.",
+    supportSave: "Save QR",
+    supportAlt: "PromptPay QR code to support BrewMap",
   },
 
   units: {
