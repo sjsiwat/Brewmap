@@ -641,7 +641,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:web`
 
 ### Phase 27 — Analytics: ปล่อย path ตามรูปแบบ (ต่อจาก Phase 26)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-27.md](reviews/phase-27.md)
 **Branch:** `phase-27-analytics-path-pattern`
 **Review range:** `main..phase-27-analytics-path-pattern` (ใช้ `git diff main...HEAD`)
 
