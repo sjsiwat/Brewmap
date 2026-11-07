@@ -550,7 +550,7 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 20 — ข้อความหน้าแรก/หน้าค้นหา (ภาษาไทย) ตามที่ owner เขียน (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-20.md](reviews/phase-20.md)
 **Branch:** `phase-20-thai-hero-copy`
 **Review range:** `main..phase-20-thai-hero-copy` (ใช้ `git diff main...HEAD`)
 
