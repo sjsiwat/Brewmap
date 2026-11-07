@@ -640,6 +640,18 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:web`
 
+### Phase 27 — Analytics: ปล่อย path ตามรูปแบบ (ต่อจาก Phase 26)
+**Status:** `awaiting-review`
+**Branch:** `phase-27-analytics-path-pattern`
+**Review range:** `main..phase-27-analytics-path-pattern` (ใช้ `git diff main...HEAD`)
+
+ที่มา (QA บน production หลัง Phase 26 deploy สำเร็จ): `/6ce677d486a77f7b/view` ยัง redirect เป็น `/th/...` → `NEXT_PUBLIC_VERCEL_OBSERVABILITY_CLIENT_CONFIG` มองไม่เห็นใน proxy บน Vercel (เห็นแค่ใน bundle ฝั่ง browser)
+
+- [x] 27.1 `isAnalyticsPath()`: ปล่อยผ่านถ้าตรง `/^\/[0-9a-f]{16}\/(view|event|session)$/` (รูปแบบ endpoint ของ Vercel) หรือ prefix จาก config (Phase 26)
+- [x] 27.2 QA: unit 9 path (3 endpoint จริง → ผ่าน · `/cafes`, `/th/cafes`, path ซ้อน, ตัวพิมพ์ใหญ่, ไม่ใช่ 16 hex, ชื่อ endpoint อื่น → ไม่ผ่าน) · build ไม่มี env: `POST /6ce677d486a77f7b/view` ไม่ redirect · `/cafes` → `/en/cafes`
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
