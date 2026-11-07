@@ -559,7 +559,7 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 **Gate:** `npm run gate:web`
 
 ### Phase 21 — AI Finder ตีความคำขอผิด (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-21.md](reviews/phase-21.md)
 **Branch:** `phase-21-ai-finder-filters`
 **Review range:** `main..phase-21-ai-finder-filters` (ใช้ `git diff main...HEAD`)
 
