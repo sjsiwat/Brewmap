@@ -574,7 +574,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:server`
 
 ### Phase 22 — ปุ่มนำทางด้วย Google Maps (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review` (round 2: 22.5)
+**Status:** `approved` — [reviews/phase-22.md](reviews/phase-22.md)
 **Branch:** `phase-22-google-maps-directions`
 **Review range:** `main..phase-22-google-maps-directions` (ใช้ `git diff main...HEAD`)
 
