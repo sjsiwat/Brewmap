@@ -587,7 +587,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
 ### Phase 23 — "สนับสนุนค่ากาแฟ" QR พร้อมเพย์ใน footer (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-23.md](reviews/phase-23.md)
 **Branch:** `phase-23-footer-support-qr` (ต่อจาก `phase-22-google-maps-directions`)
 **Review range:** `phase-22-google-maps-directions..phase-23-footer-support-qr`
 
