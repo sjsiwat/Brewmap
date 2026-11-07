@@ -653,7 +653,7 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 **Gate:** `npm run gate:web`
 
 ### Phase 28 — เพิ่มร้าน Kneads to Dough (owner สั่ง 2026-11-07)
-**Status:** `awaiting-review`
+**Status:** `approved` — [reviews/phase-28.md](reviews/phase-28.md)
 **Branch:** `phase-28-kneads-to-dough`
 **Review range:** `main..phase-28-kneads-to-dough` (ใช้ `git diff main...HEAD`)
 
