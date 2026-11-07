@@ -558,6 +558,21 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 
 **Gate:** `npm run gate:web`
 
+### Phase 21 — AI Finder ตีความคำขอผิด (owner สั่ง 2026-11-07)
+**Status:** `approved` — [reviews/phase-21.md](reviews/phase-21.md)
+**Branch:** `phase-21-ai-finder-filters`
+**Review range:** `main..phase-21-ai-finder-filters` (ใช้ `git diff main...HEAD`)
+
+bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3.1-flash-lite): "ร้านเงียบ ๆ นั่งทำงานได้ มีที่จอดรถ" → ไม่มี parking แต่มี area Old City + radiusKm 5 ที่ไม่ได้ขอ · "มัทฉะไม่เกิน 150 บาท ใกล้นิมมาน" → drinkType Non-Coffee (ร้านมัทฉะ 68/103 เป็น drinkType Coffee) แล้ว relax tag Matcha ทิ้งก่อน → ได้ร้านเจลาโต้ · บางครั้งทิ้ง maxPrice
+
+- [x] 21.1 `FILTER_SYSTEM`: อธิบาย drinkType ให้ชัด (มัทฉะเป็น tag) · ห้ามเดา area/radius · ตัวอย่าง 4 ข้อ
+- [x] 21.2 `request-rules.ts` `applyRequestRules()` (หลัง `sanitizeFilters`): คำในคำขอมีสิทธิ์สุดท้าย — ที่จอดรถ/car → `parking`, พาหมา/pet → `petFriendly` (ไม่นับ "คาเฟ่แมว"), มัทฉะ → tag Matcha + ลบ drinkType, ชาไทย → tag Thai tea, "ไม่เกิน N บาท"/"under N baht" → `maxPrice` (ไม่นับ กม./นาที) · area เฉพาะที่คำขอพูดถึง (ชื่ออังกฤษ/ไทย/landmark เช่น Maya, ท่าแพ, CMU) · radiusKm เฉพาะเมื่อพูดถึงระยะ ("ใกล้", "km") และถ้ามี area ต้องมีตัวเลขระยะ
+- [x] 21.3 filter ที่คำขอระบุเอง (tag จากคำ, area) ถูก relax หลังตัวอื่น (`nextRelaxation(filters, pinned)`) แต่ก่อนชื่อร้าน
+- [x] 21.4 tests: unit `request-rules.spec.ts` · e2e ใหม่ (Gemini ตอบผิดแบบที่เจอจริง → ได้ Matcha + parking) · e2e เดิม 2 ข้อเปลี่ยนจาก matcha เป็น Tea/Quiet เพราะ matcha ไม่ใช่ drinkType แล้ว
+- [x] 21.5 eval จริงกับ Gemini (local API, Atlas อ่านอย่างเดียว) 9 คำค้น: filter ถูกทุกข้อ
+
+**Gate:** `npm run gate:server`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
