@@ -28,6 +28,7 @@ def main(en_path, th_path):
     raw = json.load(open(RAW))
     names = json.load(open(NAMES))
     seen = {p.get('place_id') for p in raw} | {p.get('cid') for p in raw}
+    seen.discard(None)
     thai = {p.get('place_id'): p['title'].strip() for p in lines(th_path) if p.get('title')}
     added = []
     for place in lines(en_path):
@@ -43,6 +44,8 @@ def main(en_path, th_path):
             continue
         raw.append(slim(place))
         seen.add(pid)
+        if place.get('cid'):
+            seen.add(place['cid'])
         if thai.get(pid):
             names[pid] = thai[pid]
         added.append(f'#{len(raw):03d} {place["title"]}')
