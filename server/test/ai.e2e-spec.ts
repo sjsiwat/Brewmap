@@ -77,15 +77,15 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
   });
 
   it('applies valid filters and returns at most 5 matches with reasons', async () => {
-    geminiReplies({ drinkType: 'Tea', tag: 'Matcha', maxPrice: 200 });
+    geminiReplies({ drinkType: 'Tea', tag: 'Quiet', maxPrice: 200 });
     const res = await find({
-      query: 'อยากได้ร้านมัทฉะ ราคาไม่เกิน 200',
+      query: 'อยากได้ร้านชาเงียบ ๆ ราคาไม่เกิน 200',
     }).expect(200);
     const body = res.body as AiFindResponseDto;
 
     expect(body.filters).toEqual({
       drinkType: 'Tea',
-      tag: 'Matcha',
+      tag: 'Quiet',
       maxPrice: 200,
     });
     expect(body.relaxed).toEqual({});
@@ -93,32 +93,49 @@ describe('AI Finder (e2e, Gemini mocked)', () => {
     expect(body.items.length).toBeLessThanOrEqual(5);
     for (const { cafe, reason } of body.items) {
       expect(cafe.drinkType).toBe('Tea');
-      expect(cafe.tags).toContain('Matcha');
+      expect(cafe.tags).toContain('Quiet');
       expect(cafe.priceAvg).toBeLessThanOrEqual(200);
       expect(reason).toBe(`Fits: ${cafe.slug}`);
     }
   });
 
   it('relaxes the least important filters until something matches', async () => {
-    // No cafe sells matcha for 10 baht: give up tag, then drink, then price.
+    // No cafe sells tea for 10 baht: give up tag, then drink, then price.
     geminiReplies({
       drinkType: 'Tea',
-      tag: 'Matcha',
+      tag: 'Quiet',
       maxPrice: 10,
       parking: true,
     });
     const body = (
-      await find({ query: 'matcha for 10 baht with parking' }).expect(200)
+      await find({ query: 'quiet tea for 10 baht with parking' }).expect(200)
     ).body as AiFindResponseDto;
 
     expect(body.relaxed).toEqual({
-      tag: 'Matcha',
+      tag: 'Quiet',
       drinkType: 'Tea',
       maxPrice: 10,
     });
     expect(body.filters).toEqual({ parking: true });
     expect(body.items.length).toBeGreaterThan(0);
     for (const { cafe } of body.items) expect(cafe.parking).toBe(true);
+  });
+
+  it('corrects Gemini from the request words, and relaxes those last', async () => {
+    // flash-lite answered matcha with "Non-Coffee" and dropped parking.
+    geminiReplies({ drinkType: 'Non-Coffee', maxPrice: 10, area: 'Old City' });
+    const body = (
+      await find({ query: 'matcha for 10 baht with parking' }).expect(200)
+    ).body as AiFindResponseDto;
+
+    // Matcha is a tag, parking was asked for, and no area was mentioned.
+    expect(body.relaxed).toEqual({ maxPrice: 10 });
+    expect(body.filters).toEqual({ tag: 'Matcha', parking: true });
+    expect(body.items.length).toBeGreaterThan(0);
+    for (const { cafe } of body.items) {
+      expect(cafe.tags).toContain('Matcha');
+      expect(cafe.parking).toBe(true);
+    }
   });
 
   it('finds a café the visitor names, and says so when we do not have it', async () => {
