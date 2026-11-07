@@ -44,9 +44,31 @@ function preferredLocale(request: NextRequest): Locale {
   return accepted.map((entry) => entry.lang).find(hasLocale) ?? defaultLocale;
 }
 
+/**
+ * Vercel Web Analytics on Vercel posts to a per-project path such as
+ * /6ce677d486a77f7b/view (harder for ad blockers to spot than /_vercel/insights).
+ * Vercel puts it in this build-time variable; those paths must reach Vercel,
+ * not get a language prefix.
+ */
+export function analyticsPrefixes(config = process.env.NEXT_PUBLIC_VERCEL_OBSERVABILITY_CLIENT_CONFIG): string[] {
+  try {
+    const analytics = (JSON.parse(config ?? "") as { analytics?: Record<string, unknown> })?.analytics ?? {};
+    const first = Object.values(analytics)
+      .filter((value): value is string => typeof value === "string" && value.startsWith("/"))
+      .map((path) => path.split("/")[1])
+      .filter((segment) => segment && !hasLocale(segment) && segment !== "api");
+    return [...new Set(first)].map((segment) => `/${segment}/`);
+  } catch {
+    return [];
+  }
+}
+
+const ANALYTICS_PREFIXES = analyticsPrefixes();
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (pathname === "/api" || pathname.startsWith("/api/")) return forwardToApi(request);
+  if (ANALYTICS_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return NextResponse.next();
 
   // Pages: every URL starts with /en or /th. Remember the one in use, so a
   // bare link (/cafes) later opens in the same language.

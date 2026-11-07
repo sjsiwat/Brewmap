@@ -627,6 +627,19 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:web`
 
+### Phase 26 — Analytics: ให้ endpoint ของ Vercel ผ่าน proxy (ต่อจาก Phase 25)
+**Status:** `awaiting-review`
+**Branch:** `phase-26-analytics-endpoints`
+**Review range:** `main..phase-26-analytics-endpoints` (ใช้ `git diff main...HEAD`)
+
+ที่มา (QA บน production หลัง Phase 25): Vercel ตั้งค่า analytics ผ่าน `NEXT_PUBLIC_VERCEL_OBSERVABILITY_CLIENT_CONFIG` ให้ใช้ path สุ่มต่อโปรเจกต์ (`/6ce677d486a77f7b/script.js`, `/view`, `/event`, `/session`) แทน `/_vercel/insights` · `/view` ไม่มีนามสกุล → `proxy.ts` redirect ไป `/en/...` → page view จะไม่ถึง Vercel
+
+- [x] 26.1 `analyticsPrefixes()` อ่าน path จาก config ตอน build (segment แรก ไม่ใช่ภาษา/`api`) · `proxy()` ปล่อย path เหล่านี้ผ่าน (`NextResponse.next()`) · ไม่มี config → ไม่ทำอะไร
+- [x] 26.2 QA: unit (config จริง → `/6ce677d486a77f7b/`; ว่าง/JSON เสีย/`/th`,`/api` → ไม่มี) · build พร้อม env: `POST /6ce677d486a77f7b/view` ไม่ redirect · `/cafes` ยัง redirect เป็น `/en/cafes`
+- [ ] owner: เปิด Analytics ใน Vercel dashboard (ตอนนี้ `script.js` = 404 จาก Vercel)
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
