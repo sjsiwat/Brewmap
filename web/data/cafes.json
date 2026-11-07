@@ -3268,7 +3268,7 @@
   {
     "slug": "woodsage-coffee-bar-pet-friendly-but-not-a-dog-cafe",
     "index": "139",
-    "name": "Woodsage Coffee & Bar ( Pet friendly but Not a dog cafe)",
+    "name": "Woodsage Coffee & Bar (Pet friendly but Not a dog cafe)",
     "area": "Fa Ham",
     "address": "121 2, Fa Ham, Muang",
     "specialty": "Homemade bakery, pet-friendly cafe",
@@ -4273,7 +4273,7 @@
   {
     "slug": "akha-ama-coffee-the-new-original",
     "index": "182",
-    "name": "Akha Ama Coffee ( The New Original",
+    "name": "Akha Ama Coffee (The New Original)",
     "nameTh": "กาแฟอาข่า อ่ามา",
     "area": "Old City",
     "address": "moonmueang soi 9, Old City Si Phum, Mueang Chiang Mai District",
@@ -4322,8 +4322,8 @@
   {
     "slug": "magokoro-teahouse-by",
     "index": "184",
-    "name": "Magokoro Teahouse by",
-    "nameTh": "มาโกโคโระ ทีเฮาส์ (มีใจให้มัทฉะ",
+    "name": "Magokoro Teahouse",
+    "nameTh": "มาโกโคโระ ทีเฮาส์ (มีใจให้มัทฉะ)",
     "area": "Chang Khlan",
     "address": "191/1 Sridonchai Rd, Chang Khlan Sub-district, Mueang Chiang Mai District",
     "specialty": "Matcha cream puff & traditional Japanese tea",
@@ -4821,7 +4821,7 @@
   {
     "slug": "english-cafe-baanfarang-bakery-cafe",
     "index": "204",
-    "name": "English Café (Baanfarang Bakery & Café",
+    "name": "English Café (Baanfarang Bakery & Café)",
     "area": "San Kamphaeng",
     "address": "158 Chae Chang, San Kamphaeng District",
     "specialty": "Homemade pizza, pies, and English-style breakfast",
@@ -5543,7 +5543,7 @@
   {
     "slug": "1st-for-coffee-co1ffee",
     "index": "233",
-    "name": "1st For Coffee (CO1FFEE",
+    "name": "1st For Coffee (CO1FFEE)",
     "area": "Chang Khlan",
     "address": "40 3 Sridonchai Rd, Chang Khlan Sub-district, Mueang Chiang Mai District",
     "specialty": "Iced Hazelnut Macchiato & house-roasted beans",
@@ -5568,7 +5568,7 @@
   {
     "slug": "basecamp-coffee-club-thailand",
     "index": "234",
-    "name": "Basecamp Coffee Club (Thailand",
+    "name": "Basecamp Coffee Club (Thailand)",
     "area": "Suthep",
     "address": "208, Suthep",
     "specialty": "Strong coffee & smoothies",
@@ -5743,7 +5743,7 @@
     "slug": "papa-s-garden",
     "index": "241",
     "name": "Papa's Garden",
-    "nameTh": "Papa’s Garden - บ้านสวนคุณพ่อ(ดอยสะเก็ดเชียงใหม่",
+    "nameTh": "Papa’s Garden - บ้านสวนคุณพ่อ(ดอยสะเก็ดเชียงใหม่)",
     "area": "Doi Saket",
     "address": "1, Choeng Doi, Doi Saket District",
     "specialty": "Steaks, coffee & fish and chips",
@@ -5864,8 +5864,8 @@
   {
     "slug": "charlie-thai-tea-nimman-soi13-grab-go",
     "index": "246",
-    "name": "CHARLIE () Thai Tea - Nimman Soi13 (Grab&Go",
-    "nameTh": "CHARLIE (ชาร์ลี) Thai Tea - Nimman Soi13 (Grab&Go",
+    "name": "CHARLIE Thai Tea - Nimman Soi13 (Grab&Go)",
+    "nameTh": "CHARLIE (ชาร์ลี) Thai Tea - Nimman Soi13 (Grab&Go)",
     "area": "Nimman",
     "address": "2 Nimmana Haeminda Rd Lane 13, Nimmanhaemin Suthep, Mueang Chiang Mai District",
     "specialty": "Salted Caramel Cold Foam Thai Milk Tea & Satun tea",
@@ -6065,7 +6065,7 @@
     "slug": "kame-kafe",
     "index": "254",
     "name": "KAME KAFE",
-    "nameTh": "คาเมะคาเฟ่) - ถนนสนามกีฬา",
+    "nameTh": "คาเมะคาเฟ่ - ถนนสนามกีฬา",
     "area": "Old City",
     "address": "94 2 Sanamkila Rd, Si Phum",
     "specialty": "Custom roast coffee & Taiwanese milk tea",
@@ -6266,30 +6266,6 @@
     "lng": 98.9940815
   },
   {
-    "slug": "kokoro-weed-cafe-bar-cannabis-chiangmai",
-    "index": "263",
-    "name": "KOKORO: weed cafe Bar:cannabis ChiangMai",
-    "area": "Nimman",
-    "address": "19 Nimmanhaemin Soi 17, Nimmanhaemin Suthep, Mueang Chiang Mai District",
-    "specialty": "Hojicha tea & cannabis products",
-    "flavor": "Fragrant, customizable",
-    "atmosphere": "Minimalist, cozy, welcoming",
-    "priceAvg": 120,
-    "tags": [
-      "Cozy",
-      "Photogenic",
-      "Quiet"
-    ],
-    "hours": "10:00–01:00",
-    "rating": 5,
-    "reviewCount": 359,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Tea",
-    "lat": 18.7955324,
-    "lng": 98.9682996
-  },
-  {
     "slug": "beanbag-coffee",
     "index": "264",
     "name": "Beanbag coffee",
@@ -6343,7 +6319,7 @@
     "slug": "rim-nara-cafe",
     "index": "266",
     "name": "Rim Nara Café",
-    "nameTh": "Rivah Folk Cafe and Life Bistro ริว่า โฟล์ค คาเฟ่ (เดิมชื่อ ริมนารา คาเฟ่ แอนด์ บริสโทร",
+    "nameTh": "Rivah Folk Cafe and Life Bistro ริว่า โฟล์ค คาเฟ่ (เดิมชื่อ ริมนารา คาเฟ่ แอนด์ บริสโทร)",
     "area": "Mae Rim",
     "address": "317, Mae Rim District",
     "specialty": "Americano-coconut, pasta, and cakes",
@@ -6744,8 +6720,8 @@
   {
     "slug": "red-panda-cafe-cnx-cnx",
     "index": "282",
-    "name": "Red Panda Cafè (CNX) | (CNX",
-    "nameTh": "Red Panda Cafè (CNX) | ร้านกาแฟแพนด้าแดง (สาขาCNX",
+    "name": "Red Panda Cafè (CNX) | (CNX)",
+    "nameTh": "Red Panda Cafè (CNX) | ร้านกาแฟแพนด้าแดง (สาขาCNX)",
     "area": "Chang Phueak",
     "address": "100 70-71 Huay Kaew Rd, Chang Phueak, Mueang Chiang Mai District",
     "specialty": "Iced caramel macchiato, burgers & brownies",
@@ -6995,8 +6971,7 @@
   {
     "slug": "sofuto-cream",
     "index": "292",
-    "name": "SOFUTO CREAM .",
-    "nameTh": "SOFUTO CREAM หลังมช",
+    "name": "SOFUTO CREAM",
     "area": "Suthep",
     "address": "PP Place Suthep Rd, Suthep, Mueang Chiang Mai District",
     "specialty": "Soufflé pancakes & matcha soft serve",
@@ -7041,30 +7016,6 @@
     "drinkType": "Coffee",
     "lat": 18.7922714,
     "lng": 98.9910184
-  },
-  {
-    "slug": "the-spot-cannabis-dispensary-cannabis-shop-chiang-mai",
-    "index": "294",
-    "name": "The Spot Cannabis Dispensary | Cannabis shop Chiang Mai",
-    "nameTh": "The Spot Cannabis Dispensary | ร้านกัญชาเชียงใหม่ Cannabis shop Chiang Mai",
-    "area": "Nimman",
-    "address": "36 Nimmana Haeminda Rd Lane 11, Nimmanhaemin Suthep, Mueang Chiang Mai District",
-    "specialty": "Coffee, cannabis products, and lounge experience",
-    "flavor": "Caffeinated, fresh, and high-quality",
-    "atmosphere": "Relaxed, cozy, music-driven, Nimman",
-    "priceAvg": 100,
-    "tags": [
-      "Cozy",
-      "Quiet"
-    ],
-    "hours": "10:00–23:00",
-    "rating": 4.9,
-    "reviewCount": 356,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Coffee",
-    "lat": 18.7967285,
-    "lng": 98.9692778
   },
   {
     "slug": "co-co-chiangmai",
@@ -7119,8 +7070,7 @@
   {
     "slug": "the-volcano",
     "index": "297",
-    "name": "THE VOLCANO .",
-    "nameTh": "THE VOLCANO หลัง มช",
+    "name": "THE VOLCANO",
     "area": "Suthep",
     "address": "Suthep Rd, Suthep, Mueang",
     "specialty": "Pocket cheese toast & Mango Bingsu",
@@ -7891,7 +7841,7 @@
   {
     "slug": "cafe",
     "index": "328",
-    "name": "Café",
+    "name": "Café โรงบ่ม",
     "area": "Hang Dong",
     "address": "1, Sun, Chiang Mai Hod Rd, Ban Klang, Pa Tong",
     "specialty": "Coffee & light meals",
@@ -8389,29 +8339,6 @@
     "lng": 98.91684459999999
   },
   {
-    "slug": "the-ot-dispensary-old-town",
-    "index": "348",
-    "name": "The OT Dispensary - OLD TOWN",
-    "area": "Suthep",
-    "address": "29/3 7 Sai Nam Phueng Alley, Nimmanhaemin Suthep, Amphur Muang",
-    "specialty": "Cannabis selection & Mimosa strain",
-    "flavor": "Smooth, high quality",
-    "atmosphere": "Chill, cozy, rooftop lounge",
-    "priceAvg": 250,
-    "tags": [
-      "Cozy",
-      "Themed"
-    ],
-    "hours": "11:00–00:30",
-    "rating": 4.9,
-    "reviewCount": 291,
-    "petFriendly": false,
-    "parking": false,
-    "drinkType": "Non-Coffee",
-    "lat": 18.7979582,
-    "lng": 98.9702197
-  },
-  {
     "slug": "victor-french-bakery",
     "index": "349",
     "name": "Victor French Bakery",
@@ -8440,7 +8367,7 @@
     "slug": "kame-kafe-mae-rim",
     "index": "350",
     "name": "Kame Kafé",
-    "nameTh": "คาเมะคาเฟ่) - โรงพยาบาลนครพิงค์",
+    "nameTh": "คาเมะคาเฟ่ - โรงพยาบาลนครพิงค์",
     "area": "Mae Rim",
     "address": "VX29+MP8, Don Kaeo, Mae Rim District",
     "specialty": "Oat milk latte, orange americano & matcha",
@@ -8489,7 +8416,7 @@
   {
     "slug": "lucky-cup-chiang-mai-university",
     "index": "352",
-    "name": "LUCKY CUP(Chiang Mai University",
+    "name": "LUCKY CUP(Chiang Mai University)",
     "nameTh": "ลัคกี้คัพ คอฟฟี่ สาขาหลัง มช LUCKYCUP COFFEE CMU 幸运咖",
     "area": "Suthep",
     "address": "7, 9 Suthep Rd, Suthep, Mueang Chiang Mai District",
@@ -8739,7 +8666,7 @@
   {
     "slug": "maled-coffee-roasters",
     "index": "362",
-    "name": "Maled Coffee Roasters :",
+    "name": "Maled Coffee Roasters",
     "nameTh": "โรงคั่วเมล็ด",
     "area": "Suthep",
     "address": "18, Suthep, Mueang Chiang Mai District",
@@ -9687,7 +9614,7 @@
   {
     "slug": "liberated-seed-coffee-roaster-libseed",
     "index": "400",
-    "name": "Liberated Seed Coffee Roaster (LibSeed",
+    "name": "Liberated Seed Coffee Roaster (LibSeed)",
     "area": "Old City",
     "address": "17/3 Jhaban Rd, Old City Si Phum, Mueang Chiang Mai District",
     "specialty": "Iced Dirty coffee & pour-over beans",
@@ -10485,7 +10412,7 @@
     "slug": "rung-a-roon-coffee-and-restaurant",
     "index": "432",
     "name": "Rung-a-Roon Coffee and Restaurant",
-    "nameTh": "กาแฟรุ่งอรุณ(หางดง-เชียงใหม่",
+    "nameTh": "กาแฟรุ่งอรุณ(หางดง-เชียงใหม่)",
     "area": "Hang Dong",
     "address": "78 Soi Ban Rai 1 Mu 1, Nam Phrae, Hang Dong District",
     "specialty": "Grilled pork neck, papaya salad & brownie balls",
@@ -10781,7 +10708,7 @@
   {
     "slug": "smile-lanna-coffee",
     "index": "444",
-    "name": "Smile Lanna Coffee &",
+    "name": "Smile Lanna Coffee",
     "nameTh": "สมายล์ ล้านนา คอฟฟี่",
     "area": "Old City",
     "address": "129/1 Chang Lor Rd, Phra Sing, Mueang Chiang Mai District",
@@ -10957,7 +10884,7 @@
   {
     "slug": "forty-one-cafe-41-cafe",
     "index": "451",
-    "name": "Forty One Cafe’ (41 Cafe’",
+    "name": "Forty One Cafe’ (41 Cafe’)",
     "area": "Wualai",
     "address": "41, Haiya Sub-district, Mueang Chiang Mai District",
     "specialty": "Iced latte & coconut cake",
@@ -11304,7 +11231,7 @@
     "slug": "my-moka-coffee",
     "index": "465",
     "name": "My Moka Coffee",
-    "nameTh": ": กาแฟหม้อต้มของฉัน",
+    "nameTh": "กาแฟหม้อต้มของฉัน",
     "area": "Old City",
     "address": "Ratvithi Rd, Old City Si Phum, Mueang Chiang Mai District",
     "specialty": "Moka pot coffee, freshly ground beans",
@@ -11479,7 +11406,7 @@
     "slug": "sanay-mae-kuang-coffee-restaurant",
     "index": "472",
     "name": "Sanay Mae Kuang Coffee & Restaurant",
-    "nameTh": "เสน่ห์แม่กวง (Sa Nhe Mae Kuang",
+    "nameTh": "เสน่ห์แม่กวง (Sa Nhe Mae Kuang)",
     "area": "Doi Saket",
     "address": "332 2, Choeng Doi, Doi Saket District",
     "specialty": "Spicy salad, Som Tum, and fried fish",
@@ -11627,7 +11554,7 @@
   {
     "slug": "tatata-cafe",
     "index": "478",
-    "name": "= TaTaTa café",
+    "name": "TaTaTa café",
     "nameTh": "ตถตา คาเฟ่",
     "area": "Mae Rim",
     "address": "215, Huai Sai, Mae Rim District",
@@ -12096,7 +12023,7 @@
   {
     "slug": "keane-coffee-and-guest-house",
     "index": "497",
-    "name": "Keane Coffee and Guest House.",
+    "name": "Keane Coffee and Guest House",
     "area": "Chang Phueak",
     "address": "8 Muen Dam Pla Kot Rd 5, Chang Phueak",
     "specialty": "Matcha latte, iced lattes & lemon cheesecake tea",
@@ -12494,7 +12421,7 @@
   {
     "slug": "123-glamp",
     "index": "513",
-    "name": "123 glamp•",
+    "name": "123 glamp",
     "area": "San Phi Suea",
     "address": "Unnamed Road, San Phi Suea, Mueang Chiang Mai District",
     "specialty": "Mocha coffee & riverside glamping experience",
@@ -12692,7 +12619,7 @@
   {
     "slug": "sukmee-deecha-fresh-tea-juice",
     "index": "521",
-    "name": ":Sukmee Deecha Fresh Tea & Juice",
+    "name": "Sukmee Deecha Fresh Tea & Juice",
     "nameTh": "สุขมีดีชา",
     "area": "San Sai",
     "address": "R3M4+QM6, San Na Meng, San Sai District",
@@ -12865,7 +12792,7 @@
   {
     "slug": "magic-beans-coffee-specialty-coffee-roastery",
     "index": "528",
-    "name": "Magic Beans Coffee (Specialty coffee & Roastery",
+    "name": "Magic Beans Coffee (Specialty coffee & Roastery)",
     "area": "Doi Saket",
     "address": "216, Luang Nuea, Doi Saket District",
     "specialty": "Single-origin roasts & homemade jams",
@@ -13386,7 +13313,7 @@
   {
     "slug": "between-cafe",
     "index": "549",
-    "name": "Between Cafe.",
+    "name": "Between Cafe",
     "nameTh": "บีทวีนคาเฟ่",
     "area": "Mae Rim",
     "address": "Mae Raem, Mae Rim District",
@@ -13732,8 +13659,8 @@
   {
     "slug": "22-aquarius-glamping-cafe-i-love-flower-farm",
     "index": "563",
-    "name": "22 Aquarius Glamping Cafe' ( i love flower farm",
-    "nameTh": "22 Aquarius Glamping Cafe' (ย้ายมาเปิดที่สวน i love flower farm",
+    "name": "22 Aquarius Glamping Cafe' (i love flower farm)",
+    "nameTh": "22 Aquarius Glamping Cafe' (ย้ายมาเปิดที่สวน i love flower farm)",
     "area": "Mae Rim",
     "address": "Mueang Kaeo, Mae Rim District",
     "specialty": "Dirty coffee & bakery",
@@ -14307,8 +14234,7 @@
   {
     "slug": "cafe-san-kamphaeng",
     "index": "586",
-    "name": ". CAFE",
-    "nameTh": "ช.ศรีนวล CAFE",
+    "name": "ช.ศรีนวล CAFE",
     "area": "San Kamphaeng",
     "address": "12 4, San Kamphaeng, San Kamphaeng District",
     "specialty": "Thai tea, coffee, and homemade cakes",
@@ -14582,7 +14508,7 @@
   {
     "slug": "i-have-cacao-trees-coffee-crafts-cocoa",
     "index": "597",
-    "name": "I Have Cacao Trees Coffee & Crafts Cocoa.",
+    "name": "I Have Cacao Trees Coffee & Crafts Cocoa",
     "area": "Hang Dong",
     "address": "193, Ban Pong, Hang Dong District",
     "specialty": "Cacao pulp coffee & house-made chocolate",
@@ -14631,7 +14557,7 @@
   {
     "slug": "hom-doi-coffee-by",
     "index": "599",
-    "name": "Hom Doi Coffee By",
+    "name": "Hom Doi Coffee",
     "area": "Doi Saket",
     "address": "R364+WPR, San Pu Loei, Doi Saket District",
     "specialty": "Single-origin coffee, coconut cake, pandan chiffon",
@@ -14830,8 +14756,7 @@
   {
     "slug": "cafe-amazon-fa-ham",
     "index": "607",
-    "name": "Café Amazon - .",
-    "nameTh": "Café Amazon - ปตท.ฟ้าฮ่าม",
+    "name": "Café Amazon",
     "area": "Fa Ham",
     "address": "Chiang Mai, Mueang Chiang Mai District",
     "specialty": "Iced coffee & Amazon signature drinks",
@@ -16243,7 +16168,7 @@
   {
     "slug": "tea-fac",
     "index": "664",
-    "name": "TEA FAC.",
+    "name": "TEA FAC",
     "area": "Chang Phueak",
     "address": "33 Taewarit Rd, Chang Phueak, Mueang Chiang Mai District",
     "specialty": "Signature coffee & rose milk tea",
@@ -16393,7 +16318,7 @@
   {
     "slug": "sway-cnx-rooftop-artisan-coffee-the-famous-smoothie-bowls",
     "index": "670",
-    "name": "Sway CNX - Rooftop Artisan Coffee (The famous smoothie bowls",
+    "name": "Sway CNX - Rooftop Artisan Coffee (The famous smoothie bowls)",
     "area": "Nimman",
     "address": "36 Nimmana Haeminda Rd Lane 11, Nimmanhaemin Suthep, Mueang Chiang Mai District",
     "specialty": "Latte art & rooftop views",
@@ -17206,7 +17131,7 @@
   {
     "slug": "coffee",
     "index": "703",
-    "name": "Coffee",
+    "name": "จักรพรรดิ อารมณ์ดี Coffee",
     "area": "Old City",
     "address": "146/8 Rat Chiang Saen Rd, Phra Sing, Mueang Chiang Mai District",
     "specialty": "Americano & sacred objects",
@@ -17230,8 +17155,7 @@
   {
     "slug": "law-coff-co",
     "index": "704",
-    "name": "LAW COFF & CO .",
-    "nameTh": "LAW COFF & CO ลอว์คอฟ แอนด์ โค หลังมช",
+    "name": "LAW COFF & CO",
     "area": "Suthep",
     "address": "35 Suthep Rd, Suthep, Mueang Chiang Mai District",
     "specialty": "Flat white & dark roast coffee",
@@ -17780,7 +17704,7 @@
     "slug": "thepsadej-coffee",
     "index": "726",
     "name": "Thepsadej Coffee",
-    "nameTh": "กาแฟเทพเสด็จ (ณ แม่ตอนหลวง",
+    "nameTh": "กาแฟเทพเสด็จ (ณ แม่ตอนหลวง)",
     "area": "Doi Saket",
     "address": "Thep Sadet, Doi Saket District",
     "specialty": "Single-origin Doi Saket coffee & coffee cherry tea",
@@ -18595,7 +18519,7 @@
   {
     "slug": "home-s",
     "index": "759",
-    "name": ": Home'S",
+    "name": "Home'S",
     "area": "San Kamphaeng",
     "address": "26/9 11, San Klang, San Kamphaeng District",
     "specialty": "Latte & matcha",
@@ -18771,8 +18695,8 @@
   {
     "slug": "s-saao-bahts-coffee",
     "index": "766",
-    "name": "s (SAAO BAHTs COFFEE",
-    "nameTh": "ซาวบาทsคอฟฟี่ (SAAO BAHTs COFFEE",
+    "name": "SAAO BAHTs COFFEE",
+    "nameTh": "ซาวบาทsคอฟฟี่",
     "area": "Wat Ket",
     "address": "430, 8 Charoen Raj Road, Faharm, Muang",
     "specialty": "Iced cappuccino & waffles with coconut ice cream",
@@ -18920,7 +18844,7 @@
   {
     "slug": "werb-haus-coffee",
     "index": "772",
-    "name": ".Werb Haus Coffee",
+    "name": "Werb Haus Coffee",
     "area": "Old City",
     "address": "117/3 Intrawarorot Rd, Old City Si Phum, Mueang Chiang Mai District",
     "specialty": "ES-Yen, cappuccino, and coffee",
@@ -19418,7 +19342,7 @@
   {
     "slug": "crepesso-cafe",
     "index": "792",
-    "name": "Crepesso cafe (クレ-ペッソ カフェ",
+    "name": "Crepesso cafe (クレ-ペッソ カフェ)",
     "area": "Chang Phueak",
     "address": "Ku Tao 2 Rd, Chang Phueak, Mueang Chiang Mai District",
     "specialty": "Iced Americano, Passion fruit presso & croffles",
@@ -19443,7 +19367,7 @@
   {
     "slug": "the-explorer-coffee-co",
     "index": "793",
-    "name": "The Explorer Coffee&co.",
+    "name": "The Explorer Coffee&co",
     "area": "Pa Daet",
     "address": "168 (A04, Pa Daet Sub-district",
     "specialty": "Americano & KitKat matcha croffle",
@@ -19469,7 +19393,7 @@
     "slug": "baannom-cafe",
     "index": "794",
     "name": "baannom cafe",
-    "nameTh": "บ้านนมคาเฟ่ ( ) -ท่ารั้ว",
+    "nameTh": "บ้านนมคาเฟ่ -ท่ารั้ว",
     "area": "Doi Saket",
     "address": "111 4, San Pu Loei, Doi Saket District",
     "specialty": "Coffee, cakes, and desserts",
@@ -19518,7 +19442,7 @@
   {
     "slug": "around-18-grams-home-cafe-18",
     "index": "796",
-    "name": "Around 18 grams home cafe ( 18",
+    "name": "Around 18 grams home cafe (18)",
     "nameTh": "ประมาณ 18 กรัม",
     "area": "San Sai",
     "address": "San Sai District",
@@ -19544,7 +19468,7 @@
   {
     "slug": "cafe-2",
     "index": "797",
-    "name": "Café",
+    "name": "วรรณทอง Café",
     "nameTh": "วรรณทองคาเฟ่",
     "area": "San Kamphaeng",
     "address": "P4C8+42R 36, Buak Kang, San Kamphaeng District",
@@ -20165,7 +20089,7 @@
     "slug": "mingmitr-coffee-rajapruek",
     "index": "822",
     "name": "Mingmitr Coffee Rajapruek",
-    "nameTh": "มิ่งมิตร สาขาแม่เหียะ (ราชพฤกษ์",
+    "nameTh": "มิ่งมิตร สาขาแม่เหียะ (ราชพฤกษ์)",
     "area": "Mae Hia",
     "address": "PWRQ+P5, Mae Hia, Mueang Chiang Mai District",
     "specialty": "Matcha latte & strong coffee",
@@ -20409,7 +20333,7 @@
     "slug": "khem-saad-cafe",
     "index": "832",
     "name": "Khem Saad' Cafe",
-    "nameTh": "เข้มสาดดด' คอฟฟี่เฮ้าส์ (Khem Saad’ Coffee House",
+    "nameTh": "เข้มสาดดด' คอฟฟี่เฮ้าส์ (Khem Saad’ Coffee House)",
     "area": "Hang Dong",
     "address": "253, Ban Waen, Hang Dong District",
     "specialty": "Korean sandwiches & frappes",
@@ -20729,7 +20653,7 @@
   {
     "slug": "synn-cafe-co",
     "index": "845",
-    "name": "synn cafe&co.",
+    "name": "synn cafe&co",
     "area": "San Sai",
     "address": "232/1, San Sai Luang, San Sai District",
     "specialty": "Kao Ka Moo & specialty coffee",
@@ -20901,7 +20825,7 @@
   {
     "slug": "loon-spc",
     "index": "852",
-    "name": "LOON spc.",
+    "name": "LOON spc",
     "area": "San Sai",
     "address": "99, San Phranet, San Sai District",
     "specialty": "Single-origin pour-over & flat white",
@@ -20975,7 +20899,7 @@
   {
     "slug": "starbucks-mae-rim",
     "index": "855",
-    "name": "Starbucks . .",
+    "name": "Starbucks",
     "area": "Mae Rim",
     "address": "225 225, Mae Sa, Mae Rim District",
     "specialty": "Standardized coffee, decaf options, Thai-inspired drinks",
@@ -21000,8 +20924,7 @@
   {
     "slug": "999cafe",
     "index": "856",
-    "name": "999CAFE",
-    "nameTh": "เก้า เก้า เก้า คาเฟ่",
+    "name": "เก้า เก้า เก้า คาเฟ่ 999CAFE",
     "area": "Saraphi",
     "address": "104 Soi 3, Tha Wang Tan, Saraphi District",
     "specialty": "Quality coffee, iced tea & fresh pastries",
@@ -21666,7 +21589,7 @@
   {
     "slug": "minimal-coffee-saraphi",
     "index": "883",
-    "name": "MINIMAL COFFEE.",
+    "name": "MINIMAL COFFEE",
     "area": "Saraphi",
     "address": "3, Tha Wang Tan, Saraphi District",
     "specialty": "Lightly roasted coffee & pastries",
@@ -22775,8 +22698,8 @@
   {
     "slug": "plearn-cafe",
     "index": "928",
-    "name": "Plearn cafe : .",
-    "nameTh": "Plearn cafe : เพลิน คาเฟ่ หลัง มช",
+    "name": "Plearn cafe",
+    "nameTh": "เพลิน คาเฟ่ หลัง มช",
     "area": "Suthep",
     "address": "193​ 14​ ​ Soi Ban Mai Lang Mo 1, Suthep, Mueang Chiang Mai District",
     "specialty": "Local coffee & brownies",
@@ -22993,8 +22916,8 @@
   {
     "slug": "earnt-daw-coffee-wualai",
     "index": "937",
-    "name": "Earnt Daw Coffee @ Wualai @",
-    "nameTh": "Earnt Daw Coffee @ Wualai เอิ้นดาว กาแฟ @วัวลาย",
+    "name": "Earnt Daw Coffee @ Wualai",
+    "nameTh": "เอิ้นดาว กาแฟ @วัวลาย",
     "area": "Wualai",
     "address": "143/4, Haiya Sub-district, Mueang Chiang Mai District",
     "specialty": "Iced Americano, mango slushy & toast",
@@ -23975,7 +23898,7 @@
   {
     "slug": "coffee-home",
     "index": "977",
-    "name": "Coffee home",
+    "name": "เติมใจรัก Coffee home",
     "area": "Chang Phueak",
     "address": "Chang Phueak, Mueang Chiang Mai District",
     "specialty": "Home-cooked pork rice bowl & traditional cafe food",
@@ -24125,7 +24048,7 @@
   {
     "slug": "on-the-way-cafe-chiang-mai-chiang-mai-technical-college-branch",
     "index": "983",
-    "name": "On The Way Cafe Chiang Mai (Chiang Mai Technical College Branch",
+    "name": "On The Way Cafe Chiang Mai (Chiang Mai Technical College Branch)",
     "nameTh": "ออน เดอะ เวย์ คาเฟ่ เชียงใหม่ สาขาเทคนิคเชียงใหม่",
     "area": "Old City",
     "address": "34/6 Wiang Kaew Rd, Old City Si Phum, Mueang Chiang Mai District",
@@ -24296,7 +24219,7 @@
   {
     "slug": "bays-coffee-co",
     "index": "990",
-    "name": "Bays Coffee Co.",
+    "name": "Bays Coffee Co",
     "area": "Chang Moi",
     "address": "Watkate, 113 Bumrungrad Road, Chang Moi Sub-district, Mueang Chiang Mai District",
     "specialty": "Farmers Omelette, carrot cake & coffee tonic",
@@ -25007,7 +24930,7 @@
   {
     "slug": "monsuan-cafe",
     "index": "1020",
-    "name": ": Monsuan Cafe",
+    "name": "Monsuan Cafe",
     "nameTh": "ม่อนสวนคาเฟ่",
     "area": "Doi Saket",
     "address": "12 188 M, Choeng Doi, Doi Saket District",
@@ -25273,7 +25196,7 @@
   {
     "slug": "saraphi-coffee-culinary",
     "index": "1031",
-    "name": "@Saraphi Coffee & Culinary",
+    "name": "Saraphi Coffee & Culinary",
     "area": "Saraphi",
     "address": "94/1, Don Kaeo, Saraphi District",
     "specialty": "Matcha coconut, hot cocoa & homemade omelets",
@@ -25517,7 +25440,7 @@
   {
     "slug": "enjoy-coffee-mrutl-cnx",
     "index": "1041",
-    "name": "Enjoy Coffee mrutl cnx.",
+    "name": "Enjoy Coffee mrutl cnx",
     "nameTh": "Enjoy Coffee & ข้างโรงยิม เทคโนตีนดอย",
     "area": "Chang Phueak",
     "address": "Chang Phueak",
@@ -25911,8 +25834,8 @@
   {
     "slug": "law-coffee-club",
     "index": "1057",
-    "name": "Law Coffee Club .",
-    "nameTh": "Law Coffee Club ลอว์คอฟฟี่คลับ คณะนิติศาสตร์ มช",
+    "name": "Law Coffee Club",
+    "nameTh": "ลอว์คอฟฟี่คลับ คณะนิติศาสตร์ มช",
     "area": "Suthep",
     "address": "Faculty of Law, Chiang Mai University, 239 Huay Kaew Rd, Suthep, Mueang Chiang Mai District",
     "specialty": "Medium and dark roast coffee",
@@ -26572,7 +26495,7 @@
   {
     "slug": "beholder-cafe-smoothie-coffee-tea",
     "index": "1084",
-    "name": "Beholder Cafe (Smoothie, Coffee & Tea",
+    "name": "Beholder Cafe (Smoothie, Coffee & Tea)",
     "nameTh": "บีโฮลเดอร์คาเฟ่",
     "area": "Chang Phueak",
     "address": "37 2 Taewan Rd, Chang Phueak",
@@ -26940,7 +26863,7 @@
   {
     "slug": "slow-bar-on-the-way",
     "index": "1099",
-    "name": "Slow bar on the way @",
+    "name": "Slow bar on the way",
     "area": "Chang Khlan",
     "address": "Chang Khlan Sub-district, Mueang Chiang Mai District",
     "specialty": "Es yen, Thai tea, and peach tea",
@@ -27136,7 +27059,7 @@
   {
     "slug": "mae-kuang-cafe",
     "index": "1107",
-    "name": "☕Mae Kuang Cafe",
+    "name": "Mae Kuang Cafe",
     "nameTh": "แม่กวง คาเฟ่",
     "area": "Doi Saket",
     "address": "235 2, Luang Nuea, Doi Saket District",
@@ -27553,8 +27476,7 @@
   {
     "slug": "coffee-bar-7",
     "index": "1124",
-    "name": "Coffee & Bar @ 7",
-    "nameTh": "หมูน้อย Coffee & Bar @กิ่วดอย 7 พับ",
+    "name": "หมูน้อย Coffee & Bar @กิ่วดอย 7 พับ",
     "area": "Hang Dong",
     "address": "RR46+63J, 1269, Ban Pong, Hang Dong District",
     "specialty": "Herbal tea, avocado toast & rich coffee",
@@ -28353,8 +28275,7 @@
   {
     "slug": "coffee-house-hang-dong",
     "index": "1157",
-    "name": "Coffee House",
-    "nameTh": "นิรชา",
+    "name": "นิรชา Coffee House",
     "area": "Hang Dong",
     "address": "55, Ban Waen, Hang Dong District",
     "specialty": "Coffee, shabu & dark Leo beer",
@@ -29177,7 +29098,7 @@
   {
     "slug": "montree-coffee-by-ari",
     "index": "1192",
-    "name": "Montree Coffee by Ari.",
+    "name": "Montree Coffee by Ari",
     "area": "Old City",
     "address": "27 Ratchamanka Rd, Old City Phra Sing",
     "specialty": "Piccolo & ham and cheese sourdough",
@@ -29277,8 +29198,7 @@
   {
     "slug": "coffee-house-doi-saket",
     "index": "1196",
-    "name": "Coffee house",
-    "nameTh": "บ้านกาแฟ",
+    "name": "Coffee house บ้านกาแฟ",
     "area": "Doi Saket",
     "address": "R4R7+FW, Pa Lan, Doi Saket District",
     "specialty": "Dark americano with coconut",
@@ -30013,8 +29933,8 @@
   {
     "slug": "lada-coffee",
     "index": "1226",
-    "name": "LADA COFFEE (&",
-    "nameTh": "LADA COFFEE (กาแฟสด&น้ําผลไม้ปั่น",
+    "name": "LADA COFFEE",
+    "nameTh": "กาแฟสด&น้ําผลไม้ปั่น",
     "area": "San Kamphaeng",
     "address": "Q4F8+GV5 59, Mae Pu Kha, San Kamphaeng District",
     "specialty": "Freshly brewed coffee & fruit smoothies",
@@ -30037,8 +29957,8 @@
   {
     "slug": "no-9-bake-coffee-9",
     "index": "1227",
-    "name": "No.9 Bake & Coffee ( 9",
-    "nameTh": "No.9 Bake & Coffee (นัมเบอร์ 9 กาแฟ เบเกอรี่",
+    "name": "No.9 Bake & Coffee (9)",
+    "nameTh": "No.9 Bake & Coffee (นัมเบอร์ 9 กาแฟ เบเกอรี่)",
     "area": "San Sai",
     "address": "42 San Na Meng, San Sai District",
     "specialty": "Matcha, Americano, and Biscoff cookies",
@@ -30063,8 +29983,7 @@
   {
     "slug": "coffee-saraphi",
     "index": "1228",
-    "name": "Coffee",
-    "nameTh": "มิตรรักลูกบ้านนา",
+    "name": "มิตรรักลูกบ้านนา Coffee",
     "area": "Saraphi",
     "address": "179 Chiang Mai-Lamphun Rd, Yang Noeng, Saraphi District",
     "specialty": "Coffee & homemade cakes",
@@ -30239,7 +30158,7 @@
   {
     "slug": "star-coffee-supalai-monte",
     "index": "1235",
-    "name": "Star Coffee (Supalai Monte",
+    "name": "Star Coffee (Supalai Monte)",
     "area": "Wat Ket",
     "address": "18 4, Wat Ket, Mueang Chiang Mai District",
     "specialty": "Coffee, fruit shakes, and cocoa",
@@ -30360,7 +30279,7 @@
     "slug": "sangsan-coffee-him-air",
     "index": "1240",
     "name": "Sangsan coffee - HIM Air",
-    "nameTh": "กาแฟสร้างสรรค์ (ฟ้าฮ่าม",
+    "nameTh": "กาแฟสร้างสรรค์ (ฟ้าฮ่าม)",
     "area": "Fa Ham",
     "address": "126, Fa Ham, Mueang Chiang Mai District",
     "specialty": "Dark roast coffee & bakery",
@@ -30654,7 +30573,7 @@
   {
     "slug": "coffee-2",
     "index": "1252",
-    "name": "Coffee",
+    "name": "สมดุล Coffee",
     "area": "Saraphi",
     "address": "813 Chiang Mai-Lamphun Rd, Nong Phueng, Saraphi District",
     "specialty": "Pure matcha & decent coffee",
@@ -30870,7 +30789,7 @@
     "slug": "roast-n-brew-cafe-fa-ham",
     "index": "1261",
     "name": "Roast 'n' Brew Cafe",
-    "nameTh": "โรสท์ แอนด์ บรู (มีโชคพลาซ่า",
+    "nameTh": "โรสท์ แอนด์ บรู (มีโชคพลาซ่า)",
     "area": "Fa Ham",
     "address": "Fa Ham, Mueang Chiang Mai District",
     "specialty": "Orange juice coffee & coconut coffee",
@@ -30964,8 +30883,7 @@
   {
     "slug": "nor-nang-na-home-cafe",
     "index": "1265",
-    "name": "NOR NANG NA HOME CAFE' .",
-    "nameTh": "NOR NANG NA HOME CAFE' น.นั่ง นา",
+    "name": "NOR NANG NA HOME CAFE'",
     "area": "Doi Saket",
     "address": "District Soi 5, San Pu Loei, Doi Saket District",
     "specialty": "Home-cooked meals & art classes",
@@ -31743,8 +31661,8 @@
   {
     "slug": "siri-coffee",
     "index": "1297",
-    "name": "Siri Coffee ••",
-    "nameTh": "กาแฟสิริ กาแฟเชียงใหม่ Siri Coffee หน้าบิ๊กซีดอนจั่น •คนละครึ่ง•",
+    "name": "Siri Coffee",
+    "nameTh": "กาแฟสิริ กาแฟเชียงใหม่ หน้าบิ๊กซีดอนจั่น •คนละครึ่ง",
     "area": "Tha Sala",
     "address": "91/165 4, Tha Sala Sub-district, Mueang Chiang Mai District",
     "specialty": "Latte & yogurt smoothies",
@@ -32280,8 +32198,8 @@
   {
     "slug": "2815-cafe-in-the-garden",
     "index": "1319",
-    "name": "2815 (Cafe' in the garden",
-    "nameTh": "2815 ร้านกาแฟในสวน(Cafe' in the garden",
+    "name": "2815 (Cafe' in the garden)",
+    "nameTh": "2815 ร้านกาแฟในสวน(Cafe' in the garden)",
     "area": "Mae Rim",
     "address": "281 5, Don Kaeo, Mae Rim District",
     "specialty": "Skinny hot cocoa & butter croissants",
@@ -32356,7 +32274,7 @@
   {
     "slug": "house-cafe",
     "index": "1322",
-    "name": "House Cafe",
+    "name": "House Cafeเชิงดอย",
     "area": "Doi Saket",
     "address": "330 12, Choeng Doi, Doi Saket District",
     "specialty": "Thai milk tea, pink milk & local Thai dishes",
@@ -32380,7 +32298,7 @@
   {
     "slug": "white-cafe-x",
     "index": "1323",
-    "name": "White Cafe x",
+    "name": "White Cafe",
     "area": "San Kamphaeng",
     "address": "San Klang, San Kamphaeng District",
     "specialty": "Orange coffee & fruit smoothies",
@@ -32988,7 +32906,7 @@
   {
     "slug": "minimal-exclusive-coffee-sanphraned",
     "index": "1349",
-    "name": "Minimal Exclusive Coffee (Sanphraned",
+    "name": "Minimal Exclusive Coffee (Sanphraned)",
     "area": "San Sai",
     "address": "250 Soi Mae Yoi Tai Mu 2, San Phranet, San Sai District",
     "specialty": "Matcha coconut drink & pastries",
@@ -33595,7 +33513,7 @@
   {
     "slug": "red-panda-cafe-santitham",
     "index": "1374",
-    "name": "Red Panda Cafe (Santitham",
+    "name": "Red Panda Cafe (Santitham)",
     "area": "Old City",
     "address": "Sriphum, 34/5 Hussadhisawee Rd, Si Phum, Mueang Chiang Mai District",
     "specialty": "Coffee & hostel accommodation",
@@ -33956,7 +33874,7 @@
   {
     "slug": "one-coffee-tea-by",
     "index": "1389",
-    "name": "One coffee &Tea By",
+    "name": "One coffee &Tea",
     "area": "San Kamphaeng",
     "address": "37 5 1, San Klang, San Kamphaeng District",
     "specialty": "Iced Nescafe & hot chocolate",
@@ -34457,8 +34375,8 @@
   {
     "slug": "craft-cafe-nhonghoi-chaingmai",
     "index": "1410",
-    "name": "Craft cafe @Nhonghoi Chaingmai @",
-    "nameTh": "Craft cafe @Nhonghoi Chaingmai คราฟท์คาเฟ่ @ หนองหอยเชียงใหม่",
+    "name": "Craft cafe @Nhonghoi Chaingmai",
+    "nameTh": "คราฟท์คาเฟ่ @ หนองหอยเชียงใหม่",
     "area": "Nong Hoi",
     "address": "455 Chiang Mai-Lam Phun Rd, Nong Hoi Sub-district",
     "specialty": "Fresh bread with toppings & smoothies",
@@ -35178,8 +35096,8 @@
   {
     "slug": "cafe-amazon-5",
     "index": "1440",
-    "name": "Cafe Amazon .",
-    "nameTh": "Cafe Amazon คาเฟ่อเมซอน สาขา ปตท.สันพระเนตร - ปั๊มนี้มีแมว",
+    "name": "Cafe Amazon",
+    "nameTh": "คาเฟ่อเมซอน สาขา ปตท.สันพระเนตร - ปั๊มนี้มีแมว",
     "area": "San Sai",
     "address": "R2CV+M5G 134, San Phranet, San Sai District",
     "specialty": "Iced coffee & rich pure matcha",

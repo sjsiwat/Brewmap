@@ -532,6 +532,23 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 19 — ตรวจความปลอดภัยและบั๊กก่อนเปิดให้คนอื่นทดสอบ (owner สั่ง 2026-11-07)
+**Status:** `awaiting-review`
+**Branch:** `phase-19-prelaunch-fixes`
+**Review range:** `main..phase-19-prelaunch-fixes` (ใช้ `git diff main...HEAD`)
+
+**ตรวจแล้วผ่าน (ไม่ต้องแก้):** secrets ไม่อยู่ใน repo/ประวัติ git · `npm audit` (prod deps) 0 ช่องโหว่ทั้ง server และ web · NoSQL injection (`q[$ne]`, `area[$ne]`, `tag[$regex]`…) → 400 · regex ในคำค้น escape แล้ว · CORS อนุญาตเฉพาะเว็บเรา · Swagger ปิดบน production · security headers ของเว็บครบ (CSP, HSTS, X-Frame-Options DENY, nosniff, Referrer/Permissions-Policy) · AI Finder: prompt injection ไม่ได้ผล (filter ผิดถูกตัด, ไม่หลุด system prompt), input เกิน 300 ตัว/field แปลก → 400 · login/register/AI/เขียนข้อมูลมี rate limit (มี e2e) · แก้รีวิวคนอื่น → 403 · logout เพิกถอน token · 375px ไม่ล้นจอ
+
+- [x] 19.1 **ชื่อร้านเสีย 74 ร้าน:** `.strip('()')` ตัดวงเล็บปิดทิ้ง → "CHARLIE () Thai Tea … (Grab&Go", "s (SAAO BAHTs COFFEE", "LADA COFFEE (&" · `tidy()` ใหม่: ลบวงเล็บว่าง, ตัด/ปิดวงเล็บที่ค้าง, ตัดเครื่องหมายและ "by"/"&" ที่ค้างหัวท้าย · ชื่ออังกฤษอยู่ในวงเล็บ → ใช้ส่วนนั้น · ชื่อที่เหลือแต่คำทั่วไป (". CAFE") → ใช้ชื่อเต็ม · **slug เดิมทุกร้าน** (เป็น URL และ key ของ seed)
+- [x] 19.2 **ชื่อไทย 19 ร้านวงเล็บไม่ปิด** — สาเหตุเดียวกัน → ใช้ `tidy()` · ชื่อไทยที่ขึ้นต้นด้วยวงเล็บ "(คาเมะคาเฟ่) - …" แกะวงเล็บออก
+- [x] 19.3 **ร้านกัญชา 3 แห่งหลุดเป็นคาเฟ่** (Google หมวด "Cannabis store" + "Cafe") → `EXCLUDED_CATEGORIES` · ไม่มี favorites/reviews ของผู้ใช้ผูกอยู่ (มีแค่รีวิว Google 15 รายการ) · ลบจาก Atlas รอ owner อนุมัติ
+- [x] 19.4 **JWT_SECRET:** production ไม่ยอมเริ่มถ้าไม่มี / เป็น placeholder ("change-me") / สั้นกว่า 32 ตัว (`jwtSecret()` + unit test) — ต้องให้ owner ยืนยันค่าบน Render ก่อน deploy
+- [x] 19.5 จำนวนผลค้นหามีจุลภาค ("1,435 ร้าน")
+
+**ความเสี่ยงที่ยอมรับ / ให้ owner ทำ:** ตั้ง budget alert ของ Gemini ใน Google Cloud (rate limit เป็นต่อ IP ไม่มีเพดานรวม) · สมัครด้วยอีเมลที่มีอยู่ → 409 บอกว่ามีบัญชีแล้ว (มี rate limit) · GET สาธารณะไม่มี rate limit (ถ้าใส่แบบ global การ build/ISR ของ Vercel จะโดน 429)
+
+**Gate:** `npm run gate:server` · `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

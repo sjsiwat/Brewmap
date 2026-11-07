@@ -14,7 +14,7 @@ import {
   type FinderFilters,
   type ReferencePlace,
 } from "@/lib/finder-filters";
-import { format, plural } from "@/lib/i18n/config";
+import { format, intlLocale, plural } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import type { Dictionary } from "@/lib/i18n/en";
 import { useCafeSearch } from "@/lib/use-cafe-search";
@@ -295,7 +295,7 @@ export function CafeFinder() {
               )
             ) : (
               <>
-                <span className="font-display text-2xl">{search.total}</span>{" "}
+                <span className="font-display text-2xl">{search.total.toLocaleString(intlLocale[lang])}</span>{" "}
                 {plural(t.count, search.total)}
                 {name ? format(t.named, { name }) : ""}
                 {activeCount > 0 ? t.matchingAll : ""}
@@ -428,7 +428,10 @@ export function CafeFinder() {
         >
           {search.status === "loading"
             ? t.loadingMore
-            : format(t.showMore, { shown: search.items.length, total: search.total ?? 0 })}
+            : format(t.showMore, {
+                shown: search.items.length.toLocaleString(intlLocale[lang]),
+                total: (search.total ?? 0).toLocaleString(intlLocale[lang]),
+              })}
         </button>
       )}
     </div>
