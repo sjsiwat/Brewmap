@@ -46,6 +46,11 @@ export const th: Dictionary = {
     chiangMai: "เชียงใหม่ ประเทศไทย",
     explore: "สำรวจ",
     motto: "รสชาติมาก่อน ระยะทางทีหลัง",
+    supportTitle: "สนับสนุนค่ากาแฟ",
+    supportBody: "ชอบ BrewMap ไหม? เลี้ยงกาแฟผมสักแก้ว สแกนจ่ายผ่านแอปธนาคารไหนก็ได้ (พร้อมเพย์)",
+    supportMobile: "ใช้มือถืออยู่? บันทึกรูป QR แล้วเปิดในแอปธนาคาร",
+    supportSave: "บันทึกรูป QR",
+    supportAlt: "QR พร้อมเพย์ สนับสนุนค่ากาแฟ BrewMap",
   },
 
   units: {
