@@ -549,6 +549,15 @@ owner เลือก: scrape เพิ่มด้วย gosom/google-maps-scra
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 20 — ข้อความหน้าแรก/หน้าค้นหา (ภาษาไทย) ตามที่ owner เขียน (owner สั่ง 2026-11-07)
+**Status:** `approved` — [reviews/phase-20.md](reviews/phase-20.md)
+**Branch:** `phase-20-thai-hero-copy`
+**Review range:** `main..phase-20-thai-hero-copy` (ใช้ `git diff main...HEAD`)
+
+- [x] 20.1 `th.ts` เท่านั้น: eyebrow หน้าแรก → "รสชาติมาก่อน ระยะทางทีหลัง" (tagline) · หัวข้อ → "ค้นหาคาเฟ่ที่ใช่" / "ไม่ใช่แค่ร้านที่ใกล้" · คำอธิบาย → "บอก BrewMap ว่าคุณชอบกาแฟแบบไหน อยากได้บรรยากาศอะไร หรือมีงบเท่าไหร่ แล้วค้นพบคาเฟ่ในเชียงใหม่ที่ตรงกับคุณ" · หัวข้อหน้าค้นหา → "วันนี้อยากดื่มกาแฟแบบไหน?" · ปุ่ม "ค้นหาแก้วที่ใช่" เดิมอยู่แล้ว · motto/siteTitle เป็น tagline อยู่แล้ว · ภาษาอังกฤษไม่เปลี่ยน (owner ให้มาเฉพาะไทย) · QA `/th` และ `/th/cafes` desktop + มือถือ
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)
