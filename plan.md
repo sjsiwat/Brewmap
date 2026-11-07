@@ -612,6 +612,21 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:server` · `npm run gate:web`
 
+### Phase 25 — Vercel Web Analytics (owner สั่ง 2026-11-07)
+**Status:** `approved` — [reviews/phase-25.md](reviews/phase-25.md)
+**Branch:** `phase-25-vercel-analytics`
+**Review range:** `main..phase-25-vercel-analytics` (ใช้ `git diff main...HEAD`)
+
+ที่มา: owner อยากรู้ว่ามีคนใช้กี่คน (ไม่นับตัวเอง) · ฐานข้อมูลมีแค่บัญชี/ใจ/รีวิว (คนอื่น = 0) แต่ค้นหา/ถาม AI/ดูร้านใช้ได้โดยไม่สมัคร จึงนับไม่ได้
+
+- [x] 25.1 `@vercel/analytics` 2.0.1 (exact) · `<SiteAnalytics />` ใน `[lang]/layout.tsx` · page views เท่านั้น ไม่มี cookie
+- [x] 25.2 `beforeSend`: ตัด query string ทุก URL (คำค้น `?search=` ไม่ออกจากเบราว์เซอร์) · ไม่นับเครื่อง owner: เปิดหน้าไหนก็ได้ด้วย `?no-analytics=1` ครั้งเดียวต่อเครื่อง (`=0` นับกลับ) · localStorage ใช้ไม่ได้ → นับตามปกติ
+- [x] 25.3 `proxy.ts` matcher ไม่จับ `/_vercel/` (ไม่งั้น `/_vercel/insights/view` โดน redirect เป็น `/en/...`) · CSP: script/connect จาก origin เดียวกันอยู่แล้ว · dev เพิ่ม `va.vercel-scripts.com` (debug script)
+- [x] 25.4 QA: `beforeSend` (ตัด query / opt-out / opt-in) · script โหลดจาก `/_vercel/insights/script.js` ไม่มี CSP error · `npm audit` 0
+- [ ] owner: เปิด Analytics ใน Vercel dashboard (Project → Analytics → Enable)
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

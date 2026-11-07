@@ -4,6 +4,7 @@ import { Fraunces, Inter, Geist_Mono, Noto_Sans_Thai, Noto_Serif_Thai } from "ne
 import { AuthProvider } from "@/lib/auth";
 import { FavoritesProvider } from "@/lib/favorites";
 import { LocationOnEntry } from "@/components/location-on-entry";
+import { SiteAnalytics } from "@/components/site-analytics";
 import { CAFE_COUNT } from "@/lib/content";
 import { format, hasLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -90,6 +91,7 @@ export default async function RootLayout({
             </FavoritesProvider>
           </AuthProvider>
         </I18nProvider>
+        <SiteAnalytics />
       </body>
     </html>
   );
