@@ -10,11 +10,12 @@ const isDev = process.env.NODE_ENV === "development";
 // are static/ISR. So inline scripts stay allowed (Next's hydration data), but
 // nothing loads from other origins except the OpenStreetMap embed, plugins
 // and <base> are off, and forms can only post back here. All API calls go to
-// our own /api (proxied below), so connect-src is 'self' too. Dev adds eval
-// and the HMR websocket for React Refresh.
+// our own /api (proxied below), so connect-src is 'self' too. Vercel Web
+// Analytics is served from this origin too (/_vercel/insights). Dev adds eval,
+// the HMR websocket for React Refresh, and the analytics debug script.
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",

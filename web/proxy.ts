@@ -65,6 +65,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // /api, and every page path - not Next's own files or anything with a file extension.
-  matcher: ["/api/:path*", "/((?!_next/|.*\\..*).*)"],
+  // /api, and every page path - not Next's own files, Vercel's (/_vercel/insights
+  // for analytics), or anything with a file extension.
+  matcher: ["/api/:path*", "/((?!_next/|_vercel/|.*\\..*).*)"],
 };
