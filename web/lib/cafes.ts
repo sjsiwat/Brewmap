@@ -55,6 +55,11 @@ export function osmEmbedUrl(lat: number, lng: number, delta = 0.006): string {
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
 }
 
+/** Google Maps directions to the café (opens the app on phones). */
+export function googleMapsDirectionsUrl(lat: number, lng: number): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat}%2C${lng}`;
+}
+
 export function osmViewUrl(lat: number, lng: number): string {
   return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
 }

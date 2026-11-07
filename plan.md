@@ -573,6 +573,18 @@ bug ที่เจอตอนเก็บภาพโปรโมท (gemini-3
 
 **Gate:** `npm run gate:server`
 
+### Phase 22 — ปุ่มนำทางด้วย Google Maps (owner สั่ง 2026-11-07)
+**Status:** `awaiting-review`
+**Branch:** `phase-22-google-maps-directions`
+**Review range:** `main..phase-22-google-maps-directions` (ใช้ `git diff main...HEAD`)
+
+- [x] 22.1 `googleMapsDirectionsUrl(lat, lng)` → `https://www.google.com/maps/dir/?api=1&destination=lat,lng` (Maps URLs ทางการ ไม่ต้องใช้ API key · มือถือเปิดแอป Google Maps เข้าโหมดนำทาง) · ใช้พิกัดเพราะฐานข้อมูลยังไม่เก็บ place_id
+- [x] 22.2 หน้าร้าน: ปุ่มสีสนิม "นำทางด้วย Google Maps" / "Directions in Google Maps" ใต้แท็ก · มือถือเต็มความกว้าง · เปิดแท็บใหม่ (`rel="noreferrer"`) · sr-only บอกว่าเปิด Google Maps
+- [x] 22.3 การ์ดในหน้าค้นหา: ลิงก์ "นำทาง" อยู่เหนือ stretched link (`relative z-10` แบบปุ่ม ♡) จึงไม่เปิดหน้าร้าน · `aria-label` มีชื่อร้าน
+- [x] 22.4 QA: desktop + 375px (ไม่ล้นจอ) · href ถูก · CSP ไม่ต้องแก้ (เป็นลิงก์ ไม่ใช่ iframe)
+
+**Gate:** `npm run gate:web`
+
 ---
 
 ## 4. Backlog (ยังไม่ทำ)

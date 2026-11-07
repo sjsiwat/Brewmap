@@ -7,12 +7,13 @@ import {
   Sparkles,
   Clock,
   MapPin,
+  Navigation,
   ParkingCircle,
   PawPrint,
   Star,
 } from "lucide-react";
 import type { Cafe } from "@/lib/cafes";
-import { formatPrice, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
+import { formatPrice, googleMapsDirectionsUrl, osmEmbedUrl, osmViewUrl } from "@/lib/cafes";
 import { DistanceFromOrigin } from "@/components/location-origin";
 import { dataLabel, format, intlLocale, localePath, plural, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -91,6 +92,17 @@ export function CafeDetail({ cafe, lang }: { cafe: Cafe; lang: Locale }) {
               <span key={tag}>{dataLabel(dict.cafeTags, tag)}</span>
             ))}
           </div>
+
+          <a
+            href={googleMapsDirectionsUrl(cafe.lat, cafe.lng)}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 flex w-full items-center justify-center gap-3 border border-rust bg-rust px-6 py-3.5 font-mono text-xs uppercase tracking-[0.12em] text-paper transition-colors hover:border-ink hover:bg-ink focus-ring sm:inline-flex sm:w-auto"
+          >
+            <Navigation size={15} aria-hidden />
+            {t.googleMaps}
+            <span className="sr-only"> {t.opensGoogleMaps}</span>
+          </a>
         </Reveal>
 
         {cafe.aiSummary && (cafe.aiSummary.pros.length > 0 || cafe.aiSummary.cons.length > 0) && (

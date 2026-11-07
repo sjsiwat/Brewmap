@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ParkingCircle, PawPrint, Sparkles, Star } from "lucide-react";
+import { Navigation, ParkingCircle, PawPrint, Sparkles, Star } from "lucide-react";
 import type { CafeResult } from "@/lib/api";
-import { formatPrice } from "@/lib/cafes";
+import { formatPrice, googleMapsDirectionsUrl } from "@/lib/cafes";
 import { formatKm } from "@/lib/geo";
-import { dataLabel, intlLocale, plural } from "@/lib/i18n/config";
+import { dataLabel, format, intlLocale, plural } from "@/lib/i18n/config";
 import { useI18n } from "@/lib/i18n/client";
 import { FavoriteButton } from "@/components/favorite-button";
 import { OpenStatusText } from "@/components/opening-hours";
@@ -105,6 +105,18 @@ export function CafeCard({ cafe, reason }: { cafe: CafeResult; reason?: string }
           </span>
         </p>
       )}
+
+      {/* Like ♡: above the stretched link, so it opens Google Maps, not the café page. */}
+      <a
+        href={googleMapsDirectionsUrl(cafe.lat, cafe.lng)}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={format(t.directionsTo, { name: cafe.name })}
+        className="relative z-10 mt-4 inline-flex items-center gap-1.5 self-start font-mono text-[0.65rem] uppercase tracking-[0.14em] text-rust hover:underline focus-ring"
+      >
+        <Navigation size={12} aria-hidden />
+        {t.directions}
+      </a>
 
       {/* Above the stretched link, so it's its own button; a button can't sit inside an <a>. */}
       <FavoriteButton cafe={cafe} className="absolute top-4 right-4 z-10 p-1" />

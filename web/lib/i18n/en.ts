@@ -279,6 +279,8 @@ export const en = {
     reviews: { one: "({n} review)", other: "({n} reviews)" },
     stars: "stars",
     typicalDrink: "Typical drink",
+    directions: "Directions",
+    directionsTo: "Directions to {name} in Google Maps",
     highlights: "Highlights",
     parking: "Parking",
     pets: "Pets welcome",
@@ -316,6 +318,8 @@ export const en = {
     no: "No",
     location: "Location",
     largerMap: "View larger map",
+    googleMaps: "Directions in Google Maps",
+    opensGoogleMaps: "(opens Google Maps)",
     mapTitle: "Map showing the location of {name}",
   },
 
